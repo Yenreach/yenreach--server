@@ -1,0 +1,1 @@
+export { EmailPayload } from './EmailInterface'

@@ -1,0 +1,9 @@
+/node_modules
+.log
+/src/core/logs
+/src/logs/**
+/src/logs
+.env.**
+.env
+/dist
+/public
