@@ -11,16 +11,12 @@ import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import { ConnectOptions, connect, set } from 'mongoose';
 import {
-  NODE_ENV, HOST, PORT, LOG_FORMAT, ORIGIN, CREDENTIALS, DB_URI
+  NODE_ENV, HOST, PORT, LOG_FORMAT, DB_URI
 } from '@config';
 import { dbConnection } from '@/core/databases';
 import { Routes } from '@/core/routes/interfaces/RouteInterface';
 import { errorMiddleware } from '@/core/middlewares/ErrorMiddleware';
 import { logger, stream, registerShutdownHandler } from '@/core/utils';
-import './jobs/crons/otp.cron'
-import './jobs/crons/wallet.cron'
-import './jobs/crons/account.cron'
-import './jobs/crons/kyc.cron'
 // import { socket } from './customer-support/services/SocketService';
 
 
@@ -36,7 +32,7 @@ class App {
     this.env = 'production'; NODE_ENV || 'development';
     this.port = PORT || 3000;
 
-    this.connectDatabase()
+    // this.connectDatabase()
     // this.initSocket()
     this.initializeMiddlewares();
     this.initializeRoutes(routes);
@@ -47,45 +43,7 @@ class App {
   public listen() {
     logger.info('Starting Server ....')
 
-    // const io = new Server(this.createServer(), {
-    //   allowRequest: (req, callback) => {
-    //     const noOriginHeader = req.headers.origin === undefined;
-    //     callback(null, noOriginHeader); // only allow requests without 'origin' header
-    //   }
-    // })
-
-    // console.log(io)
-
-    // socket(io)
-
     const server = this.createServer();
-
-    // const server = require('http').createServer(app);
-    // const io = new Server(this.createServer())
-    // const io = require('socket.io')(server, {
-    //   allowRequest: (req: Request, callback: any) => {
-    //     // console.log(req.headers.origin)
-    //     const noOriginHeader = req.headers.origin === undefined;
-    //     callback(null, noOriginHeader);
-    //   },
-    //   rejectUnauthorized: false,
-    //   withCredentials: false,
-    //   allowEIO3: true, // false by default
-    //   cors: {
-    //     origin: "api.morizonweb.com",
-    //     // methods: ["GET", "POST"]
-    //   }
-    // })
-
-    // socket(io)
-
-
-    // logger.info('========================== Connecting socket ================================')
-    // io.on('connection', (socket: any) => {
-    //   logger.info('========================== socket io connected! ================================')
-    // });
-
-    // global.io = io
 
 
     server.listen(this.port, () => {

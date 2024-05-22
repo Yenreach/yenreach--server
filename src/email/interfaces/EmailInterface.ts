@@ -1,9 +1,21 @@
 interface EmailPayload {
-    to: string,
-    subject: string,
-    payload?: object
-    text?: string
-    template: string
+  to: string,
+  subject: string,
+  payload?: object
+  text?: string
+  template: string
 }
 
-export { EmailPayload }
+interface IEmail {
+  to: string,
+  subject: string,
+  name: string,
+  heading: string,
+  message: string
+}
+
+interface RequestWithEmail extends Request {
+  email: IEmail
+}
+
+export { EmailPayload, IEmail }

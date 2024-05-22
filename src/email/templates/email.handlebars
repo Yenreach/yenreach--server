@@ -142,7 +142,7 @@
 
 </head>
 
-<body style="background-color: #CFEAFF;">
+<body style="background-color: #00c885;">
 
     <!-- start preheader -->
     <div class="preheader"
@@ -156,7 +156,7 @@
 
         <!-- start logo -->
         <tr>
-            <td align="center" bgcolor="#CFEAFF">
+            <td align="center" bgcolor="#00c885">
                 <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
                     <tr>
                         <td align="center" valign="top" style="padding: 36px 24px;">
@@ -167,7 +167,7 @@
         </tr>
 
         <tr style="margin-bottom: 5px;">
-            <td align="center" bgcolor="#CFEAFF">
+            <td align="center" bgcolor="#00c885">
 
                 <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
 
@@ -187,23 +187,13 @@
                         <td bgcolor="#fff" align="left"
                             style="padding:24px 50px; font-family: 'Poppins', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 24px; color: #4E4E4E;">
                             <div style="margin-bottom: 30px;">
-                                <h2>Password Reset</h2>
+                                <h2>{{heading}}</h2>
 
                                 <p style="text-transform: capitalize;">Hi {{name}} 👋,</p>
-                                <p>It appears you have forgotten your password and requested for a password reset link.
+                                <p>{{message}}
                                 </p>
-                                <p>Please click the button below to reset your password.
-                                </p>
+
                             </div>
-
-                            <a href="{{reset_link}}" target="blank" class="btn" style="">Reset Password</a>
-
-                            <p>If you have facing troubles using the button, click or copy and paste the link
-                                below in
-                                your browser: <br>
-                                <a href="{{reset_link}}" style="color: #01C38E ; text-decoration: none;">
-                                    {{reset_link}}</a>
-                            </p>
 
                             <p style="text-align: left;">Cheers, <br> {{app.name}} Team 💖</p>
                         </td>
@@ -212,12 +202,12 @@
 
                     <!-- start copy -->
                     <tr>
-                        <td align="center" bgcolor="#CFEAFF"
+                        <td align="center" bgcolor="#00c885"
                             style="padding: 20px 20px 0 20px; font-family: 'Poppins', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 24px;">
                             <div style="color: #000; font-size: 14px;">
                                 <p style="text-align:left;">
                                     Email:
-                                    <a href="mailto:{{app.email}}" style="color: #01C38E; text-decoration: none;">
+                                    <a href="mailto:{{app.email}}" style="color: #fff; text-decoration: none;">
                                         {{app.email}}</a>
                                 </p>
                             </div>

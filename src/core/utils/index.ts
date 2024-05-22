@@ -1,6 +1,5 @@
 export { logger, stream } from './logger'
 export { sendResponse } from './response'
-export { isEmpty } from './util'
 export { validateEnv } from './validateEnv'
 export { registerShutdownHandler } from './error'
 export { generateDP } from './avatar'

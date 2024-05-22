@@ -1,16 +1,3 @@
-export { AuthRoute } from '@/auth/routes'
 export { IndexRoute } from './IndexRoute'
-export { UserRoute } from '@/user/routes'
-export { TransactionRoute } from '@/transaction/routes'
-export { AccountRoute } from '@/account/routes'
-export { CardRoute } from '@/card/routes'
-export { ContactRoute } from '@/contact/routes'
-export { BillRoute } from '@/bill/routes'
-export { AddressRoute } from '@/address/routes'
-export { UploadRoute } from '@/upload/routes'
-export { PaymentRequestRoute } from '@/payment-request/routes'
-export { InvoiceRoute } from '@/invoice/routes'
-export { WalletRoute, WalletExtendedRoute } from '@/wallet/routes'
-export { ConversationRoute } from '@/customer-support/routes'
-export {AuthOptionRoute} from '@/2fa/routes'
-export { AdminRoutes } from "@/admin/routes/AdminRoutes"
+export { EmailRoute } from '@/email/routes'
+
