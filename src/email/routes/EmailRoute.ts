@@ -20,7 +20,7 @@ class EmailRoute implements Routes {
 
     this.router.post(`${this.path}/test-mail`, this.emailController.testMailer)
 
-    this.router.post(`${this.path}/test-mail`, this.emailController.sendMail)
+    this.router.post(`${this.path}/send-mail`, this.emailController.sendMail)
 
 
   }
