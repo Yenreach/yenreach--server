@@ -31,6 +31,7 @@ class EmailController {
     try {
       const { to, subject, heading, name, message } = req.body;
 
+      console.log({ dat: req.body })
       const mail = await (new EmailProvider).sendMail({
         to: to,
         subject: `Yenreach - ${subject}`,

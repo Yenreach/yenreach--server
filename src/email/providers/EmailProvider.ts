@@ -72,7 +72,7 @@ class EmailProvider {
 
       const html: string = await this.compileHtmlEmail(template, payload)
 
-      console.log(html)
+      // console.log(html)
 
       const mailOptions = {
         from: USER_EMAIL,
@@ -81,7 +81,7 @@ class EmailProvider {
         html: html
       };
 
-      console.log({ payload, to, subject, template })
+      // console.log({ payload, to, subject, template })
       const info = await transporter.sendMail(mailOptions);
 
       if (!info) throw new Error("Unable to send mail");
