@@ -72,6 +72,8 @@ class EmailProvider {
 
       const html: string = await this.compileHtmlEmail(template, payload)
 
+      console.log(html)
+
       const mailOptions = {
         from: USER_EMAIL,
         to: to,

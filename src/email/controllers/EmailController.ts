@@ -16,7 +16,7 @@ class EmailController {
         payload: {
           heading: 'Welcome to Yenreach',
           name: 'Odisi',
-          message: "you are welcome to yenreach"
+          message: "<p>hello</p>"
         },
         template: '../templates/email.handlebars'
       })
