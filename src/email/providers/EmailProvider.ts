@@ -4,7 +4,7 @@ import path, { join, resolve } from 'path'
 import { compile } from 'handlebars'
 import {
   SMTP_HOSTNAME, SMTP_USERNAME, SMTP_PASSWORD,
-  CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN, APP_NAME,
+  APP_NAME,
   APP_URL, APP_LOGO, APP_EMAIL
 } from '../../config'
 import { EmailPayload } from '../interfaces'
@@ -42,25 +42,25 @@ class EmailProvider {
   public async sendMail({ to, subject, payload, template }: EmailPayload): Promise<void> {
     try {
 
-      const oauth2Client = new OAuth2(
-        CLIENT_ID,
-        CLIENT_SECRET,
-        "https://developers.google.com/oauthplayground"
-      );
+      // const oauth2Client = new OAuth2(
+      //   CLIENT_ID,
+      //   CLIENT_SECRET,
+      //   "https://developers.google.com/oauthplayground"
+      // );
 
-      oauth2Client.setCredentials({
-        refresh_token: REFRESH_TOKEN,
-      });
+      // oauth2Client.setCredentials({
+      //   refresh_token: REFRESH_TOKEN,
+      // });
 
-      const accessToken = await new Promise((resolve, reject) => {
-        oauth2Client.getAccessToken((err, token) => {
-          if (err) {
-            console.log("*ERR: ", err)
-            reject();
-          }
-          resolve(token);
-        });
-      });
+      // const accessToken = await new Promise((resolve, reject) => {
+      //   oauth2Client.getAccessToken((err, token) => {
+      //     if (err) {
+      //       console.log("*ERR: ", err)
+      //       reject();
+      //     }
+      //     resolve(token);
+      //   });
+      // });
 
       // const transporter = nodemailer.createTransport({
       //   service: "gmail",
