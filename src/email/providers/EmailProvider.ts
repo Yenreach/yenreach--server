@@ -2,7 +2,7 @@ import sgMail from '@sendgrid/mail'
 import { readFileSync } from 'fs'
 import path, { join, resolve } from 'path'
 import { compile } from 'handlebars'
-import { USER_EMAIL, USER_PASS, CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN, ACCESS_TOKEN, APP_NAME, APP_URL, APP_LOGO, APP_EMAIL } from '@/config'
+import { USER_EMAIL, USER_PASS, SMTP_HOSTNAME, SMTP_USERNAME, SMTP_PASSWORD, CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN, ACCESS_TOKEN, APP_NAME, APP_URL, APP_LOGO, APP_EMAIL } from '@/config'
 import { EmailPayload } from '../interfaces'
 import { logger } from '@/core/utils'
 import nodemailer from 'nodemailer'
@@ -58,24 +58,41 @@ class EmailProvider {
         });
       });
 
+      // const transporter = nodemailer.createTransport({
+      //   service: "gmail",
+      //   auth: {
+      //     type: "OAuth2",
+      //     user: USER_EMAIL,
+      //     accessToken,
+      //     clientId: CLIENT_ID,
+      //     clientSecret: CLIENT_SECRET,
+      //     refreshToken: REFRESH_TOKEN,
+      //   },
+      // });
+
       const transporter = nodemailer.createTransport({
-        service: "gmail",
+        host: SMTP_HOSTNAME,
+        port: 465,
         auth: {
-          type: "OAuth2",
-          user: USER_EMAIL,
-          accessToken,
-          clientId: CLIENT_ID,
-          clientSecret: CLIENT_SECRET,
-          refreshToken: REFRESH_TOKEN,
+          user: SMTP_USERNAME,
+          pass: SMTP_PASSWORD
         },
+        debugger: true,
+        logger: true,
+        pool: true,
+        maxMessages: 1000000,
+        maxConnections: 20,
+
       });
+
+
 
       const html: string = await this.compileHtmlEmail(template, payload)
 
       // console.log(html)
 
       const mailOptions = {
-        from: USER_EMAIL,
+        from: SMTP_USERNAME,
         to: to,
         subject: subject,
         html: html

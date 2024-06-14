@@ -18,6 +18,7 @@ import { Routes } from '@/core/routes/interfaces/RouteInterface';
 import { errorMiddleware } from '@/core/middlewares/ErrorMiddleware';
 import { logger, stream, registerShutdownHandler } from '@/core/utils';
 // import { socket } from './customer-support/services/SocketService';
+import './jobs/crons/email.cron'
 
 
 class App {
@@ -32,7 +33,7 @@ class App {
     this.env = 'production'; NODE_ENV || 'development';
     this.port = PORT || 3000;
 
-    // this.connectDatabase()
+    this.connectDatabase()
     // this.initSocket()
     this.initializeMiddlewares();
     this.initializeRoutes(routes);

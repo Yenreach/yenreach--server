@@ -11,7 +11,7 @@ class EmailController {
   public testMailer = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const mail = await (new EmailProvider).sendMail({
-        to: 'oebiyeladouemmanuel@gmail.com',
+        to: 'oebiyeladouemmanuel@gmail.com, oracleebi247@gmail.com, codesoracle247@gmail.com, ebiyeladou@gmail.com',
         subject: `Yeanrach - KYC Request Succeeded`,
         payload: {
           heading: 'Welcome to Yenreach',

@@ -1,5 +1,5 @@
 interface EmailPayload {
-  to: string,
+  to: string | string[],
   subject: string,
   payload?: object
   text?: string
