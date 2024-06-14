@@ -12,11 +12,11 @@ import swaggerUi from 'swagger-ui-express';
 import { ConnectOptions, connect, set } from 'mongoose';
 import {
   NODE_ENV, HOST, PORT, LOG_FORMAT, DB_URI
-} from '@config';
-import { dbConnection } from '@/core/databases';
-import { Routes } from '@/core/routes/interfaces/RouteInterface';
-import { errorMiddleware } from '@/core/middlewares/ErrorMiddleware';
-import { logger, stream, registerShutdownHandler } from '@/core/utils';
+} from './config';
+import { dbConnection } from './core/databases';
+import { Routes } from './core/routes/interfaces/RouteInterface';
+import { errorMiddleware } from './core/middlewares/ErrorMiddleware';
+import { logger, stream, registerShutdownHandler } from './core/utils';
 // import { socket } from './customer-support/services/SocketService';
 import './jobs/crons/email.cron'
 

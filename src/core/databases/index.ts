@@ -1,4 +1,4 @@
-import { DB_URI } from '@config';
+import { DB_URI } from '../../config';
 
 const dbConnection = {
   url: DB_URI,

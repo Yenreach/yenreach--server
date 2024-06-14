@@ -1,10 +1,10 @@
-import App from '@/app';
+import App from './app';
 import {
   IndexRoute,
   EmailRoute,
   UserRoute
-} from '@/core/routes';
-import { validateEnv } from '@/core/utils/validateEnv';
+} from './core/routes';
+import { validateEnv } from './core/utils/validateEnv';
 
 validateEnv();
 
