@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction, Router } from 'express';
 import { UserController } from '../controllers';
-import { Routes } from '@/core/routes/interfaces';
+import { Routes } from '../../core/routes/interfaces';
 
 
 

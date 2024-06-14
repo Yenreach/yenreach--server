@@ -1,8 +1,8 @@
-import { agenda, logger } from '@/core/utils'
-import { delay } from '@/core/utils/delay';
-import { EmailProvider } from '@/email/providers'
+import { agenda, logger } from '../../core/utils'
+import { delay } from '../../core/utils/delay';
+import { EmailProvider } from '../../email/providers'
 
-import { User } from '@/user/models';
+import { User } from '../../user/models';
 
 const users = [
   {

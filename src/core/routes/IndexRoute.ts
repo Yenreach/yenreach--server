@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction, Router, response } from 'express';
 import { generate } from 'otp-generator'
 // import { IndexController } from '@controllers/index.controller';
-import { Routes } from '@/core/routes/interfaces/RouteInterface';
+import { Routes } from '../../core/routes/interfaces/RouteInterface';
 import { APP_NAME } from '../../config';
 import mongoose, { Model, model, mongo } from 'mongoose';
 

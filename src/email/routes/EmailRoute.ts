@@ -1,9 +1,6 @@
 import { Request, Response, NextFunction, Router } from 'express';
 import { EmailController } from '../controllers';
-import { Routes } from '@/core/routes/interfaces';
-import { authMiddleware, checkOwnership } from '@/core/middlewares';
-
-
+import { Routes } from '../../core/routes/interfaces';
 class EmailRoute implements Routes {
   public path = '/email';
   public router = Router();
@@ -21,7 +18,6 @@ class EmailRoute implements Routes {
     this.router.post(`${this.path}/test-mail`, this.emailController.testMailer)
 
     this.router.post(`${this.path}/send-mail`, this.emailController.sendMail)
-
 
   }
 }

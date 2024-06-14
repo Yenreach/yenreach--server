@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
-import { getFileLink, sendResponse } from '@/core/utils';
-import { HttpCodes } from '@/core/constants';
-import { logger } from '@/core/utils';
-import { EmailProvider } from '@/email/providers';
-import { HttpException } from '@/core/exceptions';
+import { getFileLink, sendResponse } from '../../core/utils';
+import { HttpCodes } from '../../core/constants';
+import { logger } from '../../core/utils';
+import { EmailProvider } from '../../email/providers';
+import { HttpException } from '../../core/exceptions';
 
 class EmailController {
 

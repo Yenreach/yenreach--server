@@ -1,7 +1,7 @@
 import { generate } from 'otp-generator'
-import { HttpException } from '@/core/exceptions'
+import { HttpException } from '../../core/exceptions'
 import { User } from '../models'
-import { HttpCodes } from '@/core/constants'
+import { HttpCodes } from '../../core/constants'
 import { User as IUser } from '../interfaces'
 import axios from 'axios'
 import { StatusCodes } from "http-status-codes";

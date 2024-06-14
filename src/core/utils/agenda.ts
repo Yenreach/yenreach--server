@@ -1,4 +1,4 @@
-import { DB_URI } from '@/config'
+import { DB_URI } from '../../config'
 import { Agenda } from '@hokify/agenda'
 import { logger } from './logger'
 

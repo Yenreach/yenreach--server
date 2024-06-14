@@ -2,9 +2,13 @@ import sgMail from '@sendgrid/mail'
 import { readFileSync } from 'fs'
 import path, { join, resolve } from 'path'
 import { compile } from 'handlebars'
-import { USER_EMAIL, USER_PASS, SMTP_HOSTNAME, SMTP_USERNAME, SMTP_PASSWORD, CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN, ACCESS_TOKEN, APP_NAME, APP_URL, APP_LOGO, APP_EMAIL } from '@/config'
+import {
+  SMTP_HOSTNAME, SMTP_USERNAME, SMTP_PASSWORD,
+  CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN, APP_NAME,
+  APP_URL, APP_LOGO, APP_EMAIL
+} from '../../config'
 import { EmailPayload } from '../interfaces'
-import { logger } from '@/core/utils'
+import { logger } from '../../core/utils'
 import nodemailer from 'nodemailer'
 const { google } = require("googleapis");
 const OAuth2 = google.auth.OAuth2;
