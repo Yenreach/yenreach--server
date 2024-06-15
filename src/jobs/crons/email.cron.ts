@@ -83,7 +83,7 @@ agenda.define('send_mail', async (job: any, done: any) => {
 //   console.log('Sending a welcome message every few seconds');
 // });
 
-agenda.every('5 minutes', 'send_mail');
+agenda.every('0 8 * * *', 'send_mail');
 
 // agenda.on('complete:KycStatusCheck', async (job: any) => {
 //   await job.remove()
