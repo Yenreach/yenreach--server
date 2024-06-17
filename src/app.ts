@@ -18,7 +18,7 @@ import { Routes } from './core/routes/interfaces/RouteInterface';
 import { errorMiddleware } from './core/middlewares/ErrorMiddleware';
 import { logger, stream, registerShutdownHandler } from './core/utils';
 // import { socket } from './customer-support/services/SocketService';
-import './jobs/crons/email.cron'
+// import './jobs/crons/email.cron'
 
 
 class App {
