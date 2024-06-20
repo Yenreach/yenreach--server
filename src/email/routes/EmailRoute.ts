@@ -19,6 +19,9 @@ class EmailRoute implements Routes {
 
     this.router.post(`${this.path}/send-mail`, this.emailController.sendMail)
 
+    this.router.post(`${this.path}/send-mail-sequence`, this.emailController.sendMailSequence)
+
+
   }
 }
 

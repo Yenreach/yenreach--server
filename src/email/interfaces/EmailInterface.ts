@@ -14,8 +14,6 @@ interface IEmail {
   message: string
 }
 
-interface RequestWithEmail extends Request {
-  email: IEmail
-}
+
 
 export { EmailPayload, IEmail }

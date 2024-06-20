@@ -25,7 +25,7 @@ class IndexRoute implements Routes {
         })
     });
 
-    this.router.get(`${this.path}/ping`, (req: Request, res: Response, next: NextFunction) => {
+    this.router.get(`${this.path}ping`, (req: Request, res: Response, next: NextFunction) => {
       return res.status(200)
         .json({
           msg: `${APP_NAME} Backend is active`

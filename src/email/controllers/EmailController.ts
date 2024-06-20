@@ -4,6 +4,7 @@ import { HttpCodes } from '../../core/constants';
 import { logger } from '../../core/utils';
 import { EmailProvider } from '../../email/providers';
 import { HttpException } from '../../core/exceptions';
+import { IEmail } from '../interfaces/EmailInterface';
 
 class EmailController {
 
@@ -44,6 +45,15 @@ class EmailController {
       })
       return sendResponse(res, HttpCodes.OK, 'Message sent successfully', mail)
       // return sendResponse(res, HttpCodes.OK, 'Message sent successfully', await this.userProvider.sendNotification({ userId: req.user._id, title: req.body.title, body: req.body.body }))
+    } catch (error) {
+      next(logger.error(error));
+    }
+  }
+
+  public sendMailSequence = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const mail = await (new EmailProvider).scheduledEmail(req.body as IEmail[])
+      return sendResponse(res, HttpCodes.OK, 'Message sent successfully', mail)
     } catch (error) {
       next(logger.error(error));
     }

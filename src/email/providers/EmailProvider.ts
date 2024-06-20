@@ -11,6 +11,7 @@ import { EmailPayload } from '../interfaces'
 import { logger } from '../../core/utils'
 import nodemailer from 'nodemailer'
 import { User } from '../../user/models'
+import { IEmail } from '../interfaces/EmailInterface'
 const { google } = require("googleapis");
 const OAuth2 = google.auth.OAuth2;
 
@@ -141,44 +142,20 @@ class EmailProvider {
     }
   }
 
-  public async scheduledEmail(): Promise<void> {
+  public async scheduledEmail(data: IEmail[]): Promise<void> {
     try {
-
-      const [users, userCount] = await Promise.all([
-        User.find({ email_track: { $lt: 7 } }),
-        User.countDocuments()
-      ])
-
-      console.log({ users, userCount })
-      console.log('hi')
-
-      const batchSize = 100;
-      const delayBetweenBatches = 60000;
-
-      for (let i = 0; i < userCount; i += batchSize) {
-        const batch = users.slice(i, i + batchSize);
-        batch.map((user: any) => {
-          try {
-            this.sendMail({
-              to: user.email,
-              subject: `Yeanrach - KYC Request Succeeded`,
-              payload: {
-                heading: 'Welcome to Yenreach',
-                name: user.name,
-                message: "<p>hello</p>"
-              },
-              template: '../templates/email.handlebars'
-            })
-          } catch (error: any) {
-            logger.error(`Failed to send batch ${i / batchSize + 1}:`, error);
-          }
+      data.map((mail: IEmail) => {
+        this.sendMail({
+          to: mail.to,
+          subject: `Yenreach - ${mail.subject}`,
+          payload: {
+            heading: mail.heading,
+            name: mail.name,
+            message: mail.message
+          },
+          template: '../templates/email.handlebars'
         })
-
-        console.log(`Batch ${i / batchSize + 1} sent`);
-        // if (i + batchSize < userCount) {
-        //   await delay(delayBetweenBatches);
-        // }
-      }
+      })
     } catch (error) {
       console.log({ error })
       logger.error(error)
