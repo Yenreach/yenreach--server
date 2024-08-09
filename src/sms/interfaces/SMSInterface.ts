@@ -1,6 +1,6 @@
 interface SMS {
-    body: string
-    to: string
+  message: string
+  to: string
 }
 
 export { SMS }
