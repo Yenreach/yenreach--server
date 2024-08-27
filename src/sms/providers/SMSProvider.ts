@@ -38,7 +38,7 @@ class SMSProvider {
       const data = {
         ...payload,
         sender_name: SENDCHAMP_SENDER,
-        route: "non_dnd"
+        route: "dnd"
       }
 
       const config = {
@@ -53,23 +53,65 @@ class SMSProvider {
         data: data
       };
 
-      const message = await axios.request(config)
-
-      console.log(JSON.stringify(message));
-      return message;
-      // .then((response) => {
-      //   logger.info(`Message sent successfully`)
-      //   console.log(JSON.stringify(response.data));
-      // })
-      // .catch((error) => {
-      //   logger.error(`Message sending failed`)
-      //   console.log({ error: error.response.data });
-      //   throw new Error(error.response.data.message)
-      // });
+      axios.request(config)
+        .then((response) => {
+          logger.info(`Message sent successfully`)
+          console.log(JSON.stringify(response.data));
+          return response.data
+        })
+        .catch((error) => {
+          logger.error(`Message sending failed`)
+          console.log({ error: error.response.data });
+          throw new Error(error.response.data.message)
+        });
     } catch (err) {
-      console.log({ err: err.response.data })
-      // throw new Error(`Failed to send SMS: ${err.response.data.message}`)
-      throw new HttpException(HttpCodes.BAD_REQUEST, `Failed to send SMS: ${err.response.data.message}`);
+      console.log({ err: err })
+      throw new Error(`Failed to send SMS: ${err.response.data.message}`)
+      throw new HttpException(HttpCodes.BAD_REQUEST, `Failed to send/z SMS: ${err.response.data.message}`);
+
+    }
+  }
+
+  public async sendSMSSequence(payload: SMS[]) {
+    try {
+
+      payload.map((item: SMS) => {
+        console.log(item)
+
+        const data = {
+          ...item,
+          sender_name: SENDCHAMP_SENDER,
+          route: "dnd"
+        }
+
+        const config = {
+          method: 'post',
+          maxBodyLength: Infinity,
+          url: `${SENDCHAMP_LIVEURL}/sms/send`,
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': `${SENDCHAMP_APIKEY}`
+          },
+          data: data
+        };
+        axios.request(config)
+          .then((response) => {
+            logger.info(`Message sent successfully`)
+            console.log(JSON.stringify(response.data));
+          })
+          .catch((error) => {
+            logger.error(`Message sending failed`)
+            console.log({ error: error.response.data });
+            throw new Error(error.response.data.message)
+          });
+      })
+
+
+    } catch (err) {
+      console.log({ err: err })
+      throw new Error(`Failed to send SMS: ${err.response.data.message}`)
+      throw new HttpException(HttpCodes.BAD_REQUEST, `Failed to send/z SMS: ${err.response.data.message}`);
 
     }
   }
