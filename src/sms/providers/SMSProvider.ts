@@ -1,14 +1,12 @@
-import { Twilio } from 'twilio'
 import { SMS } from '../interfaces'
 import { HttpException } from '../../core/exceptions'
 import { logger } from '../../core/utils'
 import axios from 'axios';
-import { SENDCHAMP_APIKEY, SENDCHAMP_LIVEURL, SENDCHAMP_SENDER, TWILIO_NUMBER, TWILIO_SID, TWILIO_TOKEN } from '../../config'
+import { SENDCHAMP_APIKEY, SENDCHAMP_LIVEURL, SENDCHAMP_SENDER } from '../../config'
 import { HttpCodes } from '../../core/constants';
 
 
 class SMSProvider {
-  public client = new Twilio(TWILIO_SID, TWILIO_TOKEN)
 
   public async sendSMS(payload: SMS) {
     try {
@@ -45,8 +43,7 @@ class SMSProvider {
         });
     } catch (err) {
       console.log({ err: err })
-      throw new Error(`Failed to send SMS: ${err.response.data.message}`)
-      throw new HttpException(HttpCodes.BAD_REQUEST, `Failed to send/z SMS: ${err.response.data.message}`);
+      throw new HttpException(HttpCodes.BAD_REQUEST, `Failed to send SMS: ${err.response.data.message}`);
 
     }
   }
@@ -89,17 +86,15 @@ class SMSProvider {
 
     } catch (err) {
       console.log({ err: err })
-      throw new Error(`Failed to send SMS: ${err.response.data.message}`)
       throw new HttpException(HttpCodes.BAD_REQUEST, `Failed to send/z SMS: ${err.response.data.message}`);
-
     }
   }
 
-  public async sendBulkSMS(payload: SMS[]) {
+  public async sendBulkSMS(payload: SMS[]): Promise<any> {
     try {
-
+      console.log({ payload })
       payload.map((item: SMS) => {
-        console.log(item)
+        console.log({ item })
 
         const data = {
           ...item,
@@ -122,20 +117,18 @@ class SMSProvider {
           .then((response) => {
             logger.info(`Message sent successfully`)
             console.log(JSON.stringify(response.data));
+            return response.data;
           })
           .catch((error) => {
             logger.error(`Message sending failed`)
-            console.log({ error: error.response.data });
+            console.log({ errIN: error.response.data });
             throw new Error(error.response.data.message)
           });
       })
 
-
     } catch (err) {
       console.log({ err: err })
-      throw new Error(`Failed to send SMS: ${err.response.data.message}`)
-      throw new HttpException(HttpCodes.BAD_REQUEST, `Failed to send/z SMS: ${err.response.data.message}`);
-
+      throw new HttpException(HttpCodes.BAD_REQUEST, `Failed to send SMS: ${err.response.data.message}`);
     }
   }
 }

@@ -10,10 +10,7 @@ import {
 import { EmailPayload } from '../interfaces'
 import { logger } from '../../core/utils'
 import nodemailer from 'nodemailer'
-import { User } from '../../user/models'
 import { IEmail } from '../interfaces/EmailInterface'
-const { google } = require("googleapis");
-const OAuth2 = google.auth.OAuth2;
 
 // const users = [
 //   {
