@@ -161,6 +161,30 @@ class EmailProvider {
       logger.error(error)
     }
   }
+
+  public async sendBulkMail(data: IEmail[]): Promise<any> {
+    try {
+      data.map((mail: IEmail) => {
+        this.sendMail({
+          to: mail.to,
+          subject: `Yenreach - ${mail.subject}`,
+          payload: {
+            heading: mail.heading,
+            name: mail.name,
+            message: mail.message
+          },
+          template: '../templates/email.handlebars'
+        })
+      })
+
+      return {
+        message: "Messages Send Successfully"
+      }
+    } catch (error) {
+      console.error(error)
+      throw new Error('Failed to fetch Activity');
+    }
+  }
 }
 
 export { EmailProvider }

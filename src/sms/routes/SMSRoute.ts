@@ -19,8 +19,7 @@ class SMSRoute implements Routes {
 
     this.router.post(`${this.path}/send-sms-sequence`, this.smsController.sendSMSSequence)
 
-
-
+    this.router.post(`${this.path}/send-bulk-sms`, this.smsController.sendBulkSMS)
   }
 }
 

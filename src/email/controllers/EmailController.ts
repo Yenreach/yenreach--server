@@ -58,6 +58,15 @@ class EmailController {
       next(logger.error(error));
     }
   }
+
+  public sendBulkMail = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const mail = await (new EmailProvider).sendBulkMail(req.body as IEmail[])
+      return sendResponse(res, HttpCodes.OK, 'Messages sent successfully', mail)
+    } catch (error) {
+      next(logger.error(error));
+    }
+  }
 }
 
 export { EmailController };

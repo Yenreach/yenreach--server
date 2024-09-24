@@ -12,27 +12,6 @@ class SMSProvider {
 
   public async sendSMS(payload: SMS) {
     try {
-      // await this.client.messages.create({ body: `TWILIO_SID: ${TWILIO_SID}, TWILIO_TOKEN: ${TWILIO_TOKEN}`, to: '+2347042488422', from: String(TWILIO_NUMBER) })
-      // await this.client.messages
-      //   .create({
-      //     ...payload,
-      //     from: String(TWILIO_NUMBER)
-      //   })
-      //   .then((msg) => {
-      //     logger.info(`Message sent successfully.
-
-      //       ${msg}
-      //       `)
-
-      //     console.log({ msg })
-      //   })
-      //   .catch(err => {
-      //     console.log({ err })
-      //     logger.error(err)
-
-      //     throw new Error(`Failed to send SMS: ${err}`)
-      //   })
-
       console.log(payload)
 
       const data = {
@@ -73,6 +52,50 @@ class SMSProvider {
   }
 
   public async sendSMSSequence(payload: SMS[]) {
+    try {
+
+      payload.map((item: SMS) => {
+        console.log(item)
+
+        const data = {
+          ...item,
+          sender_name: SENDCHAMP_SENDER,
+          route: "dnd"
+        }
+
+        const config = {
+          method: 'post',
+          maxBodyLength: Infinity,
+          url: `${SENDCHAMP_LIVEURL}/sms/send`,
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': `${SENDCHAMP_APIKEY}`
+          },
+          data: data
+        };
+        axios.request(config)
+          .then((response) => {
+            logger.info(`Message sent successfully`)
+            console.log(JSON.stringify(response.data));
+          })
+          .catch((error) => {
+            logger.error(`Message sending failed`)
+            console.log({ error: error.response.data });
+            throw new Error(error.response.data.message)
+          });
+      })
+
+
+    } catch (err) {
+      console.log({ err: err })
+      throw new Error(`Failed to send SMS: ${err.response.data.message}`)
+      throw new HttpException(HttpCodes.BAD_REQUEST, `Failed to send/z SMS: ${err.response.data.message}`);
+
+    }
+  }
+
+  public async sendBulkSMS(payload: SMS[]) {
     try {
 
       payload.map((item: SMS) => {

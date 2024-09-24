@@ -39,6 +39,20 @@ class SMSController {
       next(error);
     }
   }
+
+  public sendBulkSMS = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+
+      console.log({ dat: req.body })
+      const mail = await (new SMSProvider).sendSMSSequence(req.body as SMS[])
+
+      console.log({ mail })
+      return sendResponse(res, HttpCodes.OK, 'Messages sent successfully', mail)
+      // return sendResponse(res, HttpCodes.OK, 'Message sent successfully', await this.userProvider.sendNotification({ userId: req.user._id, title: req.body.title, body: req.body.body }))
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export { SMSController };
