@@ -2,7 +2,7 @@ import { NextFunction, Response } from 'express';
 import { verify } from 'jsonwebtoken';
 import { JWT_SECRET_KEY } from '../../config';
 import { HttpException } from '../../core/exceptions';
-import { User } from '../../user/models'
+
 import { HttpCodes } from '../../core/constants'
 
 const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
