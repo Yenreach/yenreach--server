@@ -24,7 +24,7 @@ class EmailController {
       return sendResponse(res, HttpCodes.OK, 'Message sent successfully', mail)
       // return sendResponse(res, HttpCodes.OK, 'Message sent successfully', await this.userProvider.sendNotification({ userId: req.user._id, title: req.body.title, body: req.body.body }))
     } catch (error) {
-      next(logger.error(error));
+      next(error);
     }
   }
 
@@ -33,7 +33,7 @@ class EmailController {
       const { to, subject, heading, name, message } = req.body;
 
       console.log({ dat: req.body })
-      const mail = await (new EmailProvider).sendMail({
+      await (new EmailProvider).sendMail({
         to: to,
         subject: `Yenreach - ${subject}`,
         payload: {
@@ -43,10 +43,10 @@ class EmailController {
         },
         template: '../templates/email.handlebars'
       })
-      return sendResponse(res, HttpCodes.OK, 'Message sent successfully', mail)
+      return sendResponse(res, HttpCodes.OK, 'Message sent successfully')
       // return sendResponse(res, HttpCodes.OK, 'Message sent successfully', await this.userProvider.sendNotification({ userId: req.user._id, title: req.body.title, body: req.body.body }))
     } catch (error) {
-      next(logger.error(error));
+      next(error);
     }
   }
 
@@ -55,7 +55,7 @@ class EmailController {
       const mail = await (new EmailProvider).scheduledEmail(req.body as IEmail[])
       return sendResponse(res, HttpCodes.OK, 'Message sent successfully', mail)
     } catch (error) {
-      next(logger.error(error));
+      next(error);
     }
   }
 
@@ -64,7 +64,7 @@ class EmailController {
       const mail = await (new EmailProvider).sendBulkMail(req.body as IEmail[])
       return sendResponse(res, HttpCodes.OK, 'Messages sent successfully', mail)
     } catch (error) {
-      next(logger.error(error));
+      next(error);
     }
   }
 }
