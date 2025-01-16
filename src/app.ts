@@ -2,21 +2,22 @@ import compression from 'compression';
 import http from "http";
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import express, { Request } from 'express';
+import express from 'express';
 import helmet from 'helmet';
 import hpp from 'hpp';
 import path from 'path'
 import morgan from 'morgan';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
-import { ConnectOptions, connect, set } from 'mongoose';
+// import { ConnectOptions, connect, set } from 'mongoose';
 import {
   NODE_ENV, HOST, PORT, LOG_FORMAT, DB_URI
 } from './config';
-import { dbConnection } from './core/databases';
+import { AppDataSource } from './core/databases';
 import { Routes } from './core/routes/interfaces/RouteInterface';
 import { errorMiddleware } from './core/middlewares/ErrorMiddleware';
 import { logger, stream, registerShutdownHandler } from './core/utils';
+import { createConnection } from 'typeorm';
 // import { socket } from './customer-support/services/SocketService';
 // import './jobs/crons/email.cron'
 
@@ -69,28 +70,41 @@ class App {
   }
 
   private async connectDatabase() {
-    if (this.env !== 'production') {
-      set('debug', true);
-    }
+    // if (this.env !== 'production') {
+    //   set('debug', true);
+    // }
 
     return new Promise((resolve, reject) => {
-      connect(
-        dbConnection.url,
-        dbConnection.options as ConnectOptions,
-        (error: NativeError) => {
-          if (error) {
-            logger.error(`Database Error: ${error}`)
-            reject(error)
-          } else {
-            logger.info(`=================================`);
-            logger.info(`========= DATABASE 🚀=======`);
-            logger.info(`🚀 Database running on ${DB_URI} 🚀`);
-            logger.info(`=================================`);
+      AppDataSource.initialize()
+        .then(() => {
+          logger.info(`=================================`);
+          logger.info(`========= DATABASE 🚀=======`);
+          logger.info(`🚀 Database running 🚀`);
+          logger.info(`=================================`);
+          console.log(AppDataSource.options.entities);
+          resolve(undefined)
+        })
+        .catch((err) => {
+          logger.error(`Database Error: ${err}`)
+          reject(err)
+        })
+      // connect(
+      //   dbConnection.url,
+      //   dbConnection.options as ConnectOptions,
+      //   (error: NativeError) => {
+      //     if (error) {
+      //       logger.error(`Database Error: ${error}`)
+      //       reject(error)
+      //     } else {
+      //       logger.info(`=================================`);
+      //       logger.info(`========= DATABASE 🚀=======`);
+      //       logger.info(`🚀 Database running on ${DB_URI} 🚀`);
+      //       logger.info(`=================================`);
 
-            resolve(undefined)
-          }
-        },
-      )
+      //       resolve(undefined)
+      //     }
+      //   },
+      // )
     })
   }
 
