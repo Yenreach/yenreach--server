@@ -1,41 +1,48 @@
-import { NextFunction, Response } from 'express';
-import { verify } from 'jsonwebtoken';
-import { JWT_SECRET_KEY } from '../../config';
+import { NextFunction, Response, Request } from 'express';
 import { HttpException } from '../../core/exceptions';
-
+import * as jwt from 'jsonwebtoken'
 import { HttpCodes } from '../../core/constants'
+import env from '../../config/env.config';
+import { UserService } from '../../modules/user/services';
+
+const userService = new UserService();
 
 const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    // const authToken = req.cookies['Authorization'] || (req.headers('Authorization') ? req.headers('Authorization').split('Bearer ')[1] : null);
+    const token = extractFromCookie(req) ?? extractTokenFromHeader(req)
 
-    // if (authToken) {
+    if (!token) throw new HttpException(HttpCodes.UNAUTHORIZED, "You are Not Authenticated");
 
-    //   const secretKey: string = JWT_SECRET_KEY;
+    const decoded = jwt.verify(token, env.JWT_SECRET_KEY) as { id: number }
 
-    //   const verificationResponse = verify(authToken, secretKey) as unknown as TokenPayload
+    const user = await userService.getUserById(decoded.id)
 
-    //   const response = await User.findById(await verificationResponse.userId)
+    if (!user) throw new HttpException(HttpCodes.UNAUTHORIZED, "Unauthorized access: User does not exist");
 
-    //   const token = await Token.findOne({ token: authToken })
+    req.user = user
+    req.token = decoded
 
-    //   if (token.isBlacklisted === true) {
-    //     next(new HttpException(HttpCodes.UNAUTHORIZED, 'Token already blacklisted'))
-    //   }
-
-    //   if (response) {
-    //     req.user = response
-    //     next();
-    //   }
-    //   else {
-    //     next(new HttpException(HttpCodes.UNAUTHORIZED, 'No data attached to this token'));
-    //   }
-    // } else {
-    //   next(new HttpException(HttpCodes.UNAUTHORIZED, 'Authentication token missing'));
-    // }
+    next()
   } catch (error) {
-    next(new HttpException(HttpCodes.UNAUTHORIZED, 'Wrong authentication token used'));
+    next(error);
+    // next(new HttpException(HttpCodes.UNAUTHORIZED, 'Wrong authentication token used'));
   }
+};
+
+
+export const extractTokenFromHeader = (
+  request: Request,
+): string | undefined => {
+  const [type, token] = request.headers.authorization?.split(' ') ?? [];
+  return type === 'Bearer' ? token : undefined;
+};
+
+export const extractFromCookie = (req: Request): string | null => {
+  let token: string | null = null;
+  if (req && req.cookies) {
+      token = req.cookies['Authentication'];
+  }
+  return token;
 };
 
 export { authMiddleware }

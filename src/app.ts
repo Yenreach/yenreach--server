@@ -10,14 +10,11 @@ import morgan from 'morgan';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 // import { ConnectOptions, connect, set } from 'mongoose';
-import {
-  NODE_ENV, HOST, PORT, LOG_FORMAT, DB_URI
-} from './config';
 import { AppDataSource } from './core/databases';
 import { Routes } from './core/routes/interfaces/RouteInterface';
 import { errorMiddleware } from './core/middlewares/ErrorMiddleware';
 import { logger, stream, registerShutdownHandler } from './core/utils';
-import { createConnection } from 'typeorm';
+import env from './config/env.config';
 // import { socket } from './customer-support/services/SocketService';
 // import './jobs/crons/email.cron'
 
@@ -31,8 +28,9 @@ class App {
 
   constructor(routes: Routes[]) {
     this.app = express();
-    this.env = 'production'; NODE_ENV || 'development';
-    this.port = PORT || 3000;
+    this.env = env.NODE_ENV || 'development';
+    // this.env = 'production'; // NODE_ENV || 'development';
+    this.port = env.PORT || 3000;
 
     this.connectDatabase()
     // this.initSocket()
@@ -53,7 +51,7 @@ class App {
       logger.info(`========= SERVER 🚀=======`);
       logger.info(`========= ENV: ${this.env} ========`);
       logger.info(`========= PORT: ${this.port} ========`);
-      logger.info(`🚀 Server running on  ${HOST}:${this.port} 🚀`);
+      logger.info(`🚀 Server running on  ${env.HOST}:${this.port} 🚀`);
       logger.info(`=================================`);
 
     });;
@@ -109,7 +107,7 @@ class App {
   }
 
   private initializeMiddlewares() {
-    this.app.use(morgan(LOG_FORMAT, { stream }));
+    this.app.use(morgan(env.LOG_FORMAT, { stream }));
     this.app.use(cors({ origin: '*' }));
     this.app.use(hpp());
     this.app.use(helmet());

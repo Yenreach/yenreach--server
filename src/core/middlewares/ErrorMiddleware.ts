@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express';
-import { HttpException } from '../../core/exceptions/HttpException';
 import { logger } from '../utils/logger';
 import { HttpCodes } from '../../core/constants'
 
@@ -24,11 +23,11 @@ const errorMiddleware = (error: any, req: Request, res: Response, next: NextFunc
       response.stack = stack
     }
 
-    res.status(status).json({ status, message })
-
+    
     logger.error(`[${req.method}] ${req.path} >> StatusCode:: ${status}, Message:: ${message}`);
-
-    res.status(status).json({ message });
+    
+    res.status(status).json({ status, message })
+    // res.status(status).json({ message });
   } catch (error) {
     next(error);
   }

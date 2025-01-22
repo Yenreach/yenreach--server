@@ -20,40 +20,40 @@ export class Users {
   @Column("varchar", { name: "password", length: 255 })
   password: string;
 
-  @Column("varchar", { name: "image", length: 255 })
+  @Column("varchar", { name: "image", length: 255, nullable: true })
   image: string;
 
-  @Column("int", { name: "listed" })
+  @Column("int", { name: "listed", nullable: true })
   listed: number;
 
-  @Column("varchar", { name: "refer_method", length: 255 })
+  @Column("varchar", { name: "refer_method", length: 255, nullable: true  })
   referMethod: string;
 
-  @Column("int", { name: "admin" })
+  @Column("int", { name: "admin", nullable: true })
   admin: number;
 
-  @Column("datetime", { name: "datecreated" })
+  @Column("datetime", { name: "datecreated", default: Date.now() })
   datecreated: Date;
 
-  @Column("datetime", { name: "lastmodified" })
+  @Column("datetime", { name: "lastmodified", default: Date.now() })
   lastmodified: Date;
 
-  @Column("varchar", { name: "modifiedby", length: 255 })
+  @Column("varchar", { name: "modifiedby", length: 255, nullable: true })
   modifiedby: string;
 
-  @Column("int", { name: "activation" })
+  @Column("int", { name: "activation", default: 2 })
   activation: number;
 
-  @Column("int", { name: "autho_level" })
+  @Column("int", { name: "autho_level", default: 1 })
   authoLevel: number;
 
-  @Column("int", { name: "created" })
+  @Column("int", { name: "created", default: Date.now() })
   created: number;
 
-  @Column("int", { name: "last_updated" })
+  @Column("int", { name: "last_updated", default: Date.now() })
   lastUpdated: number;
 
-  @Column("int", { name: "confirmed_email" })
+  @Column("int", { name: "confirmed_email", nullable: true })
   confirmedEmail: number;
 
   @Column("int", { name: "email_track", nullable: true, default: () => "'1'" })
@@ -62,15 +62,15 @@ export class Users {
   @Column("int", { name: "sms_track", default: () => "'1'" })
   smsTrack: number;
 
-  @Column("varchar", { name: "cv", length: 250 })
+  @Column("varchar", { name: "cv", length: 250, nullable: true })
   cv: string;
 
-  @Column("varchar", { name: "dob", length: 250 })
+  @Column("varchar", { name: "dob", length: 250, nullable: true })
   dob: string;
 
-  @Column("varchar", { name: "phone", length: 250 })
+  @Column("varchar", { name: "phone", length: 250, nullable: true })
   phone: string;
 
-  @Column("varchar", { name: "gender", length: 250 })
+  @Column("varchar", { name: "gender", length: 250, nullable: true })
   gender: string;
 }

@@ -1,8 +1,9 @@
 import { Request, Response, NextFunction, Router } from 'express';
 import { UserController } from '../controllers';
 import { Routes } from '../../../core/routes/interfaces';
+import { authMiddleware } from '../../../core/middlewares';
 class UserRoute implements Routes {
-  public path = '/user';
+  public path = '/users';
   public router = Router();
   public UserController = new UserController();
 
@@ -15,7 +16,7 @@ class UserRoute implements Routes {
       next()
     })
 
-    this.router.post(`${this.path}/`, this.UserController.createUser)
+    this.router.post(`${this.path}/`, authMiddleware, this.UserController.createUser)
 
     this.router.get(`${this.path}/`, this.UserController.getAllUsers)
 
