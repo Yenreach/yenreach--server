@@ -7,9 +7,6 @@ import helmet from 'helmet';
 import hpp from 'hpp';
 import path from 'path'
 import morgan from 'morgan';
-import swaggerJSDoc from 'swagger-jsdoc';
-import swaggerUi from 'swagger-ui-express';
-// import { ConnectOptions, connect, set } from 'mongoose';
 import AppDataSource from './core/databases';
 import { Routes } from './core/routes/interfaces/RouteInterface';
 import { errorMiddleware } from './core/middlewares/ErrorMiddleware';
@@ -36,7 +33,6 @@ class App {
     // this.initSocket()
     this.initializeMiddlewares();
     this.initializeRoutes(routes);
-    this.initializeSwagger();
     this.initializeErrorHandling();
   }
 
@@ -68,10 +64,6 @@ class App {
   }
 
   private async connectDatabase() {
-    // if (this.env !== 'production') {
-    //   set('debug', true);
-    // }
-
     return new Promise((resolve, reject) => {
       AppDataSource.initialize()
         .then(() => {
@@ -86,32 +78,15 @@ class App {
           logger.error(`Database Error: ${err}`)
           reject(err)
         })
-      // connect(
-      //   dbConnection.url,
-      //   dbConnection.options as ConnectOptions,
-      //   (error: NativeError) => {
-      //     if (error) {
-      //       logger.error(`Database Error: ${error}`)
-      //       reject(error)
-      //     } else {
-      //       logger.info(`=================================`);
-      //       logger.info(`========= DATABASE 🚀=======`);
-      //       logger.info(`🚀 Database running on ${DB_URI} 🚀`);
-      //       logger.info(`=================================`);
-
-      //       resolve(undefined)
-      //     }
-      //   },
-      // )
     })
   }
 
   private initializeMiddlewares() {
     this.app.use(morgan(env.LOG_FORMAT, { stream }));
     this.app.use(cors({ origin: '*' }));
-    this.app.use(hpp());
+    this.app.use(hpp() as express.RequestHandler);
     this.app.use(helmet());
-    this.app.use(compression());
+    this.app.use(compression() as express.RequestHandler);
     this.app.use(express.json({ limit: "15mb" }));
     this.app.use(express.urlencoded({ limit: "15mb", extended: true }));
     this.app.use(express.static(path.join(__dirname, '../public')));
@@ -129,26 +104,6 @@ class App {
 
     logger.info('Routes Initialized Successfully ✔️')
 
-  }
-
-  private initializeSwagger() {
-    logger.info('Initializing Swagger ....')
-
-    const options = {
-      swaggerDefinition: {
-        info: {
-          title: 'REST API',
-          version: '1.0.0',
-          description: 'Example docs',
-        },
-      },
-      apis: ['swagger.yaml'],
-    };
-
-    const specs = swaggerJSDoc(options);
-    this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
-
-    logger.info('Swagger Initialized Successfully ✔️')
   }
 
   private stopServer(): Promise<void> {
