@@ -5,9 +5,6 @@ export class Users {
   @PrimaryGeneratedColumn({ type: "int", name: "id" })
   id: number;
 
-  @Column("varchar", { name: "verify_string", length: 255 })
-  verifyString: string;
-
   @Column("varchar", { name: "name", length: 1000 })
   name: string;
 
@@ -26,7 +23,7 @@ export class Users {
   @Column("int", { name: "listed", nullable: true })
   listed: number;
 
-  @Column("varchar", { name: "refer_method", length: 255, nullable: true  })
+  @Column("varchar", { name: "refer_method", length: 255, nullable: true })
   referMethod: string;
 
   @Column("int", { name: "admin", nullable: true })

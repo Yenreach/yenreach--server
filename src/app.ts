@@ -10,7 +10,7 @@ import morgan from 'morgan';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 // import { ConnectOptions, connect, set } from 'mongoose';
-import { AppDataSource } from './core/databases';
+import AppDataSource from './core/databases';
 import { Routes } from './core/routes/interfaces/RouteInterface';
 import { errorMiddleware } from './core/middlewares/ErrorMiddleware';
 import { logger, stream, registerShutdownHandler } from './core/utils';

@@ -1,8 +1,8 @@
 import { DataSource } from 'typeorm';
 import { Users } from '../../modules/user/entities/user.entity';
-import { Products } from '../../modules/products/entities/products.entity';
+import { Product } from '../../modules/products/entities/products.entity';
 
-export const AppDataSource = new DataSource({
+const AppDataSource = new DataSource({
   type: 'sqlite',
   // type: 'mysql',
   // host: 'localhost',
@@ -12,10 +12,12 @@ export const AppDataSource = new DataSource({
   synchronize: true, // Use with caution in production
   logging: false,
   entities: [
-    Users,
-    Products
+    Users
+    // Product
     // Add other entities explicitly here if needed
   ],
-  migrations: [],
+  migrations: ["src/migrations/*.ts"],
   subscribers: [],
 });
+
+export default AppDataSource;

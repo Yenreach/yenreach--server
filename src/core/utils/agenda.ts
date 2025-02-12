@@ -1,10 +1,10 @@
-import { DB_URI } from '../../config'
+import env from '../../config/env.config'
 import { Agenda } from '@hokify/agenda'
 import { logger } from './logger'
 
 const agenda = new Agenda({
   db: {
-    address: DB_URI,
+    address: env.DB_URI,
     collection: 'cron-jobs',
   }
 })

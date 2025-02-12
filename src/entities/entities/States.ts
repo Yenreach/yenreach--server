@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany } from "typeorm";
-import { LocalGovernments } from "./LocalGovernments";
+import { LocalGovernments } from "./Localgovernments";
 
 @Entity("states", { schema: "yenreach" })
 export class States {

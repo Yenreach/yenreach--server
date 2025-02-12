@@ -1,41 +1,42 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from "typeorm";
+// import { Business } from "./business.entity";
 
-@Entity("products", { schema: "yenreach" })
-export class Products {
-  @PrimaryGeneratedColumn({ type: "int", name: "id" })
+@Entity("products")
+export class Product {
+  @PrimaryGeneratedColumn()
   id: number;
 
-  @Column("text", { name: "business_string" })
-  businessString: string;
+  @Column({ type: "text", nullable: false })
+  product_name: string;
 
-  @Column("text", { name: "product_string" })
-  productString: string;
+  @Column({ type: "text", nullable: false })
+  product_description: string;
 
-  @Column("text", { name: "product_name" })
-  productName: string;
+  @Column({ type: "integer", nullable: false })
+  product_quantity: number;
 
-  @Column("text", { name: "product_description" })
-  productDescription: string;
+  @Column({ type: "integer", nullable: false })
+  product_price: number;
 
-  @Column("int", { name: "product_quantity" })
-  productQuantity: number;
+  @Column({ type: "text", nullable: false })
+  product_color: string;
 
-  @Column("int", { name: "product_price" })
-  productPrice: number;
+  @Column({ type: "text", nullable: false })
+  product_safety_tip: string;
 
-  @Column("text", { name: "product_color" })
-  productColor: string;
+  @Column({ type: "tinyint", nullable: false })
+  product_status: number;
 
-  @Column("text", { name: "product_safety_tip" })
-  productSafetyTip: string;
+  @Column({ type: "integer", nullable: false })
+  created_at: number;
 
-  @Column("tinyint", { name: "product_status", width: 1 })
-  productStatus: boolean;
+  @Column({ type: "integer", nullable: false })
+  updated_at: number;
 
-  @Column("int", { name: "created_at" })
-  createdAt: number;
+  @Column({ type: "integer", nullable: false })
+  business_id: number;
 
-  @Column("int", { name: "updated_at" })
-  updatedAt: number;
+  // @ManyToOne(() => Business, (business) => business.products, { onDelete: "CASCADE", onUpdate: "CASCADE" })
+  // @JoinColumn({ name: "business_id" })
+  // business: Business;
 }
-

@@ -1,6 +1,6 @@
 import env from '../../../config/env.config';
 import { HttpCodes } from '../../../core/constants';
-import { AppDataSource } from '../../../core/databases';
+import AppDataSource from '../../../core/databases';
 import { HttpException } from '../../../core/exceptions';
 import { Users } from '../../user/entities/user.entity';
 import { UserService } from '../../user/services';
@@ -23,10 +23,10 @@ class AuthService {
 
     const hashedPwd = await bcrypt.hash(data.password, 10);
     const baseData = {
-        ...data,
-        verifyString: Date.now(),
-        timer: Date.now(),
-        password: hashedPwd,
+      ...data,
+      verifyString: Date.now(),
+      timer: Date.now(),
+      password: hashedPwd,
     };
 
     return userService.createUser(baseData);
@@ -40,7 +40,7 @@ class AuthService {
     response: Response;
   }) {
     const user = await userService.getUserByEmail({ email: userData.email })
-    
+
     if (!user) {
       throw new HttpException(HttpCodes.NOT_FOUND, "User does not exist");
     }
@@ -51,7 +51,7 @@ class AuthService {
 
     if (!match) throw new HttpException(HttpCodes.BAD_REQUEST, "Email or Password Incorrect");
 
-    const token = jwt.sign({ id: user.id, verifyString: user.verifyString }, env.JWT_SECRET_KEY, { expiresIn: Number(env.JWT_EXPIRATION_HOURS) }) 
+    const token = jwt.sign({ id: user.id }, env.JWT_SECRET_KEY, { expiresIn: Number(env.JWT_EXPIRATION_HOURS) })
 
     const expires = new Date();
     expires.setSeconds(expires.getSeconds() + env.JWT_EXPIRATION_HOURS);

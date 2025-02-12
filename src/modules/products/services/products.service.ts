@@ -1,18 +1,18 @@
-import { AppDataSource } from '../../../core/databases';
+import AppDataSource from '../../../core/databases';
 import { calculatePagination, paginate } from '../../../core/utils/pagination/paginate';
 import { PaginationResponse } from '../../../core/utils/pagination/pagination.interface';
-import { Products } from '../entities/products.entity';
+import { Product } from '../entities/products.entity';
 import { CreateProductDto, UpdateProductDto } from '../schemas/products.schema';
 
 class ProductsService {
-  private readonly productRepository = AppDataSource.getRepository(Products);
+  private readonly productRepository = AppDataSource.getRepository(Product);
 
-  async createProduct(data: CreateProductDto): Promise<Products> {
+  async createProduct(data: any): Promise<any> {
     const newProduct = this.productRepository.create(data);
     return await this.productRepository.save(newProduct);
   }
 
-  async updateProduct(id: number, data: UpdateProductDto): Promise<Products | null> {
+  async updateProduct(id: number, data: UpdateProductDto): Promise<Product | null> {
     const products = await this.productRepository.findOneBy({ id });
     if (!products) {
       throw new Error('Product not found');
@@ -21,7 +21,7 @@ class ProductsService {
     return await this.productRepository.save(products);
   }
 
-  async getAllProducts(page = 1, limit = 10): Promise<PaginationResponse<Products>> {
+  async getAllProducts(page = 1, limit = 10): Promise<PaginationResponse<Product>> {
     const { skip } = calculatePagination(page, limit);
 
     const [products, total] = await this.productRepository.findAndCount({
@@ -32,7 +32,7 @@ class ProductsService {
     return paginate(products, total, page, limit);
   }
 
-  async getProductById(id: number): Promise<Products | null> {
+  async getProductById(id: number): Promise<Product | null> {
     return await this.productRepository.findOneBy({ id });
   }
 
