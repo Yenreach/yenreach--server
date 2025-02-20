@@ -15,9 +15,9 @@ class BusinessController {
       const page = parseInt(req.query.page as string, 10) || 1;
       const limit = parseInt(req.query.limit as string, 10) || 10;
 
-      const products = await this.businessService.getAllBusinesses(page, limit);
+      const businesses = await this.businessService.getAllBusinesses(page, limit);
 
-      return sendResponse(res, HttpCodes.OK, 'products fetched successfully', products);
+      return sendResponse(res, HttpCodes.OK, 'businesses fetched successfully', businesses);
     } catch (error) {
       next(error);
     }

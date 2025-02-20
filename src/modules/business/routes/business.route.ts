@@ -6,8 +6,8 @@ import { BusinessController } from '../controllers';
 class BusinessRoute implements Routes {
   public path = '/business';
   public router = Router();
-  public BusinessService = new BusinessService();
-  public BusinessController = new BusinessController(this.BusinessService);
+  public businessService = new BusinessService();
+  public businessController = new BusinessController(this.businessService);
 
   constructor() {
     this.initializeRoutes();
@@ -17,8 +17,6 @@ class BusinessRoute implements Routes {
     this.router.all(`${this.path}*`, (req: Request, res: Response, next: NextFunction) => {
       next();
     });
-
-    // this.router.post(`${this.path}/`, authMiddleware, validateRequest([ProductSchema]), this.ProductsController.createProducts);
 
     /**
      * @swagger
@@ -47,13 +45,7 @@ class BusinessRoute implements Routes {
      *       500:
      *         description: Server error
      */
-    this.router.get(`${this.path}es/`, this.BusinessController.getAllBusinesses);
-
-    // this.router.get(`${this.path}/:id`, this.ProductsController.getProductsById);
-
-    // this.router.put(`${this.path}/:id`, this.ProductsController.updateProducts);
-
-    // this.router.delete(`${this.path}/:id`, this.ProductsController.deleteProducts);
+    this.router.get(`${this.path}es/`, this.businessController.getAllBusinesses);
   }
 }
 
