@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { logger } from '../utils/logger';
-import { HttpCodes } from '../../core/constants'
-
+import { HttpCodes } from '../../core/constants';
 
 const errorMiddleware = (error: any, req: Request, res: Response, next: NextFunction) => {
   try {
@@ -9,28 +8,25 @@ const errorMiddleware = (error: any, req: Request, res: Response, next: NextFunc
 
     const message: string = error.message || 'Something went wrong';
 
+    const { stack } = error;
 
-    const { stack } = error
-
-    res.locals.errorMessage = message
+    res.locals.errorMessage = message;
 
     const response: { status: number; message: string; stack?: string } = {
       status,
       message,
-    }
+    };
 
     if (process.env.NODE_ENV === 'development') {
-      response.stack = stack
+      response.stack = stack;
     }
 
-    
     logger.error(`[${req.method}] ${req.path} >> StatusCode:: ${status}, Message:: ${message}`);
-    
-    res.status(status).json({ status, message })
-    // res.status(status).json({ message });
+
+    res.status(status).json({ status, message });
   } catch (error) {
     next(error);
   }
 };
 
-export { errorMiddleware }
+export { errorMiddleware };

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction, Router } from 'express';
-import { Routes } from '../../core/routes/interfaces/RouteInterface';
+import { Routes } from './interfaces/RouteInterface';
 import { APP_NAME } from '../../config/index';
 
 class IndexRoute implements Routes {
