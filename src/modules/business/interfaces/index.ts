@@ -1,1 +1,1 @@
-export { IBusinessService } from './business.interface';
+export { IBusinessService, IBusiness, RegistrationState } from './business.interface';

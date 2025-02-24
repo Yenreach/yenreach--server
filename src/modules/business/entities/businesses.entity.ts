@@ -1,23 +1,9 @@
-import { Column, Entity, Generated, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Users } from '../../user/entities/user.entity';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('businesses', { schema: 'yenreach' })
 export class Businesses {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;
-
-  @Column({
-    type: 'uuid',
-    name: 'business_id',
-    length: 255,
-    unique: true,
-  })
-  @Generated('uuid')
-  businessId: string;
-
-  @ManyToOne(() => Users)
-  @JoinColumn({ name: 'owner_id', referencedColumnName: 'user_id' })
-  ownerId: string;
 
   @Column('varchar', { name: 'verify_string', length: 255 })
   verifyString: string;

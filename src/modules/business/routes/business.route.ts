@@ -2,6 +2,7 @@ import { Request, Response, NextFunction, Router } from 'express';
 import { Routes } from '../../../core/routes/interfaces';
 import { BusinessService } from '../services';
 import { BusinessController } from '../controllers';
+import { authMiddleware } from '../../../core/middlewares';
 
 class BusinessRoute implements Routes {
   public path = '/business';
@@ -45,7 +46,13 @@ class BusinessRoute implements Routes {
      *       500:
      *         description: Server error
      */
-    this.router.get(`${this.path}es/`, this.businessController.getAllBusinesses);
+    this.router.get(`${this.path}es/:id`, this.businessController.getBusiness);
+    this.router.get(`${this.path}es`, this.businessController.getAllBusinesses);
+    this.router.get(`${this.path}es/user`, authMiddleware, this.businessController.getUserBusinesses);
+    this.router.get(`${this.path}es/:id/products`, authMiddleware, this.businessController.getAllBusinessProducts);
+    this.router.get(`${this.path}es/:id/jobs`, authMiddleware, this.businessController.getAllBusinessJobs);
+    this.router.post(`${this.path}es/`, authMiddleware, this.businessController.createBusiness);
+    this.router.put(`${this.path}es/:id`, authMiddleware, this.businessController.updateBusiness);
   }
 }
 
