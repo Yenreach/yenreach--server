@@ -17,3 +17,4 @@ export const {
   USER_EMAIL, USER_PASS, CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN, ACCESS_TOKEN, TWILIO_NUMBER, TWILIO_SID, TWILIO_TOKEN
 } = process.env;
 
+export const APP_NAME = 'Yenreach-Server';

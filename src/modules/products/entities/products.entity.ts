@@ -7,6 +7,12 @@ export class Product {
   id: number;
 
   @Column({ type: "text", nullable: false })
+  verify_string: string;
+
+  @Column({ type: "text", nullable: false })
+  business_string: string;
+
+  @Column({ type: "text", nullable: false })
   product_name: string;
 
   @Column({ type: "text", nullable: false })
