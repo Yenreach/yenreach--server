@@ -7,16 +7,10 @@ import helmet from 'helmet';
 import hpp from 'hpp';
 import path from 'path';
 import morgan from 'morgan';
-<<<<<<< HEAD
-import swaggerJSDoc from 'swagger-jsdoc';
-import swaggerUi from 'swagger-ui-express';
 // import { ConnectOptions, connect, set } from 'mongoose';
-import AppDataSource from './core/databases';
-=======
 import swaggerJSDoc, { SwaggerDefinition } from 'swagger-jsdoc';
 import swaggerUi, { SwaggerOptions, SwaggerUiOptions } from 'swagger-ui-express';
 import { AppDataSource } from './core/databases';
->>>>>>> 3c104e9ebd16cde1b1cd09ddd0043dd86cff2a29
 import { Routes } from './core/routes/interfaces/RouteInterface';
 import { errorMiddleware } from './core/middlewares/ErrorMiddleware';
 import { logger, stream, registerShutdownHandler } from './core/utils';
