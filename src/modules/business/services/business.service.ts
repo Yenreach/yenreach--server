@@ -2,7 +2,8 @@ import { AppDataSource } from '../../../core/databases';
 import { calculatePagination, paginate } from '../../../core/utils/pagination/paginate';
 import { PaginationResponse } from '../../../core/utils/pagination/pagination.interface';
 import { Jobs } from '../../jobs/entities/jobs.entity';
-import { Products } from '../../products/entities/products.entity';
+import { Product } from '../../products/entities/products.entity';
+
 import { Businesses } from '../entities/businesses.entity';
 import { IBusiness, IBusinessService, RegistrationState } from '../interfaces';
 import { CreateBusinessDto, UpdateBusinessDto } from '../schemas';
@@ -11,7 +12,7 @@ import { nanoid } from 'nanoid';
 export class BusinessService implements IBusinessService {
   private readonly businessRepository = AppDataSource.getRepository(Businesses);
   private readonly jobRepository = AppDataSource.getRepository(Jobs);
-  private readonly productRepository = AppDataSource.getRepository(Products);
+  private readonly productRepository = AppDataSource.getRepository(Product);
 
   public async createBusiness(data: CreateBusinessDto, userId: string): Promise<Businesses> {
     const regState: RegistrationState = data.coverImg || data.profileImg ? 1 : 3;
@@ -76,7 +77,7 @@ export class BusinessService implements IBusinessService {
     return paginate(jobs, total, page, limit);
   }
 
-  public async getProductsByBusinessId(businessId: string, page: number = 1, limit: number = 10): Promise<PaginationResponse<Products>> {
+  public async getProductsByBusinessId(businessId: string, page: number = 1, limit: number = 10): Promise<PaginationResponse<Product>> {
     const { skip } = calculatePagination(page, limit);
     const [products, total] = await this.productRepository.findAndCount({
       where: {
@@ -97,5 +98,9 @@ export class BusinessService implements IBusinessService {
     if (!product) throw new Error('Product not found');
     const result = await this.productRepository.delete(product);
     return result.affected > 0;
+  }
+
+  public async addWorkingHours(businessId: string) {
+    throw new Error('Method not implemented.');
   }
 }
