@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from "typeorm";
-// import { Business } from "./business.entity";
+// import { Businesses } from "../../business/entities/businesses.entity";
 
 @Entity("products")
 export class Product {
@@ -42,7 +42,7 @@ export class Product {
   @Column({ type: "integer", nullable: false })
   business_id: number;
 
-  // @ManyToOne(() => Business, (business) => business.products, { onDelete: "CASCADE", onUpdate: "CASCADE" })
-  // @JoinColumn({ name: "business_id" })
-  // business: Business;
+  // @ManyToOne(() => Businesses, (business) => business.products, { onDelete: "CASCADE", onUpdate: "CASCADE" })
+  // @JoinColumn({ name: "business_string" })
+  // business: Businesses;
 }
