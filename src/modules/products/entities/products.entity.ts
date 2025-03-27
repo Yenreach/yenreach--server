@@ -7,40 +7,40 @@ export class Product {
   id: number;
 
   @Column({ type: "text", nullable: false })
-  verify_string: string;
+  verifyString: string;
 
   @Column({ type: "text", nullable: false })
-  business_string: string;
+  businessString: string;
 
   @Column({ type: "text", nullable: false })
-  product_name: string;
+  productName: string;
 
   @Column({ type: "text", nullable: false })
-  product_description: string;
+  productDescription: string;
 
   @Column({ type: "integer", nullable: false })
-  product_quantity: number;
+  productQuantity: number;
 
   @Column({ type: "integer", nullable: false })
-  product_price: number;
+  productPrice: number;
 
   @Column({ type: "text", nullable: false })
-  product_color: string;
+  productColor: string;
 
   @Column({ type: "text", nullable: false })
-  product_safety_tip: string;
+  productSafetyTip: string;
 
   @Column({ type: "tinyint", nullable: false })
-  product_status: number;
+  productStatus: number;
 
   @Column({ type: "integer", nullable: false })
-  created_at: number;
+  createdAt: number;
 
   @Column({ type: "integer", nullable: false })
-  updated_at: number;
+  updatedAt: number;
 
   @Column({ type: "integer", nullable: false })
-  business_id: number;
+  businessId: number;
 
   // @ManyToOne(() => Businesses, (business) => business.products, { onDelete: "CASCADE", onUpdate: "CASCADE" })
   // @JoinColumn({ name: "business_string" })
