@@ -1,9 +1,8 @@
-import { AppDataSource } from '../../../core/databases';
+import AppDataSource from '../../../core/databases';
 import { calculatePagination, paginate } from '../../../core/utils/pagination/paginate';
 import { PaginationResponse } from '../../../core/utils/pagination/pagination.interface';
 import { Jobs } from '../entities/jobs.entity';
 import { CreateJobDto, UpdateJobDto } from '../schemas/jobs.schema';
-
 class JobsService {
   private readonly jobRepository = AppDataSource.getRepository(Jobs);
 

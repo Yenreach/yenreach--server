@@ -1,4 +1,5 @@
-import { AppDataSource } from '../../../core/databases';
+import crypto from 'crypto';
+import AppDataSource from '../../../core/databases';
 import { calculatePagination, paginate } from '../../../core/utils/pagination/paginate';
 import { PaginationResponse } from '../../../core/utils/pagination/pagination.interface';
 import { Jobs } from '../../jobs/entities/jobs.entity';
@@ -7,7 +8,7 @@ import { Product } from '../../products/entities/products.entity';
 import { Businesses } from '../entities/businesses.entity';
 import { IBusiness, IBusinessService, RegistrationState } from '../interfaces';
 import { CreateBusinessDto, UpdateBusinessDto } from '../schemas';
-import { nanoid } from 'nanoid';
+// import { nanoid } from 'nanoid';
 
 export class BusinessService implements IBusinessService {
   private readonly businessRepository = AppDataSource.getRepository(Businesses);
@@ -19,7 +20,7 @@ export class BusinessService implements IBusinessService {
     const baseData = {
       ...data,
       userString: userId,
-      verifyString: nanoid(),
+      verifyString: crypto.randomBytes(16).toString("hex"),
       regState: regState,
       created: Date.now(),
       lastUpdated: Date.now(),
@@ -35,7 +36,7 @@ export class BusinessService implements IBusinessService {
     return await this.businessRepository.save(business);
   }
 
-  public async getBusinessByUserId(userId: string, page: number = 1, limit: number = 10): Promise<PaginationResponse<Businesses>> {
+  public async getBusinessByUserId(userId: string, page = 1, limit = 10): Promise<PaginationResponse<Businesses>> {
     const { skip } = calculatePagination(page, limit);
     const [businesses, total] = await this.businessRepository.findAndCount({
       where: {
@@ -47,7 +48,7 @@ export class BusinessService implements IBusinessService {
     return paginate(businesses, total, page, limit);
   }
 
-  public async getAllBusinesses(page: number = 1, limit: number = 10): Promise<PaginationResponse<Businesses>> {
+  public async getAllBusinesses(page = 1, limit = 10): Promise<PaginationResponse<Businesses>> {
     const { skip } = calculatePagination(page, limit);
     const [businesses, total] = await this.businessRepository.findAndCount({
       skip,
@@ -64,7 +65,7 @@ export class BusinessService implements IBusinessService {
     return business;
   }
 
-  public async getJobsByBusinessId(businessId: string, page: number = 1, limit: number = 10): Promise<PaginationResponse<Jobs>> {
+  public async getJobsByBusinessId(businessId: string, page = 1, limit = 10): Promise<PaginationResponse<Jobs>> {
     const { skip } = calculatePagination(page, limit);
     const [jobs, total] = await this.jobRepository.findAndCount({
       where: {
@@ -77,7 +78,7 @@ export class BusinessService implements IBusinessService {
     return paginate(jobs, total, page, limit);
   }
 
-  public async getProductsByBusinessId(businessId: string, page: number = 1, limit: number = 10): Promise<PaginationResponse<Product>> {
+  public async getProductsByBusinessId(businessId: string, page = 1, limit = 10): Promise<PaginationResponse<Product>> {
     const { skip } = calculatePagination(page, limit);
     const [products, total] = await this.productRepository.findAndCount({
       where: {

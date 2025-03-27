@@ -9,7 +9,7 @@ import { UpdateBusinessDto } from '../schemas';
 export class BusinessAdminService implements IBusinessAdminService {
   private readonly businessRepository = AppDataSource.getRepository(Businesses);
 
-  public async getAllBusinesses(page: number = 1, limit: number = 10): Promise<PaginationResponse<Businesses>> {
+  public async getAllBusinesses(page = 1, limit = 10): Promise<PaginationResponse<Businesses>> {
     const { skip } = calculatePagination(page, limit);
     const [businesses, total] = await this.businessRepository.findAndCount({
       skip,
@@ -17,7 +17,7 @@ export class BusinessAdminService implements IBusinessAdminService {
     });
     return paginate(businesses, total, page, limit);
   }
-  public async getPendingBusinesses(page: number = 1, limit: number = 10): Promise<PaginationResponse<Businesses>> {
+  public async getPendingBusinesses(page = 1, limit = 10): Promise<PaginationResponse<Businesses>> {
     const { skip } = calculatePagination(page, limit);
     const [businesses, total] = await this.businessRepository.findAndCount({
       where: {
@@ -28,7 +28,7 @@ export class BusinessAdminService implements IBusinessAdminService {
     });
     return paginate(businesses, total, page, limit);
   }
-  public async getIncompleteBusinesses(page: number = 1, limit: number = 10): Promise<PaginationResponse<Businesses>> {
+  public async getIncompleteBusinesses(page = 1, limit = 10): Promise<PaginationResponse<Businesses>> {
     const { skip } = calculatePagination(page, limit);
     const [businesses, total] = await this.businessRepository.findAndCount({
       where: {
