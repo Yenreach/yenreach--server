@@ -1,5 +1,5 @@
-enum RegsitrationStateEnum {
-  Incomplete = 1,
-  Pending = 3,
-  Approved = 4,
+export enum BusinessRegistrationState {
+  INCOMPLETE = 'incomplete',
+  PENDING = 'pending',
+  APPROVED = 'approved',
 }

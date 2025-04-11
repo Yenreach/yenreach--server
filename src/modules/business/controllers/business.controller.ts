@@ -89,6 +89,17 @@ class BusinessController {
       next(error);
     }
   }
+
+  public async reviewBussiness(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = req.user.verifyString;
+      const businessId = req.params.id as string;
+      const businessReview = await this.businessService.reviewBusiness(businessId, userId, req.body);
+      return sendResponse(res, HttpCodes.OK, 'business sucessfully reviewed', businessReview);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export { BusinessController };

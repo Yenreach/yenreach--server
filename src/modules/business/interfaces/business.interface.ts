@@ -3,6 +3,7 @@ import { Jobs } from '../../jobs/entities/jobs.entity';
 import { Product } from '../../products/entities/products.entity';
 import { Businesses } from '../entities/businesses.entity';
 import { CreateBusinessDto, UpdateBusinessDto } from '../schemas';
+import { ReviewBusinessDto } from '../schemas/business-review.schema';
 
 interface IBusinessService {
   getAllBusinesses(page?: number, limit?: number): Promise<PaginationResponse<Businesses>>;
@@ -13,7 +14,11 @@ interface IBusinessService {
   createBusiness(data: CreateBusinessDto, userId: string): Promise<Businesses>;
   updateBusiness(id: number, data: UpdateBusinessDto): Promise<Businesses>;
   getBusinessByUserId(userId: string, page?: number, limit?: number): Promise<PaginationResponse<Businesses>>;
-  addWorkingHours(businessId: string);
+  addWorkingHours(businessId: string): Promise<any>;
+  reviewBusiness(businessId: string, userId: string, data: ReviewBusinessDto): Promise<any>;
+  addBusinessPhotos(businessId: string): Promise<any>;
+  addBusinessBranch(businessId: string): Promise<any>;
+  addBusinessFacitlity(businessId: string): Promise<any>;
 }
 
 interface IBusinessAdminService {

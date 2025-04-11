@@ -8,10 +8,13 @@ import { Product } from '../../products/entities/products.entity';
 import { Businesses } from '../entities/businesses.entity';
 import { IBusiness, IBusinessService, RegistrationState } from '../interfaces';
 import { CreateBusinessDto, UpdateBusinessDto } from '../schemas';
-// import { nanoid } from 'nanoid';
+import { nanoid } from 'nanoid';
+import { ReviewBusinessDto } from '../schemas/business-review.schema';
+import { Businessreviews } from '../entities/business-reviews.entity';
 
 export class BusinessService implements IBusinessService {
   private readonly businessRepository = AppDataSource.getRepository(Businesses);
+  private readonly businessReviewRepository = AppDataSource.getRepository(Businessreviews);
   private readonly jobRepository = AppDataSource.getRepository(Jobs);
   private readonly productRepository = AppDataSource.getRepository(Product);
 
@@ -20,7 +23,7 @@ export class BusinessService implements IBusinessService {
     const baseData = {
       ...data,
       userString: userId,
-      verifyString: crypto.randomBytes(16).toString("hex"),
+      verifyString: crypto.randomBytes(16).toString('hex'),
       regState: regState,
       created: Date.now(),
       lastUpdated: Date.now(),
@@ -102,6 +105,37 @@ export class BusinessService implements IBusinessService {
   }
 
   public async addWorkingHours(businessId: string) {
+    const business = await this.businessRepository.findOneBy({ verifyString: businessId });
+    if (!business) throw new Error('Business not found');
+    throw new Error('Method not implemented.');
+  }
+  public async reviewBusiness(businessId: string, userId: string, data: ReviewBusinessDto): Promise<any> {
+    const business = await this.businessRepository.findOneBy({ verifyString: businessId });
+    if (!business) throw new Error('Business not found');
+    const newReview = this.businessReviewRepository.create({
+      businessString: businessId,
+      userString: userId,
+      review: data.review,
+      star: data.star,
+      created: Date.now(),
+      lastUpdated: Date.now(),
+    });
+    return await this.businessReviewRepository.save(newReview);
+  }
+  public async addBusinessPhotos(businessId: string): Promise<any> {
+    const business = await this.businessRepository.findOneBy({ verifyString: businessId });
+    if (!business) throw new Error('Business not found');
+    throw new Error('Method not implemented.');
+  }
+  public async addBusinessBranch(businessId: string): Promise<any> {
+    const business = await this.businessRepository.findOneBy({ verifyString: businessId });
+    if (!business) throw new Error('Business not found');
+
+    throw new Error('Method not implemented.');
+  }
+  public async addBusinessFacitlity(businessId: string): Promise<any> {
+    const business = await this.businessRepository.findOneBy({ verifyString: businessId });
+    if (!business) throw new Error('Business not found');
     throw new Error('Method not implemented.');
   }
 }
