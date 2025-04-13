@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { States } from './states.entity';
 
-@Entity('local_governments', { schema: 'yenreach_schema' })
+@Entity('local_governments', { schema: 'yenreach' })
 export class LocalGovernments {
   @PrimaryGeneratedColumn('uuid')
   public id: string;

@@ -1,10 +1,10 @@
 import { DeepPartial } from 'typeorm';
 import { MigrationFactory } from '../migration.factory';
-import { Businesses } from '../postgres-entities/businesses.entity';
 import { convertEpochToISO } from '../../core/utils/helpers';
 import { PostgresDataSource, SqlDataSource } from '../connection';
 import { Businessphotos } from '../../core/database/entities/entities/Businessphotos';
 import { BusinessPhotos } from '../../core/database/postgres/business-photos.entity';
+import { Businesses } from '../../core/database/postgres/businesses.entity';
 
 async function migrateBusinessPhotos() {
   try {

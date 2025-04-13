@@ -1,8 +1,8 @@
 import { DeepPartial } from 'typeorm';
 import { convertEpochToISO } from '../../core/utils/helpers';
 import { MigrationFactory } from '../migration.factory';
-import { Users } from '../../modules/user/entities/user.entity';
-import { Users as NewUsers } from '../postgres-entities/users.entity';
+import { Users } from '../../core/database/entities/entities/Users';
+import { Users as NewUsers } from '../../core/database/postgres/users.entity';
 import { PostgresDataSource, SqlDataSource } from '../connection';
 
 const migrateUsers = async () => {
@@ -28,7 +28,7 @@ const migrateUsers = async () => {
         password: oldUser.password,
         profileImage: oldUser.image,
         referral: oldUser.referMethod,
-        createdAt: convertEpochToISO(oldUser.created), // Use the new method here
+        createdAt: convertEpochToISO(oldUser.created),
         updatedAt: convertEpochToISO(oldUser.lastUpdated),
         emailVerified: oldUser.confirmedEmail > 0,
         cv: oldUser.cv,

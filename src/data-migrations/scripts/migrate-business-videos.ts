@@ -1,11 +1,12 @@
 import { DeepPartial } from 'typeorm';
 import { MigrationFactory } from '../migration.factory';
-import { Businesses } from '../postgres-entities/businesses.entity';
+
 import { convertEpochToISO } from '../../core/utils/helpers';
 import { PostgresDataSource, SqlDataSource } from '../connection';
 
 import { Businessvideolinks } from '../../core/database/entities/entities/Businessvideolinks';
 import { BusinessVideos } from '../../core/database/postgres/business-videos.entity';
+import { Businesses } from '../../core/database/postgres/businesses.entity';
 
 async function migrateBusinessVideos() {
   try {

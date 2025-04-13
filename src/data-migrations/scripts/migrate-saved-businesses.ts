@@ -1,10 +1,12 @@
 import { DeepPartial } from 'typeorm';
 import { MigrationFactory } from '../migration.factory';
-import { Businesses } from '../postgres-entities/businesses.entity';
+
 import { Savedbusinesses as OldSavedBusinesses } from '../../core/database/entities/entities/Savedbusinesses';
-import { SavedBusinesses } from '../postgres-entities/saved-business.entity';
-import { Users } from '../postgres-entities/users.entity';
+
 import { PostgresDataSource, SqlDataSource } from '../connection';
+import { SavedBusinesses } from '../../core/database/postgres/saved-business.entity';
+import { Users } from '../../core/database/postgres/users.entity';
+import { Businesses } from '../../core/database/postgres/businesses.entity';
 
 async function migrateSavedBusiness() {
   try {

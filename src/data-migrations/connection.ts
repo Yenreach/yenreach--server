@@ -21,5 +21,5 @@ export const SqlDataSource = new DataSource({
   database: 'yenreach_migrate_db',
   synchronize: false,
   logging: false,
-  entities: ['src/entities/*.entity.ts'],
+  entities: ['src/core/database/entities/entities/*.ts'],
 });

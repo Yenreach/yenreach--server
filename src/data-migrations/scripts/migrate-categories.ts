@@ -1,10 +1,10 @@
 import { DeepPartial } from 'typeorm';
 import { MigrationFactory } from '../migration.factory';
 import { Categories as OldCategories } from '../../core/database/entities/entities/Categories';
-import { Categories } from '../postgres-entities/category.entity';
 import { CategoryType } from '../../enums';
 import { Productcategorylist } from '../../core/database/entities/entities/Productcategorylist';
 import { PostgresDataSource, SqlDataSource } from '../connection';
+import { Categories } from '../../core/database/postgres/category.entity';
 
 const migrateCategories = async () => {
   try {

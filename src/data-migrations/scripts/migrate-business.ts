@@ -1,13 +1,13 @@
 import { DeepPartial } from 'typeorm';
 import { MigrationFactory } from '../migration.factory';
 import { Businesses as OldBusiness } from '../../core/database/entities/entities/Businesses';
-import { Businesses } from '../postgres-entities/businesses.entity';
-import { Users } from '../postgres-entities/users.entity';
-import { States } from '../postgres-entities/states.entity';
-import { LocalGovernments } from '../postgres-entities/local-governments.entity';
 import { convertEpochToISO } from '../../core/utils/helpers';
 import { BusinessRegistrationState } from '../../modules/business/enums/business.enums';
 import { PostgresDataSource, SqlDataSource } from '../connection';
+import { Businesses } from '../../core/database/postgres/businesses.entity';
+import { Users } from '../../core/database/postgres/users.entity';
+import { States } from '../../core/database/postgres/states.entity';
+import { LocalGovernments } from '../../core/database/postgres/local-governments.entity';
 
 async function migrateBusiness() {
   try {

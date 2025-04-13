@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateCol
 
 import { LocalGovernments } from './local-governments.entity';
 
-@Entity('states', { schema: 'yenreach_schema' })
+@Entity('states', { schema: 'yenreach' })
 export class States {
   @PrimaryGeneratedColumn('uuid')
   public id: string;

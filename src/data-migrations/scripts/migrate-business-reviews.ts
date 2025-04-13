@@ -1,11 +1,11 @@
 import { DeepPartial } from 'typeorm';
 import { MigrationFactory } from '../migration.factory';
-import { Businesses } from '../postgres-entities/businesses.entity';
 import { convertEpochToISO } from '../../core/utils/helpers';
 import { PostgresDataSource, SqlDataSource } from '../connection';
 import { Businessreviews } from '../../core/database/entities/entities/Businessreviews';
-import { BusinessReviews } from '../../core/database/postgres/business.reviews.entity';
+import { BusinessReviews } from '../../core/database/postgres/business-reviews.entity';
 import { Users } from '../../core/database/postgres/users.entity';
+import { Businesses } from '../../core/database/postgres/businesses.entity';
 
 async function migrateBusinessReviews() {
   try {

@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { AdminAuthorizationLevel } from '../../../modules/auth/enums';
 
-@Entity('admins', { schema: 'yenreach_schema' })
+@Entity('admins', { schema: 'yenreach' })
 export class Admins {
   @PrimaryGeneratedColumn('uuid')
   public id: string;
@@ -21,7 +21,7 @@ export class Admins {
   @Column('varchar', { name: 'official_email', length: 200, unique: true })
   public official_email: string;
 
-  @Column('varchar', { name: 'phone_email', length: 200, unique: true })
+  @Column('varchar', { name: 'phone_number', length: 200, unique: true })
   public phoneNumber: string;
 
   @Column('enum', { name: 'authorization_level', enum: AdminAuthorizationLevel })

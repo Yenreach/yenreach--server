@@ -1,23 +1,23 @@
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
-import { Businesses } from './businesses.entity';
 import { Categories } from './category.entity';
+import { Products } from './product.entity';
 
-@Entity('business_categories', { schema: 'yenreach' })
-export class BusinessCategories {
+@Entity('product_categories', { schema: 'yenreach' })
+export class ProductCategories {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  public id: string;
 
   @Column('uuid', { name: 'category_id' })
   public categoryId: string;
 
-  @Column('uuid', { name: 'business_id' })
-  public businessId: string;
+  @Column('uuid', { name: 'product_id' })
+  public productId: string;
 
-  @ManyToOne(() => Businesses, business => business.businessCategories)
-  @JoinColumn({ name: 'business_id' })
-  public business: Businesses;
+  @ManyToOne(() => Products, (product: Products) => product.categories)
+  @JoinColumn({ name: 'product_id' })
+  public product: Products;
 
-  @ManyToOne(() => Categories, category => category.businessCategories)
+  @ManyToOne(() => Categories, category => category.productCategories)
   @JoinColumn({ name: 'category_id' })
   public category: Categories;
 

@@ -2,7 +2,7 @@ import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToO
 import { Blogs } from './blogs.entity';
 import { Users } from './users.entity';
 
-@Entity('comments', { schema: 'yenreach_schema' })
+@Entity('comments', { schema: 'yenreach' })
 export class Comments {
   @PrimaryGeneratedColumn('uuid')
   public id: string;

@@ -15,13 +15,13 @@ import { States } from './states.entity';
 import { LocalGovernments } from './local-governments.entity';
 import { BusinessCategories } from './business-categories.entity';
 import { BusinessPhotos } from './business-photos.entity';
-import { BusinessReviews } from './business.reviews.entity';
+import { BusinessReviews } from './business-reviews.entity';
 import { BusinessVideos } from './business-videos.entity';
 import { BusinessWorkingHours } from './business-working-hours.entity';
 import { Products } from './product.entity';
 import { BusinessRegistrationState } from '../../../modules/business/enums';
 
-@Entity('businesses', { schema: 'yenreach_schema' })
+@Entity('businesses', { schema: 'yenreach' })
 export class Businesses {
   @Index()
   @PrimaryGeneratedColumn('uuid')

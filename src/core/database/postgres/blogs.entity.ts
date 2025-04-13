@@ -12,7 +12,7 @@ import {
 import { Comments } from './comments.entity';
 import { Admins } from './admin.entity';
 
-@Entity('blogs', { schema: 'yenreach_schema' })
+@Entity('blogs', { schema: 'yenreach' })
 export class Blogs {
   @PrimaryGeneratedColumn('uuid')
   public id: string;

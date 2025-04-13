@@ -1,11 +1,11 @@
 import { DeepPartial } from 'typeorm';
-import { Businesscategories } from '../../modules/business/entities/business-categories.entity';
 import { MigrationFactory } from '../migration.factory';
-import { BusinessCategories } from '../postgres-entities/business-categories.entity';
-import { Businesses } from '../postgres-entities/businesses.entity';
-import { Categories } from '../postgres-entities/category.entity';
 import { convertEpochToISO } from '../../core/utils/helpers';
 import { PostgresDataSource, SqlDataSource } from '../connection';
+import { Businesscategories } from '../../core/database/entities/entities/Businesscategories';
+import { Businesses } from '../../core/database/postgres/businesses.entity';
+import { Categories } from '../../core/database/postgres/category.entity';
+import { BusinessCategories } from '../../core/database/postgres/business-categories.entity';
 
 async function migrateBusinessCategories() {
   try {

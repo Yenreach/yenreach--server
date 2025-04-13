@@ -1,7 +1,7 @@
 import { DeepPartial } from 'typeorm';
 import { MigrationFactory } from '../migration.factory';
 import { States } from '../../core/database/entities/entities/States';
-import { States as NewStates } from '../postgres-entities/states.entity';
+import { States as NewStates } from '../../core/database/postgres/states.entity';
 import { PostgresDataSource, SqlDataSource } from '../connection';
 
 const migrateStates = async () => {

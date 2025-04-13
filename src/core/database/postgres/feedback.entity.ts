@@ -15,7 +15,7 @@ export class Feedbacks {
   @Column('varchar', { name: 'subject', length: 255 })
   public subject: string;
 
-  @Column('text', { name: 'subject' })
+  @Column('text', { name: 'message' })
   public message: string;
 
   @Column('enum', { name: 'status', enum: FeedbackStatus, default: FeedbackStatus.Pending })

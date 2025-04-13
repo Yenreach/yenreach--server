@@ -10,10 +10,11 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { ProductCategories } from './product-category.enity';
+
 import { ProductPhotos } from './product-photos.entity';
 import { Businesses } from './businesses.entity';
 import { ProductStatus } from '../../../modules/products/enums';
+import { ProductCategories } from './product-category.entity';
 
 @Entity('products', { schema: 'yenreach' })
 export class Products {
@@ -54,10 +55,10 @@ export class Products {
   public business: Businesses;
 
   @OneToMany(() => ProductCategories, (productCategory: ProductCategories) => productCategory.product)
-  public businessCategories: ProductCategories[];
+  public categories: ProductCategories[];
 
   @OneToMany(() => ProductPhotos, productPhotos => productPhotos.product)
-  public businessPhotos: ProductPhotos[];
+  public photos: ProductPhotos[];
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   public createdAt: Date;

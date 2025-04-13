@@ -10,10 +10,10 @@ import {
   OneToMany,
 } from 'typeorm';
 import { BusinessCategories } from './business-categories.entity';
-import { ProductCategories } from './product-category.enity';
+import { ProductCategories } from './product-category.entity';
 import { CategoryType } from '../../../enums';
 
-@Entity('categories', { schema: 'public' })
+@Entity('categories', { schema: 'yenreach' })
 export class Categories {
   @PrimaryGeneratedColumn('uuid')
   public id: string;

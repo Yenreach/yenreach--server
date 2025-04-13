@@ -8,7 +8,7 @@ import { IBusinessService } from '../interfaces';
 import { CreateBusinessDto, UpdateBusinessDto } from '../schemas';
 import { ReviewBusinessDto } from '../schemas/business-review.schema';
 import { Businesses } from '../../../core/database/postgres/businesses.entity';
-import { BusinessReviews } from '../../../core/database/postgres/business.reviews.entity';
+import { BusinessReviews } from '../../../core/database/postgres/business-reviews.entity';
 import { BusinessRegistrationState } from '../enums';
 
 export class BusinessService implements IBusinessService {

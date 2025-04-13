@@ -1,9 +1,9 @@
 import { DeepPartial } from 'typeorm';
 import { MigrationFactory } from '../migration.factory';
-import { States as NewStates } from '../postgres-entities/states.entity';
 import { LocalGovernments } from '../../core/database/entities/entities/Localgovernments';
-import { LocalGovernments as NewLgas } from '../postgres-entities/local-governments.entity';
+import { LocalGovernments as NewLgas } from '../../core/database/postgres/local-governments.entity';
 import { PostgresDataSource, SqlDataSource } from '../connection';
+import { States } from '../../core/database/postgres/states.entity';
 
 const migrateLga = async () => {
   try {
@@ -18,7 +18,7 @@ const migrateLga = async () => {
     const migrationFactory = new MigrationFactory(SqlDataSource, PostgresDataSource);
 
     const transformLga = async (oldLga: LocalGovernments): Promise<DeepPartial<NewLgas>> => {
-      const state = await PostgresDataSource.getRepository(NewStates).findOneBy({ num_id: oldLga.stateId });
+      const state = await PostgresDataSource.getRepository(States).findOneBy({ num_id: oldLga.stateId });
       return {
         num_id: oldLga.id,
         name: oldLga.name,

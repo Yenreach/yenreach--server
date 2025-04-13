@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, Index, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Businesses } from './businesses.entity';
 
-@Entity('users', { schema: 'yenreach_schema' })
+@Entity('users', { schema: 'yenreach' })
 export class Users {
   @Index()
   @PrimaryGeneratedColumn('uuid')

@@ -1,8 +1,11 @@
 import { DeepPartial } from 'typeorm';
-import { SqlDataSource, PostgresDataSource } from '../../core/database';
+
 import { MigrationFactory } from '../migration.factory';
 import { Sections } from '../../core/database/entities/entities/Sections';
-import { Categories } from '../postgres-entities/category.entity';
+
+import { PostgresDataSource, SqlDataSource } from '../connection';
+import { Categories } from '../../core/database/postgres/category.entity';
+import { CategoryType } from '../../enums';
 
 const migrateSections = async () => {
   try {
@@ -17,15 +20,15 @@ const migrateSections = async () => {
     const migrationFactory = new MigrationFactory(SqlDataSource, PostgresDataSource);
 
     const transformSections = async (oldSections: Sections): Promise<DeepPartial<Categories>> => {
-      //   const state = await PostgresDataSource.getRepository(NewStates).findOneBy({ num_id: oldLga.stateId });
       return {
         verifyString: oldSections.verifyString,
         category: oldSections.section,
+        categoryType: CategoryType.Business,
       };
     };
 
     console.log('Starting sections to category migration...');
-    await migrationFactory.migrateEntity(Sections, Categories, transformSections);
+    await migrationFactory.migrateAllInTransaction(Sections, Categories, transformSections);
     console.log('LGA migration completed successfully');
   } catch (error) {
     console.error('Migration failed:', error);
