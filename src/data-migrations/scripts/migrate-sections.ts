@@ -29,7 +29,7 @@ const migrateSections = async () => {
 
     console.log('Starting sections to category migration...');
     await migrationFactory.migrateAllInTransaction(Sections, Categories, transformSections);
-    console.log('LGA migration completed successfully');
+    console.log('Sections migration completed successfully');
   } catch (error) {
     console.error('Migration failed:', error);
   } finally {

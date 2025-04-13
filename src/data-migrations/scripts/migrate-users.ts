@@ -26,15 +26,15 @@ const migrateUsers = async () => {
         name: oldUser.name,
         email: oldUser.email,
         password: oldUser.password,
-        profileImage: oldUser.image,
-        referral: oldUser.referMethod,
+        profileImage: oldUser.image ? oldUser.image : null,
+        referral: oldUser.referMethod ? oldUser.referMethod : null,
         createdAt: convertEpochToISO(oldUser.created),
         updatedAt: convertEpochToISO(oldUser.lastUpdated),
         emailVerified: oldUser.confirmedEmail > 0,
-        cv: oldUser.cv,
-        dob: oldUser.dob,
-        phoneNumber: oldUser.phone,
-        gender: oldUser.gender,
+        cv: oldUser.cv ? oldUser.cv : null,
+        dob: oldUser.dob ? oldUser.dob : null,
+        phoneNumber: oldUser.phone ? oldUser.phone : null,
+        gender: oldUser.gender ? oldUser.gender : null,
       };
     };
 
