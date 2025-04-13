@@ -1,4 +1,4 @@
-import AppDataSource from '../../../core/databases';
+import AppDataSource from '../../../core/database';
 import { calculatePagination, paginate } from '../../../core/utils/pagination/paginate';
 import { PaginationResponse } from '../../../core/utils/pagination/pagination.interface';
 import { Product } from '../entities/products.entity';
@@ -42,4 +42,4 @@ class ProductsService {
   }
 }
 
-export { ProductsService }
+export { ProductsService };
