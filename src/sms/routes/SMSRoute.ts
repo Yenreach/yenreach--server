@@ -12,16 +12,15 @@ class SMSRoute implements Routes {
 
   private initializeRoutes() {
     this.router.all(`${this.path}*`, (req: Request, res: Response, next: NextFunction) => {
-      next()
-    })
+      next();
+    });
 
-    this.router.post(`${this.path}/send-sms`, this.smsController.sendSMS)
+    this.router.post(`${this.path}/send-sms`, this.smsController.sendSMS);
 
-    this.router.post(`${this.path}/send-sms-sequence`, this.smsController.sendSMSSequence)
+    this.router.post(`${this.path}/send-sms-sequence`, this.smsController.sendSMSSequence);
 
-    this.router.post(`${this.path}/send-bulk-sms`, this.smsController.sendBulkSMS)
+    this.router.post(`${this.path}/send-bulk-sms`, this.smsController.sendBulkSMS);
   }
 }
 
 export { SMSRoute };
-

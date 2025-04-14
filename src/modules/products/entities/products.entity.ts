@@ -3,6 +3,8 @@ import { ProductCategory } from "./product-categories.entity";
 import { ProductPhoto } from "./product-photos.entity";
 import { IProduct } from "../interfaces";
 // import { Business } from "./business.entity";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from "typeorm";
+// import { Businesses } from "../../business/entities/businesses.entity";
 
 @Entity("products")
 export class Products implements IProduct {
@@ -53,4 +55,7 @@ export class Products implements IProduct {
   })
   categories: ProductCategory[];
 
+  // @ManyToOne(() => Businesses, (business) => business.products, { onDelete: "CASCADE", onUpdate: "CASCADE" })
+  // @JoinColumn({ name: "business_string" })
+  // business: Businesses;
 }

@@ -1,19 +1,24 @@
+import { Businesses } from '../../../core/database/postgres/businesses.entity';
 import { PaginationResponse } from '../../../core/utils/pagination/pagination.interface';
 import { Jobs } from '../../jobs/entities/jobs.entity';
 import { Product } from '../../products/entities/products.entity';
-import { Businesses } from '../entities/businesses.entity';
 import { CreateBusinessDto, UpdateBusinessDto } from '../schemas';
+import { ReviewBusinessDto } from '../schemas/business-review.schema';
 
 interface IBusinessService {
   getAllBusinesses(page?: number, limit?: number): Promise<PaginationResponse<Businesses>>;
-  getBusinessById(id: number): Promise<Businesses | null>;
+  getBusinessById(id: string): Promise<Businesses | null>;
   getJobsByBusinessId(businessId: string, page?: number, limit?: number): Promise<PaginationResponse<Jobs>>;
   getProductsByBusinessId(businessId: string, page?: number, limit?: number): Promise<PaginationResponse<Product>>;
   deleteBusinessProductById(businessId: string, productId: number): Promise<boolean>;
   createBusiness(data: CreateBusinessDto, userId: string): Promise<Businesses>;
-  updateBusiness(id: number, data: UpdateBusinessDto): Promise<Businesses>;
+  updateBusiness(id: string, data: UpdateBusinessDto): Promise<Businesses>;
   getBusinessByUserId(userId: string, page?: number, limit?: number): Promise<PaginationResponse<Businesses>>;
-  addWorkingHours(businessId: string);
+  addWorkingHours(businessId: string): Promise<any>;
+  reviewBusiness(businessId: string, userId: string, data: ReviewBusinessDto): Promise<any>;
+  addBusinessPhotos(businessId: string): Promise<any>;
+  addBusinessBranch(businessId: string): Promise<any>;
+  addBusinessFacitlity(businessId: string): Promise<any>;
 }
 
 interface IBusinessAdminService {
@@ -55,6 +60,4 @@ interface IBusiness {
   lastUpdated: number;
 }
 
-type RegistrationState = 1 | 2 | 3 | 4;
-
-export { IBusinessService, IBusiness, RegistrationState, IBusinessAdminService };
+export { IBusinessService, IBusiness, IBusinessAdminService };

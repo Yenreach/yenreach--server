@@ -1,41 +1,41 @@
-import { AppDataSource } from '../../../core/databases';
+import crypto from 'crypto';
+import AppDataSource from '../../../core/database';
 import { calculatePagination, paginate } from '../../../core/utils/pagination/paginate';
 import { PaginationResponse } from '../../../core/utils/pagination/pagination.interface';
 import { Jobs } from '../../jobs/entities/jobs.entity';
 import { Products } from '../../products/entities/products.entity';
-
-import { Businesses } from '../entities/businesses.entity';
-import { IBusiness, IBusinessService, RegistrationState } from '../interfaces';
-import { CreateBusinessDto, UpdateBusinessDto } from '../schemas';
 // import { nanoid } from 'nanoid';
+import { IBusinessService } from '../interfaces';
+import { CreateBusinessDto, UpdateBusinessDto } from '../schemas';
+import { ReviewBusinessDto } from '../schemas/business-review.schema';
+import { Businesses } from '../../../core/database/postgres/businesses.entity';
+import { BusinessReviews } from '../../../core/database/postgres/business-reviews.entity';
+import { BusinessRegistrationState } from '../enums';
 
 export class BusinessService implements IBusinessService {
   private readonly businessRepository = AppDataSource.getRepository(Businesses);
+  private readonly businessReviewRepository = AppDataSource.getRepository(BusinessReviews);
   private readonly jobRepository = AppDataSource.getRepository(Jobs);
   private readonly productRepository = AppDataSource.getRepository(Products);
 
   public async createBusiness(data: CreateBusinessDto, userId: string): Promise<Businesses> {
-    const regState: RegistrationState = data.coverImg || data.profileImg ? 1 : 3;
     const baseData = {
+      registrationStatus: BusinessRegistrationState.INCOMPLETE,
+      userId: userId,
       ...data,
-      userString: userId,
-      // verifyString: nanoid(),
-      regState: regState,
-      created: Date.now(),
-      lastUpdated: Date.now(),
     };
     const newBusiness = this.businessRepository.create(baseData);
     return await this.businessRepository.save(newBusiness);
   }
 
-  public async updateBusiness(id: number, data: UpdateBusinessDto): Promise<Businesses> {
+  public async updateBusiness(id: string, data: UpdateBusinessDto): Promise<Businesses> {
     const business = await this.businessRepository.findOneBy({ id });
     if (!business) throw new Error('Business not found');
     Object.assign(business, data);
     return await this.businessRepository.save(business);
   }
 
-  public async getBusinessByUserId(userId: string, page: number = 1, limit: number = 10): Promise<PaginationResponse<Businesses>> {
+  public async getBusinessByUserId(userId: string, page = 1, limit = 10): Promise<PaginationResponse<Businesses>> {
     const { skip } = calculatePagination(page, limit);
     const [businesses, total] = await this.businessRepository.findAndCount({
       where: {
@@ -47,7 +47,7 @@ export class BusinessService implements IBusinessService {
     return paginate(businesses, total, page, limit);
   }
 
-  public async getAllBusinesses(page: number = 1, limit: number = 10): Promise<PaginationResponse<Businesses>> {
+  public async getAllBusinesses(page = 1, limit = 10): Promise<PaginationResponse<Businesses>> {
     const { skip } = calculatePagination(page, limit);
     const [businesses, total] = await this.businessRepository.findAndCount({
       skip,
@@ -56,7 +56,7 @@ export class BusinessService implements IBusinessService {
     return paginate(businesses, total, page, limit);
   }
 
-  public async getBusinessById(id: number): Promise<Businesses | null> {
+  public async getBusinessById(id: string): Promise<Businesses | null> {
     const business = await this.businessRepository.findOneBy({ id });
     if (!business) {
       throw new Error('Business not found');
@@ -64,7 +64,7 @@ export class BusinessService implements IBusinessService {
     return business;
   }
 
-  public async getJobsByBusinessId(businessId: string, page: number = 1, limit: number = 10): Promise<PaginationResponse<Jobs>> {
+  public async getJobsByBusinessId(businessId: string, page = 1, limit = 10): Promise<PaginationResponse<Jobs>> {
     const { skip } = calculatePagination(page, limit);
     const [jobs, total] = await this.jobRepository.findAndCount({
       where: {
@@ -77,7 +77,7 @@ export class BusinessService implements IBusinessService {
     return paginate(jobs, total, page, limit);
   }
 
-  public async getProductsByBusinessId(businessId: string, page: number = 1, limit: number = 10): Promise<PaginationResponse<Product>> {
+  public async getProductsByBusinessId(businessId: string, page = 1, limit = 10): Promise<PaginationResponse<Product>> {
     const { skip } = calculatePagination(page, limit);
     const [products, total] = await this.productRepository.findAndCount({
       where: {
@@ -101,6 +101,35 @@ export class BusinessService implements IBusinessService {
   }
 
   public async addWorkingHours(businessId: string) {
+    const business = await this.businessRepository.findOneBy({ verifyString: businessId });
+    if (!business) throw new Error('Business not found');
+    throw new Error('Method not implemented.');
+  }
+  public async reviewBusiness(businessId: string, userId: string, data: ReviewBusinessDto): Promise<any> {
+    const business = await this.businessRepository.findOneBy({ verifyString: businessId });
+    if (!business) throw new Error('Business not found');
+    const newReview = this.businessReviewRepository.create({
+      businessId: businessId,
+      userId: userId,
+      review: data.review,
+      star: data.star,
+    });
+    return await this.businessReviewRepository.save(newReview);
+  }
+  public async addBusinessPhotos(businessId: string): Promise<any> {
+    const business = await this.businessRepository.findOneBy({ verifyString: businessId });
+    if (!business) throw new Error('Business not found');
+    throw new Error('Method not implemented.');
+  }
+  public async addBusinessBranch(businessId: string): Promise<any> {
+    const business = await this.businessRepository.findOneBy({ verifyString: businessId });
+    if (!business) throw new Error('Business not found');
+
+    throw new Error('Method not implemented.');
+  }
+  public async addBusinessFacitlity(businessId: string): Promise<any> {
+    const business = await this.businessRepository.findOneBy({ verifyString: businessId });
+    if (!business) throw new Error('Business not found');
     throw new Error('Method not implemented.');
   }
 }

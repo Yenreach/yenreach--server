@@ -1,5 +1,5 @@
 import { DataSource, getManager, Like } from 'typeorm';
-import AppDataSource from '../../../core/databases';
+import AppDataSource from '../../../core/database';
 import { calculatePagination, paginate } from '../../../core/utils/pagination/paginate';
 import { PaginationResponse } from '../../../core/utils/pagination/pagination.interface';
 import { ProductCategory } from '../entities/product-categories.entity';
@@ -310,4 +310,4 @@ class ProductsService {
   }
 }
 
-export { ProductsService }
+export { ProductsService };

@@ -1,4 +1,4 @@
-import AppDataSource from '../../../core/databases';
+import AppDataSource from '../../../core/database';
 import { calculatePagination, paginate } from '../../../core/utils/pagination/paginate';
 import { PaginationResponse } from '../../../core/utils/pagination/pagination.interface';
 import { CreateUserDto } from '../dto/create-user.dto';
@@ -47,4 +47,4 @@ class UserService {
   }
 }
 
-export { UserService }
+export { UserService };
