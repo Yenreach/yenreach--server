@@ -3,7 +3,7 @@ import { ProductsService } from '../services';
 import { sendResponse } from '../../../core/utils';
 import { HttpCodes } from '../../../core/constants';
 import { HttpException } from '../../../core/exceptions';
-import { CreateProductDto, UpdateProductDto } from '../schemas/products.schema';
+import { AddCategoryDto, AddProductCategoryDto, CreateProductDto, GetProductsSchema, UpdateProductDto } from '../schemas/products.schema';
 
 const productsService = new ProductsService();
 
@@ -44,7 +44,46 @@ class ProductsController {
     }
   }
 
-  async getProductsById(req: Request, res: Response, next: NextFunction) {
+  async getProducts(req: Request, res: Response, next: NextFunction) {
+    try {
+      // Validate the query using Zod
+      const queryParams = GetProductsSchema.parse(req.query);
+
+      const result = await productsService.getProducts(queryParams);
+
+      return sendResponse(res, HttpCodes.OK, "Products retrieved successfully", result);
+    } catch (error) {
+      next(error);
+    }
+  }
+  
+  async getBusinessProducts(req: Request, res: Response, next: NextFunction) {
+    try {
+      const business = req.params.business_string;
+      const queryParams = GetProductsSchema.parse(req.query);
+
+      if (!business) throw Error('Business String must be sent')
+
+      const result = await productsService.getProducts({ ...queryParams, business });
+
+      return sendResponse(res, HttpCodes.OK, "Products retrieved successfully", result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getRelatedProducts(req: Request, res: Response, next: NextFunction) {
+    try {
+      // Validate the query using Zod
+      const productId = req.params.id;
+      const products = await productsService.getRelatedProducts(productId);
+      return sendResponse(res, HttpCodes.OK, 'related products fetched successfully', products);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getProductById(req: Request, res: Response, next: NextFunction) {
     try {
       const productId = parseInt(req.params.id);
       const products = await productsService.getProductById(productId);
@@ -57,11 +96,44 @@ class ProductsController {
     }
   }
 
-  async deleteProducts(req: Request, res: Response, next: NextFunction) {
+  async deleteProduct(req: Request, res: Response, next: NextFunction) {
     try {
       const productId = parseInt(req.params.id);
       const result = await productsService.deleteProduct(productId);
       return sendResponse(res, HttpCodes.OK, 'product deleted successfully', result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  // product photo
+  async addPhoto(req: Request, res: Response, next: NextFunction) {
+    try {
+      const result = await productsService.addPhoto(req.body);
+      return sendResponse(res, HttpCodes.CREATED, "Photo added successfully", result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  // product categories
+  async createCategory(req: Request, res: Response, next: NextFunction) {
+    try {
+      const data: AddCategoryDto = req.body;
+      const result = await productsService.createCategory(data);
+
+      return sendResponse(res, HttpCodes.CREATED, 'category CREATED successfully', result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async addProductCategory(req: Request, res: Response, next: NextFunction) {
+    try {
+      const data: AddProductCategoryDto = req.body;
+      const result = await productsService.addProductCategory(data);
+
+      return sendResponse(res, HttpCodes.CREATED, 'category added successfully', result);
     } catch (error) {
       next(error);
     }

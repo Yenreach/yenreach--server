@@ -2,24 +2,24 @@ import { AppDataSource } from '../../../core/databases';
 import { calculatePagination, paginate } from '../../../core/utils/pagination/paginate';
 import { PaginationResponse } from '../../../core/utils/pagination/pagination.interface';
 import { Jobs } from '../../jobs/entities/jobs.entity';
-import { Product } from '../../products/entities/products.entity';
+import { Products } from '../../products/entities/products.entity';
 
 import { Businesses } from '../entities/businesses.entity';
 import { IBusiness, IBusinessService, RegistrationState } from '../interfaces';
 import { CreateBusinessDto, UpdateBusinessDto } from '../schemas';
-import { nanoid } from 'nanoid';
+// import { nanoid } from 'nanoid';
 
 export class BusinessService implements IBusinessService {
   private readonly businessRepository = AppDataSource.getRepository(Businesses);
   private readonly jobRepository = AppDataSource.getRepository(Jobs);
-  private readonly productRepository = AppDataSource.getRepository(Product);
+  private readonly productRepository = AppDataSource.getRepository(Products);
 
   public async createBusiness(data: CreateBusinessDto, userId: string): Promise<Businesses> {
     const regState: RegistrationState = data.coverImg || data.profileImg ? 1 : 3;
     const baseData = {
       ...data,
       userString: userId,
-      verifyString: nanoid(),
+      // verifyString: nanoid(),
       regState: regState,
       created: Date.now(),
       lastUpdated: Date.now(),
