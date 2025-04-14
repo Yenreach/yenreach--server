@@ -39,7 +39,7 @@ export class Businesses {
   @Column('varchar', { name: 'user_string', length: 255 })
   public userString: string;
 
-  @Column('uuid', { name: 'user_id' })
+  @Column('uuid', { name: 'user_id', nullable: true })
   public userId: string;
 
   @Column('varchar', { name: 'subscription_string', length: 255, nullable: true })

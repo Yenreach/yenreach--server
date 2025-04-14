@@ -20,7 +20,7 @@ export class Users {
   @Column('varchar', { name: 'password', length: 255 })
   public password: string;
 
-  @Column('varchar', { name: 'profile_image', length: 255 })
+  @Column('varchar', { name: 'profile_image', length: 255, nullable: true })
   public profileImage: string;
 
   @Column('varchar', { name: 'referral', length: 255, nullable: true })
@@ -47,13 +47,13 @@ export class Users {
   @Column('varchar', { name: 'curriculum_vitae', length: 250, nullable: true })
   public cv: string;
 
-  @Column('varchar', { name: 'date_of_birth', length: 250 })
+  @Column('varchar', { name: 'date_of_birth', length: 250, nullable: true })
   public dob: string;
 
-  @Column('varchar', { name: 'phone_number', length: 250 })
+  @Column('varchar', { name: 'phone_number', length: 250, nullable: true })
   public phoneNumber: string;
 
-  @Column('varchar', { name: 'gender', length: 250 })
+  @Column('varchar', { name: 'gender', length: 250, nullable: true })
   public gender: string;
 
   @OneToMany(() => Businesses, bussiness => bussiness.user)
