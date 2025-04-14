@@ -43,7 +43,7 @@ class App {
       logger.info(`========= SERVER 🚀=======`);
       logger.info(`========= ENV: ${this.env} ========`);
       logger.info(`========= PORT: ${this.port} ========`);
-      logger.info(`🚀 Server running on  ${env.HOST}:${this.port} 🚀`);
+      logger.info(`🚀 Server running on  ${env.DB_HOST}:${this.port} 🚀`);
       logger.info(`=================================`);
     });
 

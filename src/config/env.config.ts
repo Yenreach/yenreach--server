@@ -1,6 +1,5 @@
 import * as dotenv from 'dotenv';
 import { z } from 'zod';
-import { DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT, DB_USER } from '.';
 
 dotenv.config({ path: '.env' });
 
