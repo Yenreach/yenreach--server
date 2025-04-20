@@ -10,7 +10,7 @@ import morgan from 'morgan';
 // import { ConnectOptions, connect, set } from 'mongoose';
 import swaggerJSDoc, { SwaggerDefinition } from 'swagger-jsdoc';
 import swaggerUi, { SwaggerOptions, SwaggerUiOptions } from 'swagger-ui-express';
-import AppDataSource from './core/databases';
+import AppDataSource from './core/database';
 import { Routes } from './core/routes/interfaces/RouteInterface';
 import { errorMiddleware } from './core/middlewares/ErrorMiddleware';
 import { logger, stream, registerShutdownHandler } from './core/utils';
@@ -43,7 +43,7 @@ class App {
       logger.info(`========= SERVER 🚀=======`);
       logger.info(`========= ENV: ${this.env} ========`);
       logger.info(`========= PORT: ${this.port} ========`);
-      logger.info(`🚀 Server running on  ${env.HOST}:${this.port} 🚀`);
+      logger.info(`🚀 Server running on  ${env.DB_HOST}:${this.port} 🚀`);
       logger.info(`=================================`);
     });
 

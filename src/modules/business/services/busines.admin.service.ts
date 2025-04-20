@@ -1,10 +1,11 @@
 import { Between } from 'typeorm';
-import AppDataSource from '../../../core/databases';
+import AppDataSource from '../../../core/database';
 import { calculatePagination, paginate } from '../../../core/utils/pagination/paginate';
 import { PaginationResponse } from '../../../core/utils/pagination/pagination.interface';
-import { Businesses } from '../entities/businesses.entity';
 import { IBusinessAdminService } from '../interfaces';
 import { UpdateBusinessDto } from '../schemas';
+import { Businesses } from '../../../core/database/postgres/businesses.entity';
+import { BusinessRegistrationState } from '../enums';
 
 export class BusinessAdminService implements IBusinessAdminService {
   private readonly businessRepository = AppDataSource.getRepository(Businesses);
@@ -21,7 +22,7 @@ export class BusinessAdminService implements IBusinessAdminService {
     const { skip } = calculatePagination(page, limit);
     const [businesses, total] = await this.businessRepository.findAndCount({
       where: {
-        regStage: Between(2, 3),
+        registrationStatus: BusinessRegistrationState.PENDING,
       },
       skip,
       take: limit,
@@ -32,7 +33,7 @@ export class BusinessAdminService implements IBusinessAdminService {
     const { skip } = calculatePagination(page, limit);
     const [businesses, total] = await this.businessRepository.findAndCount({
       where: {
-        regStage: 1,
+        registrationStatus: BusinessRegistrationState.INCOMPLETE,
       },
       skip,
       take: limit,
@@ -46,7 +47,7 @@ export class BusinessAdminService implements IBusinessAdminService {
       },
     });
     if (!business) throw new Error('Business not found');
-    business.regStage = 4;
+    business.registrationStatus = BusinessRegistrationState.APPROVED;
     return await this.businessRepository.save(business);
   }
   public async declineBusiness(businessId: string): Promise<Businesses> {
@@ -65,7 +66,6 @@ export class BusinessAdminService implements IBusinessAdminService {
       },
     });
     if (!business) throw new Error('Business not found');
-    business.regStage = 4;
     await this.businessRepository.delete(business);
   }
 }

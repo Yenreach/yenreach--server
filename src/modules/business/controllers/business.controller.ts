@@ -24,7 +24,7 @@ class BusinessController {
 
   public async updateBusiness(req: Request, res: Response, next: NextFunction) {
     try {
-      const businessId = req.params.id as unknown as number;
+      const businessId = req.params.id as unknown as string;
       const businessData = req.body as UpdateBusinessDto;
       const updatedBusiness = await this.businessService.updateBusiness(businessId, businessData);
       return sendResponse(res, HttpCodes.OK, 'business created successfully', updatedBusiness);
@@ -47,7 +47,7 @@ class BusinessController {
 
   public async getBusiness(req: Request, res: Response, next: NextFunction) {
     try {
-      const businessId = req.params.id as unknown as number;
+      const businessId = req.params.id as unknown as string;
       const business = await this.businessService.getBusinessById(businessId);
       return sendResponse(res, HttpCodes.OK, 'business fetched successfully', business);
     } catch (error) {
@@ -85,6 +85,17 @@ class BusinessController {
       const businessId = req.params.id as string;
       const businessJobs = await this.businessService.getJobsByBusinessId(businessId, page, limit);
       return sendResponse(res, HttpCodes.OK, 'business jobs fetched successfully', businessJobs);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async reviewBussiness(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = req.user.verifyString;
+      const businessId = req.params.id as string;
+      const businessReview = await this.businessService.reviewBusiness(businessId, userId, req.body);
+      return sendResponse(res, HttpCodes.OK, 'business sucessfully reviewed', businessReview);
     } catch (error) {
       next(error);
     }

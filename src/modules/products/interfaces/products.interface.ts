@@ -1,13 +1,13 @@
 interface IProduct {
-  productname: string;
+  productName: string;
   businessString: string;
   productDescription: string;
   productPrice: number;
   productQuantity: number;
   productColor: string;
   productSafetyTip: string;
-  productCategories: { category: string }[];
-  productPhotos: { filename: string }[];
+  categories: { category: string }[];
+  photos: { filename: string }[];
 }
 
 export { IProduct }

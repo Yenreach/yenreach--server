@@ -1,11 +1,11 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('users', { schema: 'yenreach' })
+@Entity('users', { schema: 'yenreach_migrate_db' })
 export class Users {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;
 
-  @Column({ type: 'text', nullable: false })
+  @Column({ name: 'verify_string', type: 'text', nullable: false })
   verifyString: string;
 
   @Column('varchar', { name: 'name', length: 1000 })
