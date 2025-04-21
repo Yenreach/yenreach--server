@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn } from "typeorm";
-import { Cms } from "../../cms/entities/cms.entity";
+import { Cms } from "./cms.entity";
 
-@Entity("images")
+@Entity("images", { schema: 'yenreach' })
 export class Images {
   @PrimaryGeneratedColumn("uuid")
   id: string;

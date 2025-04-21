@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn, UpdateDateColumn } from "typeorm";
-import { Image } from "../../images/entities/image.entity";
+import { Images } from "./image.entity";
 
-@Entity("cms")
+@Entity("cms", { schema: 'yenreach' })
 export class Cms {
   @PrimaryGeneratedColumn("uuid")
   id: string;
@@ -20,7 +20,7 @@ export class Cms {
   business_image: string;
 
   // Multiple hero images (One-to-Many relationship)
-  @OneToMany(() => Image, (image) => image.cms, { cascade: true })
+  @OneToMany(() => Images, (image) => image.cms, { cascade: true })
   hero_images: Images[];
 
   @Column({ type: "text", nullable: true })

@@ -1,4 +1,5 @@
 import { DataSource } from 'typeorm';
+import env from '../config/env.config'
 import { Blogs } from '../core/database/postgres/blogs.entity';
 import { BusinessCategories } from '../core/database/postgres/business-categories.entity';
 import { BusinessPhotos } from '../core/database/postgres/business-photos.entity';
@@ -32,11 +33,11 @@ import { Businessvideolinks } from '../core/database/entities/entities/Businessv
 
 export const PostgresDataSource = new DataSource({
   type: 'postgres',
-  host: 'localhost',
-  port: 5434,
-  username: 'yenreach_user',
-  password: 'yenreach',
-  database: 'yenreach_db',
+  host: env.DB_HOST,
+  port: env.DB_PORT,
+  username: env.DB_USER,
+  password: env.DB_PASSWORD,
+  database: env.DB_NAME,
   synchronize: true,
   logging: true,
   entities: [
@@ -65,11 +66,11 @@ export const PostgresDataSource = new DataSource({
 
 export const SqlDataSource = new DataSource({
   type: 'mysql', //
-  host: 'localhost',
-  port: 3306,
-  username: 'yenreach',
-  password: 'yenreach',
-  database: 'yenreach_migrate_db',
+  host: env.DB_HOST_OLD,
+  port: env.DB_PORT_OLD,
+  username: env.DB_USER_OLD,
+  // password: env.DB_PASSWORD_OLD,
+  database: env.DB_NAME_OLD,
   synchronize: false,
   logging: false,
   entities: [
