@@ -1,4 +1,4 @@
-import { Between } from 'typeorm';
+import { Between, Equal, Not } from 'typeorm';
 import AppDataSource from '../../../core/database';
 import { calculatePagination, paginate } from '../../../core/utils/pagination/paginate';
 import { PaginationResponse } from '../../../core/utils/pagination/pagination.interface';
@@ -13,11 +13,21 @@ export class BusinessAdminService implements IBusinessAdminService {
   public async getAllBusinesses(page = 1, limit = 10): Promise<PaginationResponse<Businesses>> {
     const { skip } = calculatePagination(page, limit);
     const [businesses, total] = await this.businessRepository.findAndCount({
+      where: {
+        registrationStatus: Not(Equal(BusinessRegistrationState.DECLINED)),
+      },
+      relations: {
+        categories: true,
+        photos: true,
+        workingHours: true,
+        reviews: true,
+      },
       skip,
       take: limit,
     });
     return paginate(businesses, total, page, limit);
   }
+
   public async getPendingBusinesses(page = 1, limit = 10): Promise<PaginationResponse<Businesses>> {
     const { skip } = calculatePagination(page, limit);
     const [businesses, total] = await this.businessRepository.findAndCount({
@@ -29,6 +39,7 @@ export class BusinessAdminService implements IBusinessAdminService {
     });
     return paginate(businesses, total, page, limit);
   }
+
   public async getIncompleteBusinesses(page = 1, limit = 10): Promise<PaginationResponse<Businesses>> {
     const { skip } = calculatePagination(page, limit);
     const [businesses, total] = await this.businessRepository.findAndCount({
@@ -40,29 +51,40 @@ export class BusinessAdminService implements IBusinessAdminService {
     });
     return paginate(businesses, total, page, limit);
   }
+
   public async approveBusiness(businessId: string): Promise<Businesses> {
     const business = await this.businessRepository.findOne({
       where: {
-        verifyString: businessId,
+        id: businessId,
       },
     });
     if (!business) throw new Error('Business not found');
     business.registrationStatus = BusinessRegistrationState.APPROVED;
     return await this.businessRepository.save(business);
   }
+
   public async declineBusiness(businessId: string): Promise<Businesses> {
-    throw new Error('Method not implemented.');
+    const business = await this.businessRepository.findOne({
+      where: {
+        id: businessId,
+      },
+    });
+    if (!business) throw new Error('Business not found');
+    business.registrationStatus = BusinessRegistrationState.DECLINED;
+    return await this.businessRepository.save(business);
   }
+
   public async editBusinness(businessId: string, data: UpdateBusinessDto): Promise<Businesses> {
-    const business = await this.businessRepository.findOneBy({ verifyString: businessId });
+    const business = await this.businessRepository.findOneBy({ id: businessId });
     if (!business) throw new Error('Business not found');
     Object.assign(business, data);
     return await this.businessRepository.save(business);
   }
+
   public async deleteBusiness(businessId: string): Promise<void> {
     const business = await this.businessRepository.findOne({
       where: {
-        verifyString: businessId,
+        id: businessId,
       },
     });
     if (!business) throw new Error('Business not found');

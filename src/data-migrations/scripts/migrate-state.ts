@@ -7,13 +7,13 @@ import { PostgresDataSource, SqlDataSource } from '../connection';
 const migrateStates = async () => {
   try {
     // Initialize connections to both databases
-    console.log('Initializing SQL data source...');
-    await SqlDataSource.initialize();
-    console.log('SQL data source initialized successfully');
-
     console.log('Initializing PostgreSQL data source...');
     await PostgresDataSource.initialize();
     console.log('PostgreSQL data source initialized successfully');
+
+    console.log('Initializing SQL data source...');
+    await SqlDataSource.initialize();
+    console.log('SQL data source initialized successfully');
 
     // Initialize the migration factory with your old and new data sources
     const migrationFactory = new MigrationFactory(SqlDataSource, PostgresDataSource);

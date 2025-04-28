@@ -10,7 +10,7 @@ export class BusinessWorkingHours {
   @Column('uuid', { name: 'business_id' })
   public businessId: string;
 
-  @ManyToOne(() => Businesses)
+  @ManyToOne(() => Businesses, business => business.workingHours)
   @JoinColumn({ name: 'business_id' })
   public business: Businesses;
 
@@ -18,10 +18,10 @@ export class BusinessWorkingHours {
   public days: string;
 
   @Column('varchar', { name: 'opening_time', length: 255 })
-  public opening_time: string;
+  public openingTime: string;
 
   @Column('varchar', { name: 'closing_time', length: 255 })
-  public closing_time: string;
+  public closingTime: string;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   public createdAt: Date;

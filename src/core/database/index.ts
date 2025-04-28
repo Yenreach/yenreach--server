@@ -11,7 +11,6 @@ const AppDataSource = new DataSource({
   synchronize: true,
   logging: true,
   entities: ['src/core/database/postgres/*.entity.ts'],
-  // migrations: ['sc/migrations/*.ts'],
   subscribers: [],
 });
 

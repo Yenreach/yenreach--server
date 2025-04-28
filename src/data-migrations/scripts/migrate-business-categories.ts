@@ -19,7 +19,7 @@ async function migrateBusinessCategories() {
 
     const migrationFactory = new MigrationFactory(SqlDataSource, PostgresDataSource);
 
-    const tranformCategories = async (oldBusinessCategories: Businesscategories): Promise<DeepPartial<BusinessCategories>> => {
+    const tranformBusinessCategories = async (oldBusinessCategories: Businesscategories): Promise<DeepPartial<BusinessCategories>> => {
       const [business, category] = await Promise.all([
         PostgresDataSource.getRepository(Businesses).findOneBy({
           verifyString: oldBusinessCategories.businessString,
@@ -38,7 +38,7 @@ async function migrateBusinessCategories() {
     };
 
     console.log('Starting Businesss Categories migration...');
-    await migrationFactory.migrateAllInTransaction(Businesscategories, BusinessCategories, tranformCategories);
+    await migrationFactory.migrateAllInTransaction(Businesscategories, BusinessCategories, tranformBusinessCategories);
     console.log('Business Categories migration completed successfully');
   } catch (error) {
     console.error('Migration failed:', error);

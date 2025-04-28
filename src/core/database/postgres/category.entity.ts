@@ -35,10 +35,10 @@ export class Categories {
   public categories: Categories[];
 
   @OneToMany(() => BusinessCategories, (businessCategory: BusinessCategories) => businessCategory.business)
-  businessCategories: BusinessCategories[];
+  businesses: BusinessCategories[];
 
   @OneToMany(() => ProductCategories, (productCategory: ProductCategories) => productCategory.product)
-  productCategories: ProductCategories[];
+  products: ProductCategories[];
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   public createdAt: Date;

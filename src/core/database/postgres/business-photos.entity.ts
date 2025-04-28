@@ -10,7 +10,7 @@ export class BusinessPhotos {
   @Column('uuid', { name: 'business_id' })
   public businessId: string;
 
-  @ManyToOne(() => Businesses)
+  @ManyToOne(() => Businesses, business => business.photos)
   @JoinColumn({ name: 'business_id' })
   public business: Businesses;
 

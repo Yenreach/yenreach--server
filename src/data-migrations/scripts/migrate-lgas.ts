@@ -7,13 +7,13 @@ import { States } from '../../core/database/postgres/states.entity';
 
 const migrateLga = async () => {
   try {
-    console.log('Initializing SQL data source...');
-    await SqlDataSource.initialize();
-    console.log('SQL data source initialized successfully');
-
     console.log('Initializing PostgreSQL data source...');
     await PostgresDataSource.initialize();
     console.log('PostgreSQL data source initialized successfully');
+
+    console.log('Initializing SQL data source...');
+    await SqlDataSource.initialize();
+    console.log('SQL data source initialized successfully');
 
     const migrationFactory = new MigrationFactory(SqlDataSource, PostgresDataSource);
 
