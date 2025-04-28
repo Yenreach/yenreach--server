@@ -3,7 +3,6 @@ import { ProductCategory } from "./product-categories.entity";
 import { ProductPhoto } from "./product-photos.entity";
 import { IProduct } from "../interfaces";
 // import { Business } from "./business.entity";
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from "typeorm";
 // import { Businesses } from "../../business/entities/businesses.entity";
 
 @Entity("products")

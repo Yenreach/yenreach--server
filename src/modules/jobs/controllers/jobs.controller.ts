@@ -22,7 +22,7 @@ class JobsController {
 
   async updateJobs(req: Request, res: Response, next: NextFunction) {
     try {
-      const jobId = parseInt(req.params.id);
+      const jobId = req.params.id;
       const updateData: UpdateJobDto = req.body;
       const updatedJob = await jobsService.updateJob(jobId, updateData);
       return sendResponse(res, HttpCodes.OK, 'job updated successfully', updatedJob);
@@ -46,7 +46,7 @@ class JobsController {
 
   async getJobsById(req: Request, res: Response, next: NextFunction) {
     try {
-      const jobId = parseInt(req.params.id);
+      const jobId = req.params.id;
       const jobs = await jobsService.getJobById(jobId);
       if (!jobs) {
         throw new HttpException(HttpCodes.NOT_FOUND, 'job do not exists');

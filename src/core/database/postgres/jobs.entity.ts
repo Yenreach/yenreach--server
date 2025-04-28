@@ -36,7 +36,7 @@ export class Jobs {
   public companyName: string;
 
   @Column('varchar', { name: 'tittle', length: 255 })
-  public tittle: string;
+  public title: string;
 
   @Column('varchar', { name: 'type', length: 355 })
   public type: string;
@@ -50,8 +50,8 @@ export class Jobs {
   @Column('text', { name: 'description' })
   public description: string;
 
-  @Column('text', { name: 'benefits' })
-  public benefits: boolean;
+  @Column('text', { name: 'benefit' })
+  public benefit: boolean;
 
   @Column('enum', { name: 'status', enum: JobStatus })
   public status: JobStatus;
