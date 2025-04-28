@@ -7,7 +7,7 @@ export class Users {
   @PrimaryGeneratedColumn('uuid')
   public id: string;
 
-  @Column('varchar', { name: 'verify_string', length: 255 })
+  @Column('varchar', { name: 'verify_string', length: 255, nullable: true })
   public verifyString: string;
 
   @Column('varchar', { name: 'name', length: 1000 })

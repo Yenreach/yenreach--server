@@ -65,4 +65,13 @@ interface IBusiness {
   lastUpdated: number;
 }
 
+export type PathParams = {
+  id: string;
+};
+
+export type BusinessQueryParams = {
+  page?: string;
+  limit?: string;
+};
+
 export { IBusinessService, IBusiness, IBusinessAdminService };

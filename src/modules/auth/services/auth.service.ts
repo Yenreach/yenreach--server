@@ -2,12 +2,12 @@ import env from '../../../config/env.config';
 import { HttpCodes } from '../../../core/constants';
 import AppDataSource from '../../../core/database';
 import { HttpException } from '../../../core/exceptions';
-import { Users } from '../../user/entities/user.entity';
 import { UserService } from '../../user/services';
 import { CreateAuthDto, LoginDto } from '../dto/auth.dto';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import { Response } from 'express';
+import { Users } from '../../../core/database/postgres/users.entity';
 
 const userService = new UserService();
 
@@ -16,15 +16,14 @@ class AuthService {
 
   async register(data: CreateAuthDto): Promise<Users> {
     const userExists = await userService.getUserByEmail({ email: data.email });
-    if (!!userExists) {
+    if (!userExists) {
       throw new HttpException(HttpCodes.BAD_REQUEST, 'email already exists');
     }
 
     const hashedPwd = await bcrypt.hash(data.password, 10);
-    const baseData = {
+
+    const baseData: CreateAuthDto = {
       ...data,
-      verifyString: Date.now(),
-      timer: Date.now(),
       password: hashedPwd,
     };
 
