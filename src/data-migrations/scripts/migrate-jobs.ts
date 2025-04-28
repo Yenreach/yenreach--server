@@ -3,6 +3,9 @@ import { Jobs as OldJobs } from '../../core/database/entities/entities/Jobs';
 import { PostgresDataSource, SqlDataSource } from '../connection';
 import { MigrationFactory } from '../migration.factory';
 import { Jobs } from '../../core/database/postgres/jobs.entity';
+import { Businesses } from '../../core/database/postgres/businesses.entity';
+import { convertEpochToISO } from '../../core/utils/helpers';
+import { JobStatus } from '../../modules/jobs/enums';
 
 async function migrateJobs() {
   try {
@@ -16,29 +19,36 @@ async function migrateJobs() {
 
     const migrationFactory = new MigrationFactory(SqlDataSource, PostgresDataSource);
 
-    const transformProducts = async (oldJobs: OldJobs): Promise<DeepPartial<Jobs>> => {
-      const business = await PostgresDataSource.getRepository(Businesses).findOneBy({
-        verifyString: oldProuct.businessString,
-      });
+    const transformJobs = async (oldJobs: OldJobs): Promise<DeepPartial<Jobs>> => {
+      if (!oldJobs.adminJob) {
+        const business = await PostgresDataSource.getRepository(Businesses).findOneBy({
+          verifyString: oldJobs.businessString,
+        });
 
-      return {
-        productString: oldProuct.productString,
-        businessId: business.id,
-        color: oldProuct.productColor,
-        safetyTip: oldProuct.productSafetyTip,
-        name: oldProuct.productName,
-        description: oldProuct.productDescription,
-        price: oldProuct.productPrice,
-        quantity: oldProuct.productQuantity,
-        status: oldProuct.productStatus ? ProductStatus.Available : ProductStatus.OutOfStock,
-        createdAt: convertEpochToISO(oldProuct.createdAt),
-        updatedAt: convertEpochToISO(oldProuct.updatedAt),
-      };
+        return {
+          jobString: oldJobs.jobString,
+          businessId: business.id,
+          tittle: oldJobs.jobTitle,
+          location: oldJobs.location,
+          isAdminJob: false,
+          adminId: null,
+          companyName: oldJobs.companyName,
+          description: oldJobs.jobOverview,
+          benefits: oldJobs.jobBenefit,
+          type: oldJobs.jobType,
+          applicationMethod: oldJobs.jobLink,
+          salary: oldJobs.salary,
+          applicationExpiry: oldJobs.expiryDate,
+          status: oldJobs.status ? JobStatus.Open : JobStatus.Closed,
+          createdAt: convertEpochToISO(oldJobs.createdAt),
+          updatedAt: convertEpochToISO(oldJobs.updatedAt),
+        };
+      }
     };
 
-    console.log('Starting Products migration...');
-    await migrationFactory.migrateAllInTransaction(OldProducts, Products, transformProducts);
-    console.log('Products migration completed successfully');
+    console.log('Starting Jobs migration...');
+    await migrationFactory.migrateAllInTransaction(OldJobs, Jobs, transformJobs);
+    console.log('Jobs migration completed successfully');
   } catch (error) {
     console.error('Migration failed:', error);
   } finally {
@@ -49,4 +59,4 @@ async function migrateJobs() {
   }
 }
 
-migrateProducts();
+migrateJobs();

@@ -47,11 +47,14 @@ export class Jobs {
   @Column('varchar', { name: 'salary', length: 255 })
   public salary: string;
 
+  @Column('varchar', { name: 'application_expiry', length: 255 })
+  public applicationExpiry: string;
+
   @Column('text', { name: 'description' })
   public description: string;
 
   @Column('text', { name: 'benefits' })
-  public benefits: boolean;
+  public benefits: string;
 
   @Column('enum', { name: 'status', enum: JobStatus })
   public status: JobStatus;

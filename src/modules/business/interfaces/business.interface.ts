@@ -1,24 +1,29 @@
+import { BusinessPhotos } from '../../../core/database/postgres/business-photos.entity';
+import { BusinessReviews } from '../../../core/database/postgres/business-reviews.entity';
+import { BusinessWorkingHours } from '../../../core/database/postgres/business-working-hours.entity';
 import { Businesses } from '../../../core/database/postgres/businesses.entity';
+import { Jobs } from '../../../core/database/postgres/jobs.entity';
+import { Products } from '../../../core/database/postgres/product.entity';
 import { PaginationResponse } from '../../../core/utils/pagination/pagination.interface';
-import { Jobs } from '../../jobs/entities/jobs.entity';
-import { Product } from '../../products/entities/products.entity';
-import { CreateBusinessDto, UpdateBusinessDto } from '../schemas';
+
+import { AddBusinessWorkingHoursDto, AddBussinessPhotoDto, CreateBusinessDto, UpdateBusinessDto } from '../schemas';
+
 import { ReviewBusinessDto } from '../schemas/business-review.schema';
 
 interface IBusinessService {
   getAllBusinesses(page?: number, limit?: number): Promise<PaginationResponse<Businesses>>;
   getBusinessById(id: string): Promise<Businesses | null>;
   getJobsByBusinessId(businessId: string, page?: number, limit?: number): Promise<PaginationResponse<Jobs>>;
-  getProductsByBusinessId(businessId: string, page?: number, limit?: number): Promise<PaginationResponse<Product>>;
-  deleteBusinessProductById(businessId: string, productId: number): Promise<boolean>;
+  getProductsByBusinessId(businessId: string, page?: number, limit?: number): Promise<PaginationResponse<Products>>;
+  deleteBusinessProductById(businessId: string, productId: string): Promise<boolean>;
   createBusiness(data: CreateBusinessDto, userId: string): Promise<Businesses>;
   updateBusiness(id: string, data: UpdateBusinessDto): Promise<Businesses>;
   getBusinessByUserId(userId: string, page?: number, limit?: number): Promise<PaginationResponse<Businesses>>;
-  addWorkingHours(businessId: string): Promise<any>;
-  reviewBusiness(businessId: string, userId: string, data: ReviewBusinessDto): Promise<any>;
-  addBusinessPhotos(businessId: string): Promise<any>;
-  addBusinessBranch(businessId: string): Promise<any>;
-  addBusinessFacitlity(businessId: string): Promise<any>;
+  addWorkingHours(businessId: string, data: AddBusinessWorkingHoursDto): Promise<BusinessWorkingHours>;
+  reviewBusiness(businessId: string, userId: string, data: ReviewBusinessDto): Promise<BusinessReviews>;
+  addBusinessPhotos(businessId: string, data: AddBussinessPhotoDto): Promise<BusinessPhotos>;
+  // addBusinessBranch(businessId: string): Promise<any>;
+  // addBusinessFacitlity(businessId: string): Promise<any>;
 }
 
 interface IBusinessAdminService {

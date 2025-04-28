@@ -13,7 +13,7 @@ export class BusinessReviews {
   @Column('uuid', { name: 'user_id' })
   public userId: string;
 
-  @ManyToOne(() => Businesses)
+  @ManyToOne(() => Businesses, business => business.reviews)
   @JoinColumn({ name: 'business_id' })
   public business: Businesses;
 

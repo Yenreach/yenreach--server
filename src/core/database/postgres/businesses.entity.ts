@@ -39,7 +39,7 @@ export class Businesses {
   @Column('varchar', { name: 'user_string', length: 255 })
   public userString: string;
 
-  @Column('uuid', { name: 'user_id', nullable: true })
+  @Column('uuid', { name: 'user_id' })
   public userId: string;
 
   @Column('varchar', { name: 'subscription_string', length: 255, nullable: true })
@@ -51,10 +51,10 @@ export class Businesses {
   @Column('varchar', { name: 'town', length: 500 })
   public town: string;
 
-  @Column('varchar', { name: 'lga_id', nullable: true })
+  @Column('varchar', { name: 'lga_id' })
   public lgaId: string;
 
-  @Column('varchar', { name: 'state_id', nullable: true })
+  @Column('varchar', { name: 'state_id' })
   public stateId: string;
 
   @Column('varchar', { name: 'phone_number', length: 100 })
@@ -121,19 +121,19 @@ export class Businesses {
   public products: Products[];
 
   @OneToMany(() => BusinessCategories, businessCategory => businessCategory.business)
-  public businessCategories: BusinessCategories[];
+  public categories: BusinessCategories[];
 
   @OneToMany(() => BusinessPhotos, businessPhotos => businessPhotos.business)
-  public businessPhotos: BusinessPhotos[];
+  public photos: BusinessPhotos[];
 
   @OneToMany(() => BusinessReviews, businessReviews => businessReviews.business)
-  public businessReviews: BusinessReviews[];
+  public reviews: BusinessReviews[];
 
   @OneToMany(() => BusinessVideos, businessVideos => businessVideos.business)
-  public businessVideos: BusinessVideos[];
+  public videos: BusinessVideos[];
 
   @OneToMany(() => BusinessWorkingHours, businessWorkingHours => businessWorkingHours.business)
-  public businessWorkingHours: BusinessWorkingHours[];
+  public workingHours: BusinessWorkingHours[];
 
   @ManyToOne(() => Users, (user: Users) => user.businesses)
   @JoinColumn({ name: 'user_id' })

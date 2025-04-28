@@ -25,8 +25,8 @@ async function migrateBusinessWorkingHours() {
       return {
         businessId: business.id,
         days: oldBusinessWorkingHourse.day,
-        opening_time: oldBusinessWorkingHourse.openingTime,
-        closing_time: oldBusinessWorkingHourse.closingTime,
+        openingTime: oldBusinessWorkingHourse.openingTime,
+        closingTime: oldBusinessWorkingHourse.closingTime,
       };
     };
 

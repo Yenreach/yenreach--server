@@ -13,11 +13,11 @@ export class BusinessCategories {
   @Column('uuid', { name: 'business_id' })
   public businessId: string;
 
-  @ManyToOne(() => Businesses, business => business.businessCategories)
+  @ManyToOne(() => Businesses, business => business.categories)
   @JoinColumn({ name: 'business_id' })
   public business: Businesses;
 
-  @ManyToOne(() => Categories, category => category.businessCategories)
+  @ManyToOne(() => Categories, category => category.businesses)
   @JoinColumn({ name: 'category_id' })
   public category: Categories;
 
