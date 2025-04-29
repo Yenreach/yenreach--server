@@ -33,7 +33,7 @@ export class BusinessService implements IBusinessService {
   private transformBusiness = (business: Businesses) => {
     return {
       ...business,
-      categories: business.categories.map(c => c.category),
+      categories: business.categories.map(c => c.category.category),
       photos: business.photos.map(p => p.mediaPath),
       state: business.state.name,
       lga: business.lga.name,
@@ -104,7 +104,9 @@ export class BusinessService implements IBusinessService {
       skip,
       take: limit,
       relations: {
-        categories: true,
+        categories: {
+          category: true,
+        },
         photos: true,
         workingHours: true,
         reviews: true,
