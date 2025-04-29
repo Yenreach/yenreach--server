@@ -1,9 +1,9 @@
 import AppDataSource from '../../../core/database';
+import { Users } from '../../../core/database/postgres/users.entity';
 import { calculatePagination, paginate } from '../../../core/utils/pagination/paginate';
 import { PaginationResponse } from '../../../core/utils/pagination/pagination.interface';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
-import { Users } from '../entities/user.entity';
 
 class UserService {
   private readonly userRepository = AppDataSource.getRepository(Users);
@@ -13,7 +13,7 @@ class UserService {
     return await this.userRepository.save(newUser);
   }
 
-  async updateUser(id: number, data: UpdateUserDto): Promise<Users | null> {
+  async updateUser(id: string, data: UpdateUserDto): Promise<Users | null> {
     const user = await this.userRepository.findOneBy({ id });
     if (!user) {
       throw new Error('User not found');
@@ -33,7 +33,7 @@ class UserService {
     return paginate(users, total, page, limit);
   }
 
-  async getUserById(id: number): Promise<Users | null> {
+  async getUserById(id: string): Promise<Users | null> {
     return await this.userRepository.findOneBy({ id });
   }
 
@@ -41,7 +41,7 @@ class UserService {
     return await this.userRepository.findOneBy({ email });
   }
 
-  async deleteUser(id: number): Promise<boolean> {
+  async deleteUser(id: string): Promise<boolean> {
     const result = await this.userRepository.delete(id);
     return result.affected > 0;
   }

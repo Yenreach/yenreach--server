@@ -2,12 +2,12 @@ import env from '../../../config/env.config';
 import { HttpCodes } from '../../../core/constants';
 import AppDataSource from '../../../core/database';
 import { HttpException } from '../../../core/exceptions';
-import { Users } from '../../user/entities/user.entity';
 import { UserService } from '../../user/services';
 import { CreateAuthDto, LoginDto } from '../dto/auth.dto';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import { Response } from 'express';
+import { Users } from '../../../core/database/postgres/users.entity';
 
 const userService = new UserService();
 

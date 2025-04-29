@@ -8,10 +8,7 @@ import { Products } from '../entities/products.entity';
 import { AddCategoryDto, AddProductCategoryDto, AddProductPhotoDto, AddProductPhotoSchema, CreateProductDto, GetProductsDto, RemoveProductCategoryDto, RemoveProductCategorySchema, RemoveProductPhotoDto, RemoveProductPhotoSchema, UpdateProductDto } from '../schemas/products.schema';
 
 class ProductsService {
-  constructor(
-    private dataSource: DataSource // Inject the DataSource instance
-  ) {}
-
+  private readonly dataSource = AppDataSource;
   private readonly productRepository = AppDataSource.getRepository(Products);
   private readonly productCategoryRepository = AppDataSource.getRepository(ProductCategory);
   private readonly productPhotoRepository = AppDataSource.getRepository(ProductPhoto);
