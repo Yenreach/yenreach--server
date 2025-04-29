@@ -15,13 +15,13 @@ class AuthService {
   private readonly userRepository = AppDataSource.getRepository(Users);
 
   async register(data: CreateAuthDto): Promise<Users> {
-    CreateAuthSchema.parse(data);
+    const parsed = CreateAuthSchema.parse(data);
 
     const userExists = await userService.getUserByEmail({ email: data.email });
 
-    console.log(userExists);
+    console.log({userExists});
 
-    if (!userExists) {
+    if (!!userExists) {
       throw new HttpException(HttpCodes.BAD_REQUEST, 'email already exists');
     }
 

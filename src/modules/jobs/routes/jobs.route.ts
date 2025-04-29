@@ -4,6 +4,7 @@ import { Routes } from '../../../core/routes/interfaces';
 import { authMiddleware } from '../../../core/middlewares';
 import { validateRequest } from '../../../core/middlewares/ValidationMiddleware';
 import { JobSchema } from '../schemas/jobs.schema';
+import { z } from 'zod';
 
 class JobsRoute implements Routes {
   public path = '/jobs';
@@ -19,11 +20,17 @@ class JobsRoute implements Routes {
       next()
     })
 
-    this.router.post(`${this.path}/`, authMiddleware, validateRequest([JobSchema]), this.JobsController.createJobs)
+    this.router.post(`${this.path}/`, authMiddleware, validateRequest([z.object({ body: JobSchema })]), this.JobsController.createJobs)
 
-    this.router.get(`${this.path}/`, this.JobsController.getAllJobs)
+    this.router.get(`${this.path}`, this.JobsController.getJobs)
+
+    this.router.get(`${this.path}/all`, this.JobsController.getAllJobs)
 
     this.router.get(`${this.path}/:id`, this.JobsController.getJobsById)
+
+    this.router.get(`${this.path}/:id/related`, this.JobsController.getRelatedJobs)
+
+    this.router.get(`${this.path}/:business_string/jobs`, this.JobsController.getBusinessJobs)
 
     this.router.put(`${this.path}/:id`, this.JobsController.updateJobs)
 

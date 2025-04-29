@@ -1,49 +1,49 @@
-import { DataSource, getManager, Like } from 'typeorm';
+import { Like } from 'typeorm';
 import AppDataSource from '../../../core/database';
 import { calculatePagination, paginate } from '../../../core/utils/pagination/paginate';
 import { PaginationResponse } from '../../../core/utils/pagination/pagination.interface';
-import { ProductCategory } from '../entities/product-categories.entity';
-import { ProductPhoto } from '../entities/product-photos.entity';
-import { Products } from '../entities/products.entity';
 import { AddCategoryDto, AddProductCategoryDto, AddProductPhotoDto, AddProductPhotoSchema, CreateProductDto, GetProductsDto, RemoveProductCategoryDto, RemoveProductCategorySchema, RemoveProductPhotoDto, RemoveProductPhotoSchema, UpdateProductDto } from '../schemas/products.schema';
+import { Products } from '../../../core/database/postgres/product.entity';
+import { ProductPhotos } from '../../../core/database/postgres/product-photos.entity';
+import { ProductCategories } from '../../../core/database/postgres/product-category.entity';
+import { ProductStatus } from '../enums';
+import { Categories } from '../../../core/database/postgres/category.entity';
 
 class ProductsService {
   private readonly dataSource = AppDataSource;
+  private readonly categoryRepository = AppDataSource.getRepository(Categories);
   private readonly productRepository = AppDataSource.getRepository(Products);
-  private readonly productCategoryRepository = AppDataSource.getRepository(ProductCategory);
-  private readonly productPhotoRepository = AppDataSource.getRepository(ProductPhoto);
+  private readonly productCategoryRepository = AppDataSource.getRepository(ProductCategories);
+  private readonly productPhotoRepository = AppDataSource.getRepository(ProductPhotos);
 
   async createProduct(data: CreateProductDto): Promise<any> {
     // const newProduct = this.productRepository.create(data);
     // return await this.productRepository.save(newProduct);
 
-    // Create or find categories
-    const categories = await Promise.all(
-        data.categories.map(async (data) => {
-            let category = await this.productCategoryRepository.findOne({ where: { category: data.category } });
-
-            if (!category) {
-                category = this.productCategoryRepository.create({ category: data.category });
-                await this.productCategoryRepository.save(category);
-            }
-
-            return category;
-        })
-    );
+    const { photos: medias, categories: catIds, ...productData } = data;
 
     // Create product
-    const product = this.productRepository.create({
-      productName: data.name,
-      categories,
-    });
+    const product = this.productRepository.create(productData);
 
     const savedProduct = await this.productRepository.save(product)
 
+    // Find Category
+    const categories = catIds.map(async (id) => {
+      let category = await this.productCategoryRepository.findOne({ where: { categoryId: id } });
+
+      if (!category) {
+          category = this.productCategoryRepository.create({ categoryId: id, productId: savedProduct.id });
+          await this.productCategoryRepository.save(category);
+      }
+
+      return category;
+    });
+
     // Create product photos and associate them with the product
-    const photos = data.photos.map((data) => {
+    const photos = medias.map((url) => {
       const photo = this.productPhotoRepository.create({
-        filename: data.filename,
-        product: savedProduct,
+        mediaPath: url,
+        productId: savedProduct.id,
       });
 
       return photo;
@@ -51,14 +51,19 @@ class ProductsService {
     
     await this.productPhotoRepository.save(photos)
 
-    return savedProduct;
+    return {
+      ...savedProduct,
+     categories,
+     photos,
+    };
   }
 
-  async updateProduct(id: number, data: UpdateProductDto): Promise<Products | null> {
-    const queryRunner = this.dataSource.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
+  async updateProduct(id: string, data: UpdateProductDto): Promise<Products | null> {
+    // const queryRunner = this.dataSource.createQueryRunner();
+    // await queryRunner.connect();
+    // await queryRunner.startTransaction();
 
+    const { photos: medias, categories: catIds, ...productData } = data;
 
     const product = await this.productRepository.findOne({
       where: { id },
@@ -70,20 +75,32 @@ class ProductsService {
       throw new Error("Product not found");
     }
   
-    Object.assign(product, data);
+    Object.assign(product, productData);
 
     // Update categories (only existing ones)
-    if (data.categories) {
-      const existingCategories = await this.productCategoryRepository.find({
-        where: data.categories.map((c) => ({ category: c.category })),
-      });
-      product.categories = existingCategories;
+    if (catIds && catIds.length > 0) {
+      const existingCategories = new Set(product.categories.map((c) => c.categoryId));
+      const newCategories = catIds.filter((id) => !existingCategories.has(id)); // New ones
+      const categoriesToRemove = product.categories.filter((c) => !catIds.some((id) => id === c.categoryId)); // Old ones
+
+      // Remove only outdated categories
+      if (categoriesToRemove.length > 0) {
+        await this.productCategoryRepository.remove(categoriesToRemove);
+      } 
+      // Add only new categories
+      if (newCategories.length > 0) {
+        const categoryEntities = newCategories.map((catId) =>
+          this.productCategoryRepository.create({ categoryId: catId, productId: product.id })
+        );
+        await this.productCategoryRepository.save(categoryEntities);
+      } 
     }
+
   
-    if (data.photos) {
-      const existingPhotos = new Set(product.photos.map((p) => p.filename));
-      const newPhotos = data.photos.filter((p) => !existingPhotos.has(p.filename)); // New ones
-      const photosToRemove = product.photos.filter((p) => !data.photos.some((np) => np.filename === p.filename)); // Old ones
+    if (medias && medias.length > 0) {
+      const existingPhotos = new Set(product.photos.map((p) => p.mediaPath));
+      const newPhotos = medias.filter((p) => !existingPhotos.has(p)); // New ones
+      const photosToRemove = product.photos.filter((p) => !medias.some((np) => np === p.mediaPath)); // Old ones
   
       // Remove only outdated photos
       if (photosToRemove.length > 0) {
@@ -92,8 +109,8 @@ class ProductsService {
   
       // Add only new photos
       if (newPhotos.length > 0) {
-        const photoEntities = newPhotos.map((p) =>
-          this.productPhotoRepository.create({ filename: p.filename, product })
+        const photoEntities = newPhotos.map((media) =>
+          this.productPhotoRepository.create({ mediaPath: media, product })
         );
         await this.productPhotoRepository.save(photoEntities);
       }
@@ -116,8 +133,8 @@ class ProductsService {
   async getProducts({ skip = 0, per_page = 20, search = "", business }: GetProductsDto) {
     const queryConditions: any = {
       where: {
-        product_status: "active",
-        ...(business && { businessString: business }),
+        status: ProductStatus.Available,
+        ...(business && { businessId: business }),
       },
       relations: ["categories", "photos"],
       skip,
@@ -128,7 +145,7 @@ class ProductsService {
       queryConditions.where = [
         {
           ...queryConditions.where,
-          productName: Like(`%${search}%`),
+          name: Like(`%${search}%`),
         },
         { categories: { category: Like(`%${search}%`) } },
       ];
@@ -154,21 +171,28 @@ class ProductsService {
 
   async getRelatedProducts(productId: string, limit = 5) {
     const product = await this.productRepository.findOne({
-      where: { verifyString: productId },
+      where: { id: productId },
       relations: ["categories"],
     });
 
     if (!product) throw new Error("Product not found");
 
-    const categoryStrings = product.categories.map((cat) => cat.category_string);
+    const categoryStrings = product.categories.map((cat) => cat.categoryId);
+    if (!categoryStrings?.length) { 
+      // throw new Error("Product categories not found");
+      return {
+        status: "success",
+        data: [],
+      };
+    }
 
     // Find related products that share at least one category
     const relatedProducts = await this.productRepository
       .createQueryBuilder("product")
       .innerJoin("product.categories", "category")
-      .where("category.category_string IN (:...categoryStrings)", { categoryStrings })
-      .andWhere("product.product_string != :productId", { productId }) // Exclude the current product
-      .andWhere("product.product_status = :status", { status: "active" }) // Filter active products
+      .where("category.id IN (:...categoryStrings)", { categoryStrings })
+      .andWhere("product.id != :productId", { productId }) // Exclude the current product
+      .andWhere("product.id = :status", { status: ProductStatus.Available }) // Filter active products
       .take(limit)
       .getMany();
 
@@ -178,11 +202,11 @@ class ProductsService {
     };
   }
 
-  async getProductById(id: number): Promise<Products | null> {
+  async getProductById(id: string): Promise<Products | null> {
     return await this.productRepository.findOneBy({ id });
   }
 
-  async deleteProduct(id: number): Promise<boolean> {
+  async deleteProduct(id: string): Promise<boolean> {
     const result = await this.productRepository.delete(id);
     return result.affected > 0;
   }
@@ -192,12 +216,12 @@ class ProductsService {
     const validatedData = AddProductPhotoSchema.parse(data);
     const { product_string, filename } = validatedData;
 
-    const product = await this.productRepository.findOne({ where: { verifyString: product_string } });
+    const product = await this.productRepository.findOne({ where: { id: product_string } });
     if (!product) throw new Error("Product not found");
 
     const productPhoto = this.productPhotoRepository.create({
       product,
-      filename,
+      mediaPath: filename,
     });
 
     return await this.productPhotoRepository.save(productPhoto);
@@ -205,48 +229,50 @@ class ProductsService {
 
   // product categories
   async createCategory(data: AddCategoryDto) {
-    const { category, details } = data;
+    const { category } = data;
 
-    const existingCategory = await this.productCategoryRepository.findOne({ where: { category } });
+    const existingCategory = await this.categoryRepository.findOne({ where: { category } });
     if (existingCategory) throw new Error("Category already exists");
 
-    const newCategory = this.productCategoryRepository.create({
+    const newCategory = this.categoryRepository.create({
       category,
-      details,
+
     });
 
-    return await this.productCategoryRepository.save(newCategory);
+    return await this.categoryRepository.save(newCategory);
   }
 
   
-  async deleteCategory(id: number): Promise<boolean> {
+  async deleteCategory(id: string): Promise<boolean> {
     const result = await this.productCategoryRepository.delete(id);
     return result.affected > 0;
   }
 
   async addProductCategory(data: AddProductCategoryDto) {
-    const product = await this.productRepository.findOne({ where: { verifyString: data.productString }, relations: ["categories"] });
+    const product = await this.productRepository.findOne({ where: { id: data.productString }, relations: ["categories"] });
     if (!product) throw new Error('Product not found');
 
     // Check if the product already has 3 categories
     if (product.categories.length >= 3) throw new Error('Category limit exceeded (max: 3)');
 
     // Find or create category
-    let categoryEntity = await this.productCategoryRepository.findOne({ where: { category: data.category } });
+    let categoryEntity = await this.productCategoryRepository.findOne({ where: {
+      categoryId: data.category,
+      productId: product.id,
+    } });
     if (!categoryEntity) {
-        categoryEntity = this.productCategoryRepository.create({ category: data.category });
-        await this.productCategoryRepository.save(categoryEntity);
+        categoryEntity = this.productCategoryRepository.create({ categoryId: data.category, productId: product.id });
+        await this.productCategoryRepository.save(categoryEntity);  
     }
 
     // Add category to product
-    product.categories.push(categoryEntity);
-    await this.productCategoryRepository.save(product);
+    // await this.productCategoryRepository.save(product);
 
     // Return success response
     return ({
         id: categoryEntity.id,
         category: categoryEntity.category,
-        productString: product.verifyString,
+        productString: product.id,
     })
   };
 
@@ -255,7 +281,7 @@ class ProductsService {
     const { product_string, category_string } = validatedData;
 
     const product = await this.productRepository.findOne({
-      where: { verifyString: product_string },
+      where: { id: product_string },
       relations: ["categories"], // Ensure categories are loaded
     });
 
@@ -264,16 +290,16 @@ class ProductsService {
     }
 
     const categoryIndex = product.categories.findIndex(
-      (cat) => cat.category_string === category_string
+      (cat) => cat.categoryId === category_string
     );
 
     if (categoryIndex === -1) {
       throw new Error("Category is not associated with this product");
     }
 
-    product.categories.splice(categoryIndex, 1);
+    // product.categories.splice(categoryIndex, 1);
 
-    await this.productRepository.save(product);
+    // await this.productRepository.save(product);
 
     return { message: "Category removed from product successfully" };
   }
@@ -283,7 +309,7 @@ class ProductsService {
     const { product_string, photo_string } = validatedData;
 
     const product = await this.productRepository.findOne({
-      where: { verifyString: product_string },
+      where: { id: product_string },
       relations: ["photos"],
     });
 

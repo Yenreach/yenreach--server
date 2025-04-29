@@ -3,7 +3,7 @@ import { JobsService } from '../services';
 import { sendResponse } from '../../../core/utils';
 import { HttpCodes } from '../../../core/constants';
 import { HttpException } from '../../../core/exceptions';
-import { CreateJobDto, UpdateJobDto } from '../schemas/jobs.schema';
+import { CreateJobDto, GetJobsSchema, UpdateJobDto } from '../schemas/jobs.schema';
 
 const jobsService = new JobsService();
 
@@ -39,6 +39,45 @@ class JobsController {
       const jobs = await jobsService.getAllJobs(page, limit);
 
       return sendResponse(res, HttpCodes.OK, 'jobs fetched successfully', jobs);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getJobs(req: Request, res: Response, next: NextFunction) {
+    try {
+      // Validate the query using Zod
+      const queryParams = GetJobsSchema.parse(req.query);
+
+      const result = await jobsService.getJobsPublic(queryParams);
+
+      return sendResponse(res, HttpCodes.OK, "Jobs retrieved successfully", result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getBusinessJobs(req: Request, res: Response, next: NextFunction) {
+    try {
+      const business = req.params.business_string;
+      const queryParams = GetJobsSchema.parse(req.query);
+
+      if (!business) throw Error('Business String must be sent')
+
+      const result = await jobsService.getJobsPublic({ ...queryParams, business });
+
+      return sendResponse(res, HttpCodes.OK, "Jobs retrieved successfully", result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getRelatedJobs(req: Request, res: Response, next: NextFunction) {
+    try {
+      // Validate the query using Zod
+      const jobId = req.params.id;
+      const jobs = await jobsService.getRelatedJobs(jobId);
+      return sendResponse(res, HttpCodes.OK, 'related jobs fetched successfully', jobs);
     } catch (error) {
       next(error);
     }

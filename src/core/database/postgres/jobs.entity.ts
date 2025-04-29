@@ -56,7 +56,7 @@ export class Jobs {
   @Column('text', { name: 'benefit' })
   public benefit: string;
 
-  @Column('enum', { name: 'status', enum: JobStatus })
+  @Column('enum', { name: 'status', enum: JobStatus, default: JobStatus.Open })
   public status: JobStatus;
 
   @Column('boolean', { name: 'is_admin_job', default: false })

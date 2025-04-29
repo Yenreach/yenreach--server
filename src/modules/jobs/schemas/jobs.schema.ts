@@ -1,21 +1,30 @@
 import { z } from "zod";
 
 export const JobSchema = z.object({
-  name: z.string().optional().default(""),
-  businessString: z.string().optional().default(""),
-  companyName: z.string().optional().default(""),
-  title: z.string().optional().default(""),
-  type: z.string().optional().default(""),
-  location: z.string().optional().default(""),
-  salary: z.string().optional().default(""),
-  description: z.string().optional().default(""),
-  benefit: z.string().optional().default(""),
-  link: z.string().optional().default(""),
+  name: z.string(),
+  businessId: z.string(),
+  companyName: z.string(),
+  title: z.string(),
+  type: z.string(),
+  location: z.string(),
+  salary: z.string(),
+  description: z.string(),
+  benefit: z.string(),
+  applicationMethod: z.string(),
+  // link: z.string().optional().default(""),
   overview: z.string().optional().default(""),
-  expiryDate: z.number().optional().default(1),
-  tags: z.array(z.object({ tag: z.string() }))
+  applicationExpiry: z.string(),
+  tags: z.array(z.string()).optional().default([]),
+});
+
+export const GetJobsSchema = z.object({
+  skip: z.string().optional().default("0").transform(Number),
+  per_page: z.string().optional().default("20").transform(Number),
+  search: z.string().optional(),
+  business: z.string().optional(),
 });
 
 export type CreateJobDto = z.infer<typeof JobSchema>;
 export type UpdateJobDto = Partial<CreateJobDto>
+export type GetJobsDto = z.infer<typeof GetJobsSchema>;
 

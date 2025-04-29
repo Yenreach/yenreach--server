@@ -1,3 +1,4 @@
+import { Like } from 'typeorm';
 import AppDataSource from '../../../core/database';
 import { Businesses } from '../../../core/database/postgres/businesses.entity';
 import { JobTags } from '../../../core/database/postgres/job-tags.entity';
@@ -5,88 +6,45 @@ import { Jobs } from '../../../core/database/postgres/jobs.entity';
 import { calculatePagination, paginate } from '../../../core/utils/pagination/paginate';
 import { PaginationResponse } from '../../../core/utils/pagination/pagination.interface';
 import { JobStatus } from '../enums';
-import { CreateJobDto, UpdateJobDto } from '../schemas/jobs.schema';
+import { CreateJobDto, GetJobsDto, UpdateJobDto } from '../schemas/jobs.schema';
 class JobsService {
   private readonly jobRepository = AppDataSource.getRepository(Jobs);
   private readonly jobTagsRepository = AppDataSource.getRepository(JobTags);
   private readonly businessRepository = AppDataSource.getRepository(Businesses);
-  async createJob(data: CreateJobDto): Promise<Jobs> {
+
+  async createJob(data: CreateJobDto): Promise<any> {
     const {
-      businessString,
-      companyName,
-      title,
-      type,
-      location,
-      salary,
-      overview,
-      benefit,
-      link,
-      expiryDate,
+      businessId,
       tags = [],
+      ...jobData
     } = data;
-  
+
     // Find the business by businessString
-    const business = await this.businessRepository.findOne({ where: { verifyString: businessString } });
+    const business = await this.businessRepository.findOne({ where: { id: businessId } });
     if (!business) throw new Error('Business does not exist');
   
     // Create job entity
     const job = this.jobRepository.create({
-      companyName,
-      title,
-      type,
-      location,
-      salary,
-      // overview,
-      benefit,
-      link,
-      expiryDate,
-      status: JobStatus.Open,
-      adminJob: false,
+      ...jobData,
+      businessId,
+      jobString: businessId,
     });
   
     // Save the job entity
     const savedJob = await this.jobRepository.save(job);
   
     // Insert job tags
-    const tagEntities = jobTags.map(tag =>
+    const tagEntities = tags.map(tag =>
       this.jobTagsRepository.create({
-        jobString: savedJob.jobString,
-        tag: tag.tag,
+        jobId: savedJob.id,
+        tag,
       })
     );
     await this.jobTagsRepository.save(tagEntities);
   
-    // Retrieve the saved tags
-    const savedTags = await this.jobTagsRepository.find({
-      where: { jobString: savedJob.jobString },
-    });
-  
-    return {
-      status: 'success',
-      data: {
-        id: savedJob.id,
-        jobString: savedJob.jobString,
-        businessString: savedJob.businessString,
-        companyName: savedJob.companyName,
-        jobTitle: savedJob.jobTitle,
-        jobType: savedJob.jobType,
-        location: savedJob.location,
-        salary: savedJob.salary,
-        jobOverview: savedJob.jobOverview,
-        jobBenefit: savedJob.jobBenefit,
-        jobTags: savedTags,
-        jobLink: savedJob.jobLink,
-        adminJob: savedJob.adminJob,
-        status: savedJob.status,
-        expiryDate: savedJob.expiryDate,
-        createdAt: savedJob.createdAt,
-        updatedAt: savedJob.updatedAt,
-      },
-    };
+    return { status: 'success', data: savedJob };
   }
   
-  
-
   // async createJob(data: CreateJobDto): Promise<any> {
   //   const {
   //     admin_string,
@@ -128,21 +86,21 @@ class JobsService {
   //   // Save job tags
   //   const tagEntities = job_tags.map(tag =>
   //     this.jobTagsRepository.create({
-  //       jobString: savedJob.jobString,
-  //       tag: tag.tag,
+  //       id: savedJob.id,
+  //       tag: tag,
   //     })
   //   );
   //   await this.jobTagsRepository.save(tagEntities);
   
   //   const savedTags = await this.jobTagsRepository.find({
-  //     where: { jobString: savedJob.jobString },
+  //     where: { id: savedJob.id },
   //   });
   
   //   return {
   //     status: 'success',
   //     data: {
   //       id: savedJob.id,
-  //       job_string: savedJob.jobString,
+  //       job_string: savedJob.id,
   //       admin_string: savedJob.adminString,
   //       company_name: savedJob.companyName,
   //       job_title: savedJob.jobTitle,
@@ -181,6 +139,79 @@ class JobsService {
 
     return paginate(jobs, total, page, limit);
   }
+
+  async getJobsPublic({ skip = 0, per_page = 20, search = "", business }: GetJobsDto) {
+    const queryConditions: any = {
+      where: {
+        status: JobStatus.Open,
+        ...(business && { businessId: business }),
+      },
+      relations: ["tags"],
+      skip,
+      take: per_page,
+    };
+
+    if (search) {
+      queryConditions.where = [
+        {
+          ...queryConditions.where,
+          title: Like(`%${search}%`),
+        },
+        // { tags: { tag: In(`%${search}%`) } },
+      ];
+    
+      queryConditions.join = {
+        alias: "job",
+        leftJoinAndSelect: {
+          tags: "job.tags",
+        },
+      };
+    }
+
+    const [jobs, total] = await this.jobRepository.findAndCount(queryConditions);
+
+    return {
+      status: "success",
+      total,
+      data: jobs,
+      page: skip+1,
+      perPage: per_page
+    };
+  }
+
+  async getRelatedJobs(jobId: string, limit = 5) {
+    const job = await this.jobRepository.findOne({
+      where: { id: jobId },
+      relations: ["tags"],
+    });
+
+    if (!job) throw new Error("job not found");
+
+    const tags = job.tags.map((tag) => tag.id);
+    if (!tags?.length) { 
+      // throw new Error("Job categories not found");
+      return {
+        status: "success",
+        data: [],
+      };
+    }
+    console.log({ tags })
+    // Find related jobs that share at least one tag
+    const relatedJobs = await this.jobRepository
+      .createQueryBuilder("job")
+      .innerJoin("job.tags", "tag")
+      .where("tag.id IN (:...tags)", { tags })
+      .andWhere("job.id != :jobId", { jobId }) // Exclude the current job
+      .andWhere("job.status = :status", { status: JobStatus.Open }) // Filter active jobs
+      .take(limit)
+      .getMany();
+
+    return {
+      status: "success",
+      data: relatedJobs,
+    };
+  }
+
 
   async getJobById(id: string): Promise<Jobs | null> {
     return await this.jobRepository.findOneBy({ id });

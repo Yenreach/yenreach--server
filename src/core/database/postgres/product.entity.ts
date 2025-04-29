@@ -47,7 +47,7 @@ export class Products {
   @Column('text', { name: 'safety_tip' })
   public safetyTip: string;
 
-  @Column('enum', { name: 'status', enum: ProductStatus })
+  @Column('enum', { name: 'status', enum: ProductStatus, default: ProductStatus.Available })
   public status: ProductStatus;
 
   @ManyToOne(() => Businesses, (business: Businesses) => business.products)

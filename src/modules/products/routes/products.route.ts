@@ -4,6 +4,7 @@ import { Routes } from '../../../core/routes/interfaces';
 import { authMiddleware } from '../../../core/middlewares';
 import { validateRequest } from '../../../core/middlewares/ValidationMiddleware';
 import { AddCategorySchema, AddProductCategorySchema, ProductSchema } from '../schemas/products.schema';
+import { z } from 'zod';
 
 class ProductsRoute implements Routes {
   public path = '/products';
@@ -19,7 +20,7 @@ class ProductsRoute implements Routes {
       next()
     })
 
-    this.router.post(`${this.path}`, authMiddleware, validateRequest([ProductSchema]), this.ProductsController.createProducts)
+    this.router.post(`${this.path}`, authMiddleware, validateRequest([z.object({ body: ProductSchema })]), this.ProductsController.createProducts)
 
     this.router.get(`${this.path}`, this.ProductsController.getProducts)
 
