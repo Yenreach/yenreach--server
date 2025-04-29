@@ -2,8 +2,14 @@ import AppDataSource from '../../../core/database';
 import { calculatePagination, paginate } from '../../../core/utils/pagination/paginate';
 import { PaginationResponse } from '../../../core/utils/pagination/pagination.interface';
 import { IBusinessService } from '../interfaces';
-import { AddBusinessWorkingHoursDto, AddBussinessPhotoDto, CreateBusinessDto, UpdateBusinessDto } from '../schemas';
-import { ReviewBusinessDto } from '../schemas/business-review.schema';
+import {
+  AddBusinessWorkingHoursDto,
+  AddBussinessPhotoDto,
+  CreateBusinessDto,
+  CreateBusinessSchema,
+  ReviewBusinessDto,
+  UpdateBusinessDto,
+} from '../schemas';
 import { Businesses } from '../../../core/database/postgres/businesses.entity';
 import { BusinessReviews } from '../../../core/database/postgres/business-reviews.entity';
 import { BusinessRegistrationState } from '../enums';
@@ -23,6 +29,16 @@ export class BusinessService implements IBusinessService {
   private readonly productRepository = AppDataSource.getRepository(Products);
   private readonly stateRepository = AppDataSource.getRepository(States);
   private readonly lGaRepository = AppDataSource.getRepository(LocalGovernments);
+
+  private transformBusiness = (business: Businesses) => {
+    return {
+      ...business,
+      categories: business.categories.map(c => c.category.category),
+      photos: business.photos.map(p => p.mediaPath),
+      state: business.state.name,
+      lga: business.lga.name,
+    };
+  };
 
   public async createBusiness(data: CreateBusinessDto, userId: string): Promise<Businesses> {
     const state = this.stateRepository.findOneBy({ id: data.stateId });
@@ -58,7 +74,7 @@ export class BusinessService implements IBusinessService {
     return await this.businessRepository.save(business);
   }
 
-  public async getBusinessByUserId(userId: string, page = 1, limit = 10): Promise<PaginationResponse<Businesses>> {
+  public async getBusinessByUserId(userId: string, page = 1, limit = 10): Promise<PaginationResponse<any>> {
     const { skip } = calculatePagination(page, limit);
     const [businesses, total] = await this.businessRepository.findAndCount({
       where: {
@@ -73,10 +89,13 @@ export class BusinessService implements IBusinessService {
       skip,
       take: limit,
     });
-    return paginate(businesses, total, page, limit);
+
+    const transformedBusiness = businesses.map(this.transformBusiness);
+
+    return paginate(transformedBusiness, total, page, limit);
   }
 
-  public async getAllBusinesses(page = 1, limit = 10): Promise<PaginationResponse<Businesses>> {
+  public async getAllBusinesses(page = 1, limit = 10): Promise<PaginationResponse<any>> {
     const { skip } = calculatePagination(page, limit);
     const [businesses, total] = await this.businessRepository.findAndCount({
       where: {
@@ -85,13 +104,20 @@ export class BusinessService implements IBusinessService {
       skip,
       take: limit,
       relations: {
-        categories: true,
+        categories: {
+          category: true,
+        },
         photos: true,
         workingHours: true,
         reviews: true,
+        state: true,
+        lga: true,
       },
     });
-    return paginate(businesses, total, page, limit);
+
+    const transformedBusiness = businesses.map(this.transformBusiness);
+
+    return paginate(transformedBusiness, total, page, limit);
   }
 
   public async getBusinessById(id: string): Promise<Businesses | null> {

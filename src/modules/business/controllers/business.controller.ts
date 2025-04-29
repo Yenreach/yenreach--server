@@ -2,7 +2,14 @@ import { NextFunction, Response } from 'express';
 import { BusinessQueryParams, IBusinessService, PathParams } from '../interfaces';
 import { sendResponse } from '../../../core/utils';
 import { HttpCodes } from '../../../core/constants';
-import { CreateBusinessDto, ReviewBusinessDto, UpdateBusinessDto } from '../schemas';
+import {
+  AddBusinessReviewSchema,
+  CreateBusinessDto,
+  CreateBusinessSchema,
+  ReviewBusinessDto,
+  UpdateBusinessDto,
+  UpdateBusinessSchema,
+} from '../schemas';
 import { RequestWithBody, RequestWithParam, RequestWithParamAndBody, RequestWithParamAndQuery, RequestWithQuery } from '../../../types/express';
 
 class BusinessController {
@@ -16,6 +23,7 @@ class BusinessController {
     try {
       const userId = req.user.id;
       const businessData = req.body;
+      CreateBusinessSchema.parse(businessData);
       const newBusiness = await this.businessService.createBusiness(businessData, userId);
       return sendResponse(res, HttpCodes.OK, 'business created successfully', newBusiness);
     } catch (error) {
@@ -27,6 +35,7 @@ class BusinessController {
     try {
       const businessId = req.params.id;
       const businessData = req.body;
+      UpdateBusinessSchema.parse(businessData);
       const updatedBusiness = await this.businessService.updateBusiness(businessId, businessData);
       return sendResponse(res, HttpCodes.OK, 'business created successfully', updatedBusiness);
     } catch (error) {
@@ -95,6 +104,7 @@ class BusinessController {
     try {
       const userId = req.user.id;
       const businessId = req.params.id;
+      AddBusinessReviewSchema.parse(req.body);
       const businessReview = await this.businessService.reviewBusiness(businessId, userId, req.body);
       return sendResponse(res, HttpCodes.OK, 'business sucessfully reviewed', businessReview);
     } catch (error) {
