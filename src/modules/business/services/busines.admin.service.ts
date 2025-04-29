@@ -1,4 +1,4 @@
-import { Between, Equal, Not } from 'typeorm';
+import { Equal, Not } from 'typeorm';
 import AppDataSource from '../../../core/database';
 import { calculatePagination, paginate } from '../../../core/utils/pagination/paginate';
 import { PaginationResponse } from '../../../core/utils/pagination/pagination.interface';
@@ -15,12 +15,6 @@ export class BusinessAdminService implements IBusinessAdminService {
     const [businesses, total] = await this.businessRepository.findAndCount({
       where: {
         registrationStatus: Not(Equal(BusinessRegistrationState.DECLINED)),
-      },
-      relations: {
-        categories: true,
-        photos: true,
-        workingHours: true,
-        reviews: true,
       },
       skip,
       take: limit,

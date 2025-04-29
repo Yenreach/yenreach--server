@@ -19,41 +19,14 @@ class BusinessRoute implements Routes {
       next();
     });
 
-    /**
-     * @swagger
-     * /businesses:
-     *   get:
-     *     summary: Get all businesses
-     *     description: Fetch all businesses
-     *     tags:
-     *       - Business
-     *     responses:
-     *       200:
-     *         description: Successfully fetched businesses
-     *         content:
-     *           application/json:
-     *             schema:
-     *               type: array
-     *               items:
-     *                 type: object
-     *                 properties:
-     *                   id:
-     *                     type: integer
-     *                   name:
-     *                     type: string
-     *                   location:
-     *                     type: string
-     *       500:
-     *         description: Server error
-     */
-    this.router.get(`${this.path}es/:id`, this.businessController.getBusiness);
-    this.router.get(`${this.path}es`, this.businessController.getAllBusinesses);
-    this.router.get(`${this.path}es/user`, authMiddleware, this.businessController.getUserBusinesses);
-    this.router.get(`${this.path}es/:id/products`, authMiddleware, this.businessController.getAllBusinessProducts);
-    this.router.get(`${this.path}es/:id/jobs`, authMiddleware, this.businessController.getAllBusinessJobs);
-    this.router.post(`${this.path}es/`, authMiddleware, this.businessController.createBusiness);
-    this.router.put(`${this.path}es/:id`, authMiddleware, this.businessController.updateBusiness);
-    this.router.put(`${this.path}es/:id/review`, authMiddleware, this.businessController.reviewBussiness);
+    this.router.get(`${this.path}/:id`, this.businessController.getBusiness);
+    this.router.get(`${this.path}`, this.businessController.getAllBusinesses);
+    this.router.get(`user/${this.path}`, authMiddleware, this.businessController.getUserBusinesses);
+    this.router.get(`${this.path}/:id/products`, authMiddleware, this.businessController.getAllBusinessProducts);
+    this.router.get(`${this.path}/:id/jobs`, authMiddleware, this.businessController.getAllBusinessJobs);
+    this.router.post(`${this.path}`, authMiddleware, this.businessController.createBusiness);
+    this.router.put(`${this.path}/:id`, authMiddleware, this.businessController.updateBusiness);
+    this.router.post(`${this.path}/:id/review`, authMiddleware, this.businessController.reviewBussiness);
   }
 }
 
