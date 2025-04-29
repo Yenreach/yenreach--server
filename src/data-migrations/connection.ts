@@ -1,5 +1,5 @@
 import { DataSource } from 'typeorm';
-import env from '../config/env.config'
+import env from '../config/env.config';
 import { Blogs } from '../core/database/postgres/blogs.entity';
 import { BusinessCategories } from '../core/database/postgres/business-categories.entity';
 import { BusinessPhotos } from '../core/database/postgres/business-photos.entity';
@@ -30,6 +30,17 @@ import { Businesses as oldBusinesses } from '../core/database/entities/entities/
 import { Businesscategories } from '../core/database/entities/entities/Businesscategories';
 import { Businessphotos } from '../core/database/entities/entities/Businessphotos';
 import { Businessvideolinks } from '../core/database/entities/entities/Businessvideolinks';
+import { Productphotos } from '../core/database/entities/entities/Productphotos';
+import { Jobtags } from '../core/database/entities/entities/Jobtags';
+import { Jobs as OldJobs } from '../core/database/entities/entities/Jobs';
+import { Products as OldProducts } from '../core/database/entities/entities/Products';
+import { Comments as OldComments } from '../core/database/entities/entities/Comments';
+import { Feedback } from '../core/database/entities/entities/Feedback';
+import { Savedbusinesses } from '../core/database/entities/entities/Savedbusinesses';
+import { Admins as OldAdmins } from '../core/database/entities/entities/Admins';
+import { Blogpost } from '../core/database/entities/entities/Blogpost';
+import { Businessreviews } from '../core/database/entities/entities/Businessreviews';
+import { Businessworkinghours } from '../core/database/entities/entities/Businessworkinghours';
 
 export const PostgresDataSource = new DataSource({
   type: 'postgres',
@@ -38,7 +49,7 @@ export const PostgresDataSource = new DataSource({
   username: env.DB_USER,
   password: env.DB_PASSWORD,
   database: env.DB_NAME,
-  synchronize: true,
+  synchronize: false,
   logging: true,
   entities: [
     Admins,
@@ -65,14 +76,14 @@ export const PostgresDataSource = new DataSource({
 });
 
 export const SqlDataSource = new DataSource({
-  type: 'mysql', //
+  type: 'mysql',
   host: env.DB_HOST_OLD,
   port: env.DB_PORT_OLD,
   username: env.DB_USER_OLD,
-  // password: env.DB_PASSWORD_OLD,
+  password: env.DB_PASSWORD_OLD,
   database: env.DB_NAME_OLD,
   synchronize: false,
-  logging: false,
+  logging: true,
   entities: [
     OldUsers,
     OldStates,
@@ -84,5 +95,16 @@ export const SqlDataSource = new DataSource({
     Businesscategories,
     Businessphotos,
     Businessvideolinks,
+    Productphotos,
+    Jobtags,
+    Feedback,
+    Savedbusinesses,
+    OldJobs,
+    OldProducts,
+    OldComments,
+    Blogpost,
+    Businessreviews,
+    Businessworkinghours,
+    OldAdmins,
   ],
 });

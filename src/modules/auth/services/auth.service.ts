@@ -3,11 +3,11 @@ import { HttpCodes } from '../../../core/constants';
 import AppDataSource from '../../../core/database';
 import { HttpException } from '../../../core/exceptions';
 import { UserService } from '../../user/services';
-import { CreateAuthDto, LoginDto } from '../dto/auth.dto';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import { Response } from 'express';
 import { Users } from '../../../core/database/postgres/users.entity';
+import { CreateAuthDto, CreateAuthSchema, LoginDto, LoginSchema } from '../schemas';
 
 const userService = new UserService();
 
@@ -15,16 +15,20 @@ class AuthService {
   private readonly userRepository = AppDataSource.getRepository(Users);
 
   async register(data: CreateAuthDto): Promise<Users> {
+    CreateAuthSchema.parse(data);
+
     const userExists = await userService.getUserByEmail({ email: data.email });
-    if (!!userExists) {
+
+    console.log(userExists);
+
+    if (!userExists) {
       throw new HttpException(HttpCodes.BAD_REQUEST, 'email already exists');
     }
 
     const hashedPwd = await bcrypt.hash(data.password, 10);
-    const baseData = {
+
+    const baseData: CreateAuthDto = {
       ...data,
-      verifyString: Date.now(),
-      timer: Date.now(),
       password: hashedPwd,
     };
 
@@ -32,15 +36,21 @@ class AuthService {
   }
 
   async login({ userData, response }: { userData: LoginDto; response: Response }) {
+    LoginSchema.parse(userData);
+
     const user = await userService.getUserByEmail({ email: userData.email });
 
     if (!user) {
       throw new HttpException(HttpCodes.NOT_FOUND, 'User does not exist');
     }
 
+    console.log(user);
+
     const { password, ...data } = user;
 
     const match = await bcrypt.compare(userData.password, password);
+
+    console.log(match);
 
     if (!match) throw new HttpException(HttpCodes.BAD_REQUEST, 'Email or Password Incorrect');
 

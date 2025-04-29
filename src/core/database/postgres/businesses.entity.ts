@@ -39,7 +39,7 @@ export class Businesses {
   @Column('varchar', { name: 'user_string', length: 255 })
   public userString: string;
 
-  @Column('uuid', { name: 'user_id' })
+  @Column('uuid', { name: 'user_id', nullable: true })
   public userId: string;
 
   @Column('varchar', { name: 'subscription_string', length: 255, nullable: true })
@@ -51,10 +51,10 @@ export class Businesses {
   @Column('varchar', { name: 'town', length: 500 })
   public town: string;
 
-  @Column('varchar', { name: 'lga_id' })
+  @Column('varchar', { name: 'lga_id', nullable: true })
   public lgaId: string;
 
-  @Column('varchar', { name: 'state_id' })
+  @Column('varchar', { name: 'state_id', nullable: true })
   public stateId: string;
 
   @Column('varchar', { name: 'phone_number', length: 100 })
@@ -135,7 +135,7 @@ export class Businesses {
   @OneToMany(() => BusinessWorkingHours, businessWorkingHours => businessWorkingHours.business)
   public workingHours: BusinessWorkingHours[];
 
-  @ManyToOne(() => Users, (user: Users) => user.businesses)
+  @ManyToOne(() => Users, (user: Users) => user.businesses, { cascade: true })
   @JoinColumn({ name: 'user_id' })
   public user: Users;
 

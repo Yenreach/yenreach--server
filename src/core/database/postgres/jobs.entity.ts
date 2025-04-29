@@ -54,7 +54,7 @@ export class Jobs {
   public description: string;
 
   @Column('text', { name: 'benefit' })
-  public benefit: boolean;
+  public benefit: string;
 
   @Column('enum', { name: 'status', enum: JobStatus })
   public status: JobStatus;

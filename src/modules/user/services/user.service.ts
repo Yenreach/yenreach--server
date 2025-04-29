@@ -2,8 +2,7 @@ import AppDataSource from '../../../core/database';
 import { Users } from '../../../core/database/postgres/users.entity';
 import { calculatePagination, paginate } from '../../../core/utils/pagination/paginate';
 import { PaginationResponse } from '../../../core/utils/pagination/pagination.interface';
-import { CreateUserDto } from '../dto/create-user.dto';
-import { UpdateUserDto } from '../dto/update-user.dto';
+import { CreateUserDto, UpdateUserDto } from '../schemas';
 
 class UserService {
   private readonly userRepository = AppDataSource.getRepository(Users);

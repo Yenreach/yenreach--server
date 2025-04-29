@@ -7,7 +7,6 @@ import helmet from 'helmet';
 import hpp from 'hpp';
 import path from 'path';
 import morgan from 'morgan';
-// import { ConnectOptions, connect, set } from 'mongoose';
 import swaggerJSDoc, { SwaggerDefinition } from 'swagger-jsdoc';
 import swaggerUi, { SwaggerOptions, SwaggerUiOptions } from 'swagger-ui-express';
 import AppDataSource from './core/database';

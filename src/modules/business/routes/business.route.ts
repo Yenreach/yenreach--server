@@ -7,10 +7,14 @@ import { authMiddleware } from '../../../core/middlewares';
 class BusinessRoute implements Routes {
   public path = '/business';
   public router = Router();
-  public businessService = new BusinessService();
-  public businessController = new BusinessController(this.businessService);
+  public businessService: BusinessService;
+  public businessController: BusinessController;
 
   constructor() {
+    this.businessService = new BusinessService();
+
+    this.businessController = new BusinessController(this.businessService);
+
     this.initializeRoutes();
   }
 
@@ -19,41 +23,23 @@ class BusinessRoute implements Routes {
       next();
     });
 
-    /**
-     * @swagger
-     * /businesses:
-     *   get:
-     *     summary: Get all businesses
-     *     description: Fetch all businesses
-     *     tags:
-     *       - Business
-     *     responses:
-     *       200:
-     *         description: Successfully fetched businesses
-     *         content:
-     *           application/json:
-     *             schema:
-     *               type: array
-     *               items:
-     *                 type: object
-     *                 properties:
-     *                   id:
-     *                     type: integer
-     *                   name:
-     *                     type: string
-     *                   location:
-     *                     type: string
-     *       500:
-     *         description: Server error
-     */
-    this.router.get(`${this.path}es/:id`, this.businessController.getBusiness);
-    this.router.get(`${this.path}es`, this.businessController.getAllBusinesses);
-    this.router.get(`${this.path}es/user`, authMiddleware, this.businessController.getUserBusinesses);
-    this.router.get(`${this.path}es/:id/products`, authMiddleware, this.businessController.getAllBusinessProducts);
-    this.router.get(`${this.path}es/:id/jobs`, authMiddleware, this.businessController.getAllBusinessJobs);
-    this.router.post(`${this.path}es/`, authMiddleware, this.businessController.createBusiness);
-    this.router.put(`${this.path}es/:id`, authMiddleware, this.businessController.updateBusiness);
-    this.router.put(`${this.path}es/:id/review`, authMiddleware, this.businessController.reviewBussiness);
+    this.router.get(`${this.path}/:id`, this.businessController.getBusiness.bind(this.businessController));
+    this.router.get(`${this.path}`, this.businessController.getAllBusinesses.bind(this.businessController));
+    this.router.get(`user/${this.path}`, authMiddleware, this.businessController.getUserBusinesses.bind(this.businessController));
+    this.router.get(`${this.path}/:id/products`, authMiddleware, this.businessController.getAllBusinessProducts.bind(this.businessController));
+    this.router.get(`${this.path}/:id/jobs`, authMiddleware, this.businessController.getAllBusinessJobs.bind(this.businessController));
+    this.router.post(`${this.path}`, authMiddleware, this.businessController.createBusiness.bind(this.businessController));
+    this.router.put(`${this.path}/:id`, authMiddleware, this.businessController.updateBusiness.bind(this.businessController));
+    this.router.post(`${this.path}/:id/review`, authMiddleware, this.businessController.reviewBussiness.bind(this.businessController));
+
+    // this.router.get(`${this.path}/:id`, this.businessController.getBusiness);
+    // this.router.get(`${this.path}`, this.businessController.getAllBusinesses);
+    // this.router.get(`user/${this.path}`, authMiddleware, this.businessController.getUserBusinesses);
+    // this.router.get(`${this.path}/:id/products`, authMiddleware, this.businessController.getAllBusinessProducts);
+    // this.router.get(`${this.path}/:id/jobs`, authMiddleware, this.businessController.getAllBusinessJobs);
+    // this.router.post(`${this.path}`, authMiddleware, this.businessController.createBusiness);
+    // this.router.put(`${this.path}/:id`, authMiddleware, this.businessController.updateBusiness);
+    // this.router.post(`${this.path}/:id/review`, authMiddleware, this.businessController.reviewBussiness);
   }
 }
 

@@ -48,7 +48,6 @@ const swaggerOptions: swaggerJSDoc.Options = {
       },
     },
   },
-  // apis: ['./core/schemas/*.ts', './modules/**/schemas/*.ts', './modules/**/routes/*.ts', './core/routes/*.ts'],
   apis: ['./src/modules/**/routes/*.ts'], // Correct path to your route files
 };
 const swaggerSpecs = swaggerJSDoc(swaggerOptions);

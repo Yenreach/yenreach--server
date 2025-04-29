@@ -1,1 +1,1 @@
-export { IBusinessService, IBusiness, IBusinessAdminService } from './business.interface';
+export { IBusinessService, IBusiness, IBusinessAdminService, PathParams, BusinessQueryParams } from './business.interface';
