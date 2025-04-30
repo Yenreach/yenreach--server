@@ -6,12 +6,10 @@ import { Jobs } from '../../../core/database/postgres/jobs.entity';
 import { Products } from '../../../core/database/postgres/product.entity';
 import { PaginationResponse } from '../../../core/utils/pagination/pagination.interface';
 
-import { AddBusinessWorkingHoursDto, AddBussinessPhotoDto, CreateBusinessDto, UpdateBusinessDto } from '../schemas';
-
-import { ReviewBusinessDto } from '../schemas/business-review.schema';
+import { AddBusinessWorkingHoursDto, AddBussinessPhotoDto, CreateBusinessDto, ReviewBusinessDto, UpdateBusinessDto } from '../schemas';
 
 interface IBusinessService {
-  getAllBusinesses(page?: number, limit?: number): Promise<PaginationResponse<Businesses>>;
+  getBusinesses(page?: number, limit?: number, search?: string): Promise<PaginationResponse<BusinessDto>>;
   getBusinessById(id: string): Promise<Businesses | null>;
   getJobsByBusinessId(businessId: string, page?: number, limit?: number): Promise<PaginationResponse<Jobs>>;
   getProductsByBusinessId(businessId: string, page?: number, limit?: number): Promise<PaginationResponse<Products>>;
@@ -36,34 +34,28 @@ interface IBusinessAdminService {
   deleteBusiness(businessId: string): Promise<void>;
 }
 
-interface IBusiness {
+type BusinessDto = {
   name: string;
-  userString: string;
+  description: string;
+  address: string;
+  lgaId: string;
   town: string;
-  lga: string;
-  state: string;
+  stateId: string;
+  email: string;
   phoneNumber: string;
   whatsapp: string;
-  email: string;
   website: string;
-  facebookLink: string;
   twitterLink: string;
   instagramLink: string;
   youtubeLink: string;
-  workingHours: string;
   cv: string;
-  experience: number;
-  monthStarted: number;
-  modifiedBy: string;
-  yearStarted: number;
   profileImg: string;
   coverImg: string;
-  activation: number;
-  filename: string;
-  remarks: string;
-  created: number;
-  lastUpdated: number;
-}
+  monthStarted: string;
+  yearStarted: string;
+  categories: string[];
+  photos: string[];
+};
 
 export type PathParams = {
   id: string;
@@ -72,6 +64,7 @@ export type PathParams = {
 export type BusinessQueryParams = {
   page?: string;
   limit?: string;
+  search?: string;
 };
 
-export { IBusinessService, IBusiness, IBusinessAdminService };
+export { IBusinessService, BusinessDto, IBusinessAdminService };

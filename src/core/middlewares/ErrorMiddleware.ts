@@ -22,6 +22,8 @@ const errorMiddleware = (error: any, req: Request, res: Response, next: NextFunc
       });
     }
 
+    console.log(error);
+
     const status: number = error.status || HttpCodes.SERVER_ERROR;
 
     const message: string = error.message || 'Something went wrong';

@@ -1,15 +1,8 @@
 import AppDataSource from '../../../core/database';
 import { calculatePagination, paginate } from '../../../core/utils/pagination/paginate';
 import { PaginationResponse } from '../../../core/utils/pagination/pagination.interface';
-import { IBusinessService } from '../interfaces';
-import {
-  AddBusinessWorkingHoursDto,
-  AddBussinessPhotoDto,
-  CreateBusinessDto,
-  CreateBusinessSchema,
-  ReviewBusinessDto,
-  UpdateBusinessDto,
-} from '../schemas';
+import { BusinessDto, IBusinessService } from '../interfaces';
+import { AddBusinessWorkingHoursDto, AddBussinessPhotoDto, CreateBusinessDto, ReviewBusinessDto, UpdateBusinessDto } from '../schemas';
 import { Businesses } from '../../../core/database/postgres/businesses.entity';
 import { BusinessReviews } from '../../../core/database/postgres/business-reviews.entity';
 import { BusinessRegistrationState } from '../enums';
@@ -19,6 +12,7 @@ import { LocalGovernments } from '../../../core/database/postgres/local-governme
 import { Jobs } from '../../../core/database/postgres/jobs.entity';
 import { BusinessWorkingHours } from '../../../core/database/postgres/business-working-hours.entity';
 import { BusinessPhotos } from '../../../core/database/postgres/business-photos.entity';
+import { FindManyOptions, ILike, Like, Or } from 'typeorm';
 
 export class BusinessService implements IBusinessService {
   private readonly businessRepository = AppDataSource.getRepository(Businesses);
@@ -35,8 +29,8 @@ export class BusinessService implements IBusinessService {
       ...business,
       categories: business.categories.map(c => c.category.category),
       photos: business.photos.map(p => p.mediaPath),
-      state: business.state.name,
-      lga: business.lga.name,
+      state: business.state?.name,
+      lga: business.lga?.name,
     };
   };
 
@@ -95,9 +89,10 @@ export class BusinessService implements IBusinessService {
     return paginate(transformedBusiness, total, page, limit);
   }
 
-  public async getAllBusinesses(page = 1, limit = 10): Promise<PaginationResponse<any>> {
+  public async getBusinesses(page = 1, limit = 10, search?: string): Promise<PaginationResponse<BusinessDto>> {
     const { skip } = calculatePagination(page, limit);
-    const [businesses, total] = await this.businessRepository.findAndCount({
+
+    const queryConditions: FindManyOptions<Businesses> = {
       where: {
         registrationStatus: BusinessRegistrationState.APPROVED,
       },
@@ -113,7 +108,18 @@ export class BusinessService implements IBusinessService {
         state: true,
         lga: true,
       },
-    });
+    };
+
+    console.log(search);
+    if (search) {
+      queryConditions.where = [
+        { ...queryConditions.where, name: ILike(`%${search}%`) },
+        { ...queryConditions.where, description: ILike(`%${search}%`) },
+        // { ...queryConditions.where, categories: { category: Like(`%${search}%`) } },
+      ];
+    }
+
+    const [businesses, total] = await this.businessRepository.findAndCount(queryConditions);
 
     const transformedBusiness = businesses.map(this.transformBusiness);
 

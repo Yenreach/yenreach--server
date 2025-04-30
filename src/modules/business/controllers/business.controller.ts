@@ -17,6 +17,14 @@ class BusinessController {
 
   constructor(businessService: IBusinessService) {
     this.businessService = businessService;
+    this.getBusiness = this.getBusiness.bind(this);
+    this.getBusinesses = this.getBusinesses.bind(this);
+    this.getUserBusinesses = this.getUserBusinesses.bind(this);
+    this.getAllBusinessProducts = this.getAllBusinessProducts.bind(this);
+    this.getAllBusinessJobs = this.getAllBusinessJobs.bind(this);
+    this.createBusiness = this.createBusiness.bind(this);
+    this.updateBusiness = this.updateBusiness.bind(this);
+    this.reviewBussiness = this.reviewBussiness.bind(this);
   }
 
   public async createBusiness(req: RequestWithBody<CreateBusinessDto>, res: Response, next: NextFunction) {
@@ -65,11 +73,12 @@ class BusinessController {
     }
   }
 
-  public async getAllBusinesses(req: RequestWithQuery<BusinessQueryParams>, res: Response, next: NextFunction) {
+  public async getBusinesses(req: RequestWithQuery<BusinessQueryParams>, res: Response, next: NextFunction) {
     try {
       const page = parseInt(req.query.page, 10) || 1;
       const limit = parseInt(req.query.limit, 10) || 10;
-      const businesses = await this.businessService.getAllBusinesses(page, limit);
+      const search = req.query.search || '';
+      const businesses = await this.businessService.getBusinesses(page, limit, search);
       return sendResponse(res, HttpCodes.OK, 'businesses fetched successfully', businesses);
     } catch (error) {
       next(error);

@@ -1,7 +1,7 @@
 import { NextFunction, Response, Request } from 'express';
 import { HttpException } from '../../core/exceptions';
-import * as jwt from 'jsonwebtoken'
-import { HttpCodes } from '../../core/constants'
+import * as jwt from 'jsonwebtoken';
+import { HttpCodes } from '../../core/constants';
 import env from '../../config/env.config';
 import { UserService } from '../../modules/user/services';
 
@@ -9,30 +9,27 @@ const userService = new UserService();
 
 const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const token = extractFromCookie(req) ?? extractTokenFromHeader(req)
+    const token = extractFromCookie(req) ?? extractTokenFromHeader(req);
 
-    if (!token) throw new HttpException(HttpCodes.UNAUTHORIZED, "You are Not Authenticated");
+    if (!token) throw new HttpException(HttpCodes.UNAUTHORIZED, 'You are Not Authenticated');
 
-    const decoded = jwt.verify(token, env.JWT_SECRET_KEY) as { id: number }
+    const decoded = jwt.verify(token, env.JWT_SECRET_KEY) as { id: string };
 
-    const user = await userService.getUserById(decoded.id)
+    const user = await userService.getUserById(decoded.id);
 
-    if (!user) throw new HttpException(HttpCodes.UNAUTHORIZED, "Unauthorized access: User does not exist");
+    if (!user) throw new HttpException(HttpCodes.UNAUTHORIZED, 'Unauthorized access: User does not exist');
 
-    req.user = user
-    req.token = decoded
+    req.user = user;
+    req.token = decoded;
 
-    next()
+    next();
   } catch (error) {
     next(error);
     // next(new HttpException(HttpCodes.UNAUTHORIZED, 'Wrong authentication token used'));
   }
 };
 
-
-export const extractTokenFromHeader = (
-  request: Request,
-): string | undefined => {
+export const extractTokenFromHeader = (request: Request): string | undefined => {
   const [type, token] = request.headers.authorization?.split(' ') ?? [];
   return type === 'Bearer' ? token : undefined;
 };
@@ -40,9 +37,9 @@ export const extractTokenFromHeader = (
 export const extractFromCookie = (req: Request): string | null => {
   let token: string | null = null;
   if (req && req.cookies) {
-      token = req.cookies['Authentication'];
+    token = req.cookies['Authentication'];
   }
   return token;
 };
 
-export { authMiddleware }
+export { authMiddleware };
