@@ -1,9 +1,7 @@
-import crypto from 'crypto';
 import { Repository } from 'typeorm';
-// import { nanoid } from "nanoid";
 import AppDataSource from '../../../core/database';
-import { Cms } from '../entities/cms.entity';
-import { Images } from '../../images/entities/image.entity';
+import { Cms } from '../../../core/database/postgres/cms.entity';
+import { Images } from '../../../core/database/postgres/image.entity';
 
 export class CmsService {
   private cmsRepository: Repository<Cms>;
@@ -35,7 +33,7 @@ export class CmsService {
     });
 
     if (!cms) {
-      cms = this.cmsRepository.create({ id: crypto.randomBytes(16).toString('hex'), ...cmsData });
+      cms = this.cmsRepository.create({ ...cmsData });
     } else {
       this.cmsRepository.merge(cms, cmsData);
 
@@ -52,7 +50,6 @@ export class CmsService {
       await this.imageRepository.delete({ cms });
       const images = hero_images.map(img => {
         const image = new Images();
-        image.id = crypto.randomBytes(16).toString('hex');
         image.url = img.url;
         image.cms = cms;
         return image;
