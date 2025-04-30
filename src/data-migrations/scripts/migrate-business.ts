@@ -38,37 +38,41 @@ async function migrateBusiness() {
         registrationStatus = BusinessRegistrationState.APPROVED;
       }
 
-      return {
-        verifyString: oldBusinesses.verifyString,
-        userString: oldBusinesses.userString,
-        subscriptionString: oldBusinesses.subscriptionString,
-        website: oldBusinesses.website,
-        twitterLink: oldBusinesses.twitterLink,
-        instagramLink: oldBusinesses.instagramLink,
-        whatsapp: oldBusinesses.whatsapp,
-        facebookLink: oldBusinesses.facebookLink,
-        town: oldBusinesses.town,
-        userId: user ? user.id : null,
-        stateId: state ? state.id : null,
-        lgaId: lga ? lga.id : null,
-        registrationStatus,
-        createdAt: convertEpochToISO(oldBusinesses.created),
-        updatedAt: convertEpochToISO(oldBusinesses.lastUpdated),
-        experience: oldBusinesses.experience,
-        email: oldBusinesses.email,
-        description: oldBusinesses.description,
-        cv: oldBusinesses.cv,
-        coverImg: oldBusinesses.coverImg,
-        isActive: oldBusinesses.activation > 0,
-        profileImg: oldBusinesses.profileImg,
-        phoneNumber: oldBusinesses.phonenumber,
-        monthStarted: oldBusinesses.monthStarted,
-        yearStarted: oldBusinesses.yearStarted,
-        youtubeLink: oldBusinesses.youtubeLink,
-        linkedinLink: oldBusinesses.linkedinLink,
-        address: oldBusinesses.address,
-        name: oldBusinesses.name,
-      };
+      if (user && state && lga) {
+        return {
+          verifyString: oldBusinesses.verifyString,
+          userString: oldBusinesses.userString,
+          subscriptionString: oldBusinesses.subscriptionString,
+          website: oldBusinesses.website,
+          twitterLink: oldBusinesses.twitterLink,
+          instagramLink: oldBusinesses.instagramLink,
+          whatsapp: oldBusinesses.whatsapp,
+          facebookLink: oldBusinesses.facebookLink,
+          town: oldBusinesses.town,
+          userId: user ? user.id : null,
+          stateId: state ? state.id : null,
+          lgaId: lga ? lga.id : null,
+          registrationStatus,
+          createdAt: convertEpochToISO(oldBusinesses.created),
+          updatedAt: convertEpochToISO(oldBusinesses.lastUpdated),
+          experience: oldBusinesses.experience,
+          email: oldBusinesses.email,
+          description: oldBusinesses.description,
+          cv: oldBusinesses.cv,
+          coverImg: oldBusinesses.coverImg,
+          isActive: oldBusinesses.activation > 0,
+          profileImg: oldBusinesses.profileImg,
+          phoneNumber: oldBusinesses.phonenumber,
+          monthStarted: oldBusinesses.monthStarted,
+          yearStarted: oldBusinesses.yearStarted,
+          youtubeLink: oldBusinesses.youtubeLink,
+          linkedinLink: oldBusinesses.linkedinLink,
+          address: oldBusinesses.address,
+          name: oldBusinesses.name,
+        };
+      }
+
+      return null;
     };
 
     console.log('Starting Business migration...');

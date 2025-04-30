@@ -12,7 +12,7 @@ export class JobTags {
   @Column('varchar', { name: 'tag', length: 255 })
   public tag: string;
 
-  @ManyToOne(() => Jobs, (jobs: Jobs) => jobs.tags)
+  @ManyToOne(() => Jobs, (jobs: Jobs) => jobs.tags, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'job_id' })
   public job: Jobs;
 

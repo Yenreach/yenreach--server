@@ -24,19 +24,23 @@ async function migrateProducts() {
         verifyString: oldProuct.businessString,
       });
 
-      return {
-        productString: oldProuct.productString,
-        businessId: business.id,
-        color: oldProuct.productColor,
-        safetyTip: oldProuct.productSafetyTip,
-        name: oldProuct.productName,
-        description: oldProuct.productDescription,
-        price: oldProuct.productPrice,
-        quantity: oldProuct.productQuantity,
-        status: oldProuct.productStatus ? ProductStatus.Available : ProductStatus.OutOfStock,
-        createdAt: convertEpochToISO(oldProuct.createdAt),
-        updatedAt: convertEpochToISO(oldProuct.updatedAt),
-      };
+      if (business) {
+        return {
+          productString: oldProuct.productString,
+          businessId: business.id,
+          color: oldProuct.productColor,
+          safetyTip: oldProuct.productSafetyTip,
+          name: oldProuct.productName,
+          description: oldProuct.productDescription,
+          price: oldProuct.productPrice,
+          quantity: oldProuct.productQuantity,
+          status: oldProuct.productStatus ? ProductStatus.Available : ProductStatus.OutOfStock,
+          createdAt: convertEpochToISO(oldProuct.createdAt),
+          updatedAt: convertEpochToISO(oldProuct.updatedAt),
+        };
+      }
+
+      return null;
     };
 
     console.log('Starting Products migration...');

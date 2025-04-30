@@ -30,6 +30,8 @@ async function migrateJobTags() {
           updatedAt: convertEpochToISO(oldJobTags.updatedAt),
         };
       }
+
+      return null;
     };
 
     console.log('Starting Job Tags migration...');

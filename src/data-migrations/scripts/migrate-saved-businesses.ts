@@ -30,10 +30,13 @@ async function migrateSavedBusiness() {
         }),
       ]);
 
-      return {
-        businessId: business.id,
-        userId: user.id,
-      };
+      if (user && business) {
+        return {
+          businessId: business.id,
+          userId: user.id,
+        };
+      }
+      return null;
     };
 
     console.log('Starting Saved Businesss migrations...');

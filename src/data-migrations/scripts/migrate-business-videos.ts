@@ -25,13 +25,16 @@ async function migrateBusinessVideos() {
         verifyString: oldBusinessVideos.businessString,
       });
 
-      return {
-        businessId: business.id,
-        mediaPath: oldBusinessVideos.videoLink,
-        platform: oldBusinessVideos.platform,
-        createdAt: convertEpochToISO(oldBusinessVideos.created),
-        updatedAt: convertEpochToISO(oldBusinessVideos.lastUpdated),
-      };
+      if (business) {
+        return {
+          businessId: business.id,
+          mediaPath: oldBusinessVideos.videoLink,
+          platform: oldBusinessVideos.platform,
+          createdAt: convertEpochToISO(oldBusinessVideos.created),
+          updatedAt: convertEpochToISO(oldBusinessVideos.lastUpdated),
+        };
+      }
+      return null;
     };
 
     console.log('Starting Businesss Videos migration...');

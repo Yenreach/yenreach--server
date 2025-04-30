@@ -29,12 +29,16 @@ async function migrateBusinessCategories() {
         }),
       ]);
 
-      return {
-        businessId: business.id,
-        categoryId: category.id,
-        createdAt: convertEpochToISO(oldBusinessCategories.created),
-        updatedAt: convertEpochToISO(oldBusinessCategories.lastUpdated),
-      };
+      if (business && category) {
+        return {
+          businessId: business.id,
+          categoryId: category.id,
+          createdAt: convertEpochToISO(oldBusinessCategories.created),
+          updatedAt: convertEpochToISO(oldBusinessCategories.lastUpdated),
+        };
+      }
+
+      return null;
     };
 
     console.log('Starting Businesss Categories migration...');

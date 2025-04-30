@@ -13,7 +13,7 @@ export class ProductCategories {
   @Column('uuid', { name: 'product_id' })
   public productId: string;
 
-  @ManyToOne(() => Products, (product: Products) => product.categories)
+  @ManyToOne(() => Products, (product: Products) => product.categories, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'product_id' })
   public product: Products;
 

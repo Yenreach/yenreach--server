@@ -10,7 +10,7 @@ export class ProductPhotos {
   @Column('uuid', { name: 'product_id' })
   public productId: string;
 
-  @ManyToOne(() => Products)
+  @ManyToOne(() => Products, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'product_id' })
   public product: Products;
 

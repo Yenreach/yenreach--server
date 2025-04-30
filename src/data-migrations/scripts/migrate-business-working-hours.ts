@@ -22,12 +22,15 @@ async function migrateBusinessWorkingHours() {
         verifyString: oldBusinessWorkingHourse.businessString,
       });
 
-      return {
-        businessId: business.id,
-        days: oldBusinessWorkingHourse.day,
-        openingTime: oldBusinessWorkingHourse.openingTime,
-        closingTime: oldBusinessWorkingHourse.closingTime,
-      };
+      if (business) {
+        return {
+          businessId: business.id,
+          days: oldBusinessWorkingHourse.day,
+          openingTime: oldBusinessWorkingHourse.openingTime,
+          closingTime: oldBusinessWorkingHourse.closingTime,
+        };
+      }
+      return null;
     };
 
     console.log('Starting Businesss Working Hours migration...');

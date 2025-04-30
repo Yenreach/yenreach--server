@@ -26,7 +26,7 @@ export class Products {
   @Column('uuid', { name: 'business_id' })
   public businessId: string;
 
-  @Column('varchar', { name: 'product_string', length: 255 })
+  @Column('varchar', { name: 'product_string', length: 255, nullable: true })
   public productString: string;
 
   @Column('varchar', { name: 'name', length: 255 })
@@ -50,14 +50,14 @@ export class Products {
   @Column('enum', { name: 'status', enum: ProductStatus, default: ProductStatus.Available })
   public status: ProductStatus;
 
-  @ManyToOne(() => Businesses, (business: Businesses) => business.products)
+  @ManyToOne(() => Businesses, (business: Businesses) => business.products, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'business_id' })
   public business: Businesses;
 
-  @OneToMany(() => ProductCategories, (productCategory: ProductCategories) => productCategory.product)
+  @OneToMany(() => ProductCategories, (productCategory: ProductCategories) => productCategory.product, { cascade: ['soft-remove', 'remove'] })
   public categories: ProductCategories[];
 
-  @OneToMany(() => ProductPhotos, productPhotos => productPhotos.product)
+  @OneToMany(() => ProductPhotos, productPhotos => productPhotos.product, { cascade: ['soft-remove', 'remove'] })
   public photos: ProductPhotos[];
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })

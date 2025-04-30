@@ -29,12 +29,17 @@ async function migrateBusinessReviews() {
         }),
       ]);
 
-      return {
-        businessId: business.id,
-        userId: user.id,
-        createdAt: convertEpochToISO(oldBusinessReviews.created),
-        updatedAt: convertEpochToISO(oldBusinessReviews.lastUpdated),
-      };
+      if (business && user) {
+        return {
+          businessId: business.id,
+          userId: user.id,
+          review: oldBusinessReviews.review,
+          star: oldBusinessReviews.star,
+          createdAt: convertEpochToISO(oldBusinessReviews.created),
+          updatedAt: convertEpochToISO(oldBusinessReviews.lastUpdated),
+        };
+      }
+      return null;
     };
 
     console.log('Starting Businesss Review migration...');

@@ -10,7 +10,7 @@ export class BusinessWorkingHours {
   @Column('uuid', { name: 'business_id' })
   public businessId: string;
 
-  @ManyToOne(() => Businesses, business => business.workingHours)
+  @ManyToOne(() => Businesses, business => business.workingHours, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'business_id' })
   public business: Businesses;
 

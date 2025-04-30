@@ -10,7 +10,7 @@ export class BusinessVideos {
   @Column('uuid', { name: 'business_id' })
   public businessId: string;
 
-  @ManyToOne(() => Businesses, business => business.videos)
+  @ManyToOne(() => Businesses, business => business.videos, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'business_id' })
   public business: Businesses;
 

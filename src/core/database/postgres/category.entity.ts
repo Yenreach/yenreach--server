@@ -21,7 +21,7 @@ export class Categories {
   @Column('uuid', { name: 'parent_category_id', nullable: true })
   public parentCategoryId: string;
 
-  @Column('varchar', { name: 'verify_string' })
+  @Column('varchar', { name: 'verify_string', nullable: true })
   public verifyString: string;
 
   @Column('varchar', { name: 'category', length: 100 })

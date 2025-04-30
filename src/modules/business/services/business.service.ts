@@ -13,6 +13,8 @@ import { Jobs } from '../../../core/database/postgres/jobs.entity';
 import { BusinessWorkingHours } from '../../../core/database/postgres/business-working-hours.entity';
 import { BusinessPhotos } from '../../../core/database/postgres/business-photos.entity';
 import { FindManyOptions, ILike, Like, Or } from 'typeorm';
+import { HttpException } from '../../../core/exceptions';
+import { HttpCodes } from '../../../core/constants';
 
 export class BusinessService implements IBusinessService {
   private readonly businessRepository = AppDataSource.getRepository(Businesses);
@@ -35,15 +37,19 @@ export class BusinessService implements IBusinessService {
   };
 
   public async createBusiness(data: CreateBusinessDto, userId: string): Promise<Businesses> {
-    const state = this.stateRepository.findOneBy({ id: data.stateId });
+    const state = await this.stateRepository.findOneBy({ id: data.stateId });
     if (!state) {
-      throw new Error('State not found');
+      throw new HttpException(HttpCodes.BAD_REQUEST, 'State not found');
     }
 
-    const lga = this.lGaRepository.findOneBy({ id: data.lgaId });
+    const lga = await this.lGaRepository.findOneBy({ id: data.lgaId });
 
     if (!lga) {
-      throw new Error('Lga not found');
+      throw new HttpException(HttpCodes.BAD_REQUEST, 'Lga not found');
+    }
+
+    if (lga.stateId != state.id) {
+      throw new HttpException(HttpCodes.BAD_REQUEST, 'Lga does not belong to state');
     }
 
     let registrationStatus = BusinessRegistrationState.INCOMPLETE;

@@ -25,6 +25,10 @@ async function migrateJobs() {
           verifyString: oldJobs.businessString,
         });
 
+        if (!business) {
+          return null;
+        }
+
         return {
           jobString: oldJobs.jobString,
           businessId: business.id,

@@ -13,11 +13,11 @@ export class SavedBusinesses {
   @Column('uuid', { name: 'user_id' })
   public userId: string;
 
-  @ManyToOne(() => Businesses)
+  @ManyToOne(() => Businesses, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'business_id' })
   business: Businesses;
 
-  @ManyToOne(() => Users)
+  @ManyToOne(() => Users, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
   user: Users;
 

@@ -38,12 +38,6 @@ export class Users {
   @Column('boolean', { name: 'email_verified', default: false })
   public emailVerified: boolean;
 
-  //   @Column('int', { name: 'email_track', nullable: true, default: () => "'1'" })
-  //   emailTrack: number | null;
-
-  //   @Column('int', { name: 'sms_track', default: () => "'1'" })
-  //   smsTrack: number;
-
   @Column('varchar', { name: 'curriculum_vitae', length: 250, nullable: true })
   public cv: string;
 
@@ -56,6 +50,6 @@ export class Users {
   @Column('varchar', { name: 'gender', length: 250, nullable: true })
   public gender: string;
 
-  @OneToMany(() => Businesses, bussiness => bussiness.user)
+  @OneToMany(() => Businesses, bussiness => bussiness.user, { cascade: ['soft-remove', 'remove'] })
   public businesses: Businesses[];
 }

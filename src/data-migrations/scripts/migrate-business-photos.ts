@@ -23,12 +23,16 @@ async function migrateBusinessPhotos() {
         verifyString: oldBusinessPhotos.businessString,
       });
 
-      return {
-        businessId: business.id,
-        mediaPath: oldBusinessPhotos.filepath,
-        createdAt: convertEpochToISO(oldBusinessPhotos.created),
-        updatedAt: convertEpochToISO(oldBusinessPhotos.lastUpdated),
-      };
+      if (business) {
+        return {
+          businessId: business.id,
+          mediaPath: oldBusinessPhotos.filepath,
+          createdAt: convertEpochToISO(oldBusinessPhotos.created),
+          updatedAt: convertEpochToISO(oldBusinessPhotos.lastUpdated),
+        };
+      }
+
+      return null;
     };
 
     console.log('Starting Businesss Photos migration...');

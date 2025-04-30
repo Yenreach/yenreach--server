@@ -26,7 +26,7 @@ export class Jobs {
   @Column('uuid', { name: 'business_id', nullable: true })
   public businessId: string;
 
-  @Column('varchar', { name: 'job_string', length: 255 })
+  @Column('varchar', { name: 'job_string', length: 255, nullable: true })
   public jobString: string;
 
   @Column('uuid', { name: 'admin_id', nullable: true })
@@ -65,10 +65,10 @@ export class Jobs {
   @Column('text', { name: 'application_method' })
   public applicationMethod: string;
 
-  @OneToMany(() => JobTags, jobTags => jobTags.job)
+  @OneToMany(() => JobTags, jobTags => jobTags.job, { cascade: ['soft-remove', 'remove'] })
   public tags: JobTags[];
 
-  @ManyToOne(() => Businesses)
+  @ManyToOne(() => Businesses, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'business_id' })
   public business?: Businesses;
 
