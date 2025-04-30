@@ -10,6 +10,9 @@ const AppDataSource = new DataSource({
   database: env.DB_NAME,
   synchronize: true,
   logging: true,
+  ssl: {
+    rejectUnauthorized: false,
+  },
   entities: ['src/core/database/postgres/*.entity.ts'],
   subscribers: [],
 });

@@ -7,7 +7,7 @@ export class MigrationFactory {
   public async migrateAllInTransaction<OldEntity, NewEntity>(
     oldEntityClass: new () => OldEntity,
     newEntityClass: new () => NewEntity,
-    transform: (old: OldEntity) => DeepPartial<NewEntity> | Promise<DeepPartial<NewEntity>>,
+    transform: (old: OldEntity) => DeepPartial<NewEntity> | Promise<DeepPartial<NewEntity> | null> | null,
   ) {
     const queryRunner = this.newDataSource.createQueryRunner();
     await queryRunner.connect();
@@ -15,7 +15,12 @@ export class MigrationFactory {
 
     try {
       const oldEntities = await this.oldDataSource.getRepository(oldEntityClass).find();
-      const newEntities = await Promise.all(oldEntities.map(async old => queryRunner.manager.create(newEntityClass, await transform(old))));
+
+      const transformed = (await Promise.all(oldEntities.map(old => transform(old)))).filter(t => t !== null);
+
+      const newEntities = transformed.map(data => queryRunner.manager.create(newEntityClass, data));
+
+      // const newEntities = await Promise.all(oldEntities.map(async old => queryRunner.manager.create(newEntityClass, await transform(old))));
 
       // const newEntities: NewEntity[] = [];
 

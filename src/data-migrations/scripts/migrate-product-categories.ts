@@ -31,12 +31,16 @@ async function migrateProductsCategories() {
         }),
       ]);
 
-      return {
-        productId: product.id,
-        categoryId: category.id,
-        createdAt: convertEpochToISO(oldProductCategory.createdAt),
-        updatedAt: convertEpochToISO(oldProductCategory.updatedAt),
-      };
+      if (product && category) {
+        return {
+          productId: product.id,
+          categoryId: category.id,
+          createdAt: convertEpochToISO(oldProductCategory.createdAt),
+          updatedAt: convertEpochToISO(oldProductCategory.updatedAt),
+        };
+      }
+
+      return null;
     };
 
     console.log('Starting Product Categories migration...');

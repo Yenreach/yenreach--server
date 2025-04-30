@@ -14,7 +14,7 @@ const migrations: string[] = [
   './src/data-migrations/scripts/migrate-business-working-hours.ts',
   './src/data-migrations/scripts/migrate-saved-businesses.ts',
   './src/data-migrations/scripts/migrate-comments.ts',
-  // './src/data-migrations/scripts/migrate-feedbacks.ts',
+  './src/data-migrations/scripts/migrate-feedbacks.ts',
   './src/data-migrations/scripts/migrate-jobs.ts',
   './src/data-migrations/scripts/migrate-job-tags.ts',
   './src/data-migrations/scripts/migrate-products.ts',

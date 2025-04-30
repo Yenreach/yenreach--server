@@ -23,12 +23,16 @@ async function migrateProductsPhotos() {
         productString: oldProductPhotos.productString,
       });
 
-      return {
-        productId: product.id,
-        mediaPath: oldProductPhotos.filename,
-        createdAt: convertEpochToISO(oldProductPhotos.createdAt),
-        updatedAt: convertEpochToISO(oldProductPhotos.updatedAt),
-      };
+      if (product) {
+        return {
+          productId: product.id,
+          mediaPath: oldProductPhotos.filename,
+          createdAt: convertEpochToISO(oldProductPhotos.createdAt),
+          updatedAt: convertEpochToISO(oldProductPhotos.updatedAt),
+        };
+      }
+
+      return null;
     };
 
     console.log('Starting Product Photos migration...');

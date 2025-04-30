@@ -41,6 +41,7 @@ import { Admins as OldAdmins } from '../core/database/entities/entities/Admins';
 import { Blogpost } from '../core/database/entities/entities/Blogpost';
 import { Businessreviews } from '../core/database/entities/entities/Businessreviews';
 import { Businessworkinghours } from '../core/database/entities/entities/Businessworkinghours';
+import { Productcategories } from '../core/database/entities/entities/Productcategories';
 
 export const PostgresDataSource = new DataSource({
   type: 'postgres',
@@ -50,6 +51,9 @@ export const PostgresDataSource = new DataSource({
   password: env.DB_PASSWORD,
   database: env.DB_NAME,
   synchronize: false,
+  ssl: {
+    rejectUnauthorized: false,
+  },
   logging: true,
   entities: [
     Admins,
@@ -106,5 +110,6 @@ export const SqlDataSource = new DataSource({
     Businessreviews,
     Businessworkinghours,
     OldAdmins,
+    Productcategories,
   ],
 });
