@@ -13,7 +13,8 @@ const AppDataSource = new DataSource({
   ssl: {
     rejectUnauthorized: false,
   },
-  entities: ['src/core/database/postgres/*.entity.ts'],
+  // entities: ['src/core/database/postgres/*.entity.ts'],
+  entities: ['dist/core/database/postgres/*.entity.js'],
   subscribers: [],
 });
 
