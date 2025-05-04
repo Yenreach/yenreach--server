@@ -1,4 +1,4 @@
-import { FindManyOptions, Like } from 'typeorm';
+import { FindManyOptions, ILike } from 'typeorm';
 import AppDataSource from '../../../core/database';
 import { calculatePagination, paginate } from '../../../core/utils/pagination/paginate';
 import { PaginationResponse } from '../../../core/utils/pagination/pagination.interface';
@@ -156,9 +156,13 @@ class ProductsService {
       queryConditions.where = [
         {
           ...queryConditions.where,
-          name: Like(`%${search}%`),
+          name: ILike(`%${search}%`),
         },
-        // { categories: { category: Like(`%${search}%`) } },
+        {
+          ...queryConditions.where,
+          description: ILike(`%${search}%`),
+        },
+        // { categories: { category: ILike(`%${search}%`) } },
       ];
     
       // queryConditions.join = {
