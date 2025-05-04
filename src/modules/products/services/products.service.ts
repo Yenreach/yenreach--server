@@ -8,6 +8,7 @@ import { ProductPhotos } from '../../../core/database/postgres/product-photos.en
 import { ProductCategories } from '../../../core/database/postgres/product-category.entity';
 import { ProductStatus } from '../enums';
 import { Categories } from '../../../core/database/postgres/category.entity';
+import { CategoryType } from '../../../enums';
 
 class ProductsService {
   private readonly dataSource = AppDataSource;
@@ -128,6 +129,14 @@ class ProductsService {
     });
 
     return paginate(products, total, page, limit);
+  }
+
+  async getProductCategories(): Promise<Categories[]> {
+    return await this.categoryRepository.find({
+      where: {
+        categoryType: CategoryType.Product,
+      },
+    });
   }
 
   async getProducts({ page = 1, limit = 20, search = "", business }: GetProductsDto) {

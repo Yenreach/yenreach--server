@@ -46,6 +46,15 @@ class ProductsController {
     }
   }
 
+  async getCategories(req: Request, res: Response, next: NextFunction) {
+    try {
+      const categories = await productsService.getProductCategories();
+      return sendResponse(res, HttpCodes.OK, 'Categories fetched successfully', categories);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async getProducts(req: Request, res: Response, next: NextFunction) {
     try {
       // Validate the query using Zod

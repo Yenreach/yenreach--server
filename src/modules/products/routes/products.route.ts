@@ -21,6 +21,8 @@ class ProductsRoute implements Routes {
     })
 
     this.router.post(`${this.path}`, authMiddleware, validateRequest([z.object({ body: ProductSchema })]), this.ProductsController.createProducts)
+    
+    this.router.get(`${this.path}/categories`, this.ProductsController.getCategories);
 
     this.router.get(`${this.path}`, this.ProductsController.getProducts)
 
