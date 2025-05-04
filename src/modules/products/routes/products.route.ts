@@ -28,11 +28,12 @@ class ProductsRoute implements Routes {
 
     this.router.get(`${this.path}/all`, this.ProductsController.getAllProducts)
 
-    this.router.get(`${this.path}/:id`, this.ProductsController.getProductById)
-
     this.router.get(`${this.path}/:id/related`, this.ProductsController.getRelatedProducts)
 
     this.router.get(`${this.path}/:business_string/products`, this.ProductsController.getBusinessProducts)
+
+    this.router.get(`${this.path}/:id`, this.ProductsController.getProductById)
+
 
     this.router.put(`${this.path}/:id`, this.ProductsController.updateProducts)
 
