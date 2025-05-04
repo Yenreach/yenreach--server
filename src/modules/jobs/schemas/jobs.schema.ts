@@ -18,8 +18,8 @@ export const JobSchema = z.object({
 });
 
 export const GetJobsSchema = z.object({
-  skip: z.string().optional().default("0").transform(Number),
-  per_page: z.string().optional().default("20").transform(Number),
+  page: z.string().optional().default("1").transform(Number),
+  limit: z.string().optional().default("20").transform(Number),
   search: z.string().optional(),
   business: z.string().optional(),
 });

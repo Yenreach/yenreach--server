@@ -50,7 +50,6 @@ class ProductsController {
     try {
       // Validate the query using Zod
       const queryParams = GetProductsSchema.parse(req.query);
-
       const result = await productsService.getProducts(queryParams);
 
       return sendResponse(res, HttpCodes.OK, "Products retrieved successfully", result);

@@ -140,7 +140,9 @@ class JobsService {
     return paginate(jobs, total, page, limit);
   }
 
-  async getJobsPublic({ skip = 0, per_page = 20, search = "", business }: GetJobsDto) {
+  async getJobsPublic({ page = 1, limit = 20, search = "", business }: GetJobsDto) {
+    const { skip } = calculatePagination(page, limit);
+
     const queryConditions: any = {
       where: {
         status: JobStatus.Open,
@@ -148,7 +150,7 @@ class JobsService {
       },
       relations: ["tags"],
       skip,
-      take: per_page,
+      take: limit,
     };
 
     if (search) {
@@ -170,13 +172,7 @@ class JobsService {
 
     const [jobs, total] = await this.jobRepository.findAndCount(queryConditions);
 
-    return {
-      status: "success",
-      total,
-      data: jobs,
-      page: skip+1,
-      perPage: per_page
-    };
+    return paginate(jobs, total, page, limit);
   }
 
   async getRelatedJobs(jobId: string, limit = 5) {
