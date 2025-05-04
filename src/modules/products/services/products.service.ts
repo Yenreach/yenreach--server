@@ -130,7 +130,9 @@ class ProductsService {
     return paginate(products, total, page, limit);
   }
 
-  async getProducts({ skip = 0, per_page = 20, search = "", business }: GetProductsDto) {
+  async getProducts({ page = 0, limit = 20, search = "", business }: GetProductsDto) {
+    const { skip } = calculatePagination(page, limit);
+
     const queryConditions: any = {
       where: {
         status: ProductStatus.Available,
@@ -138,7 +140,7 @@ class ProductsService {
       },
       relations: ["categories", "photos"],
       skip,
-      take: per_page,
+      take: limit,
     };
 
     if (search) {
@@ -160,13 +162,7 @@ class ProductsService {
 
     const [products, total] = await this.productRepository.findAndCount(queryConditions);
 
-    return {
-      status: "success",
-      total,
-      data: products,
-      page: skip+1,
-      perPage: per_page
-    };
+    return paginate(products, total, page, limit);
   }
 
   async getRelatedProducts(productId: string, limit = 5) {
