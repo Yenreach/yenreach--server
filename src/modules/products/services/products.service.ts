@@ -1,4 +1,4 @@
-import { Like } from 'typeorm';
+import { FindManyOptions, Like } from 'typeorm';
 import AppDataSource from '../../../core/database';
 import { calculatePagination, paginate } from '../../../core/utils/pagination/paginate';
 import { PaginationResponse } from '../../../core/utils/pagination/pagination.interface';
@@ -142,7 +142,7 @@ class ProductsService {
   async getProducts({ page = 1, limit = 20, search = "", business }: GetProductsDto) {
     const { skip } = calculatePagination(page, limit);
 
-    const queryConditions: any = {
+    const queryConditions: FindManyOptions<Products>  = {
       where: {
         status: ProductStatus.Available,
         ...(business && { businessId: business }),
@@ -158,15 +158,15 @@ class ProductsService {
           ...queryConditions.where,
           name: Like(`%${search}%`),
         },
-        { categories: { category: Like(`%${search}%`) } },
+        // { categories: { category: Like(`%${search}%`) } },
       ];
     
-      queryConditions.join = {
-        alias: "product",
-        leftJoinAndSelect: {
-          categories: "product.categories",
-        },
-      };
+      // queryConditions.join = {
+      //   alias: "product",
+      //   leftJoinAndSelect: {
+      //     categories: "product.categories",
+      //   },
+      // };
     }
 
     const [products, total] = await this.productRepository.findAndCount(queryConditions);
