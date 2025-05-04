@@ -1,4 +1,4 @@
-import { NextFunction, Response } from 'express';
+import { NextFunction, Response, Request } from 'express';
 import { BusinessQueryParams, IBusinessService, PathParams } from '../interfaces';
 import { sendResponse } from '../../../core/utils';
 import { HttpCodes } from '../../../core/constants';
@@ -25,6 +25,64 @@ class BusinessController {
     this.createBusiness = this.createBusiness.bind(this);
     this.updateBusiness = this.updateBusiness.bind(this);
     this.reviewBussiness = this.reviewBussiness.bind(this);
+    this.getCategories = this.getCategories.bind(this);
+    this.getStates = this.getStates.bind(this);
+    this.getLga = this.getLga.bind(this);
+    this.getRelatedBusiness = this.getRelatedBusiness.bind(this);
+  }
+
+  public async getCategories(req: Request, res: Response, next: NextFunction) {
+    try {
+      const categories = await this.businessService.getBusinessCategories();
+      return sendResponse(res, HttpCodes.OK, 'Categories fetched successfully', categories);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async getStates(req: Request, res: Response, next: NextFunction) {
+    try {
+      const states = await this.businessService.getStates();
+      return sendResponse(res, HttpCodes.OK, 'States fetched successfully', states);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async getLga(
+    req: RequestWithParam<{
+      id: string;
+    }>,
+    res: Response,
+    next: NextFunction,
+  ) {
+    try {
+      const lgas = await this.businessService.getLgas(req.params.id);
+      return sendResponse(res, HttpCodes.OK, 'Lgas fetched successfully', lgas);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async getRelatedBusiness(
+    req: RequestWithParamAndQuery<
+      {
+        id: string;
+      },
+      {
+        limit: string;
+      }
+    >,
+    res: Response,
+    next: NextFunction,
+  ) {
+    try {
+      const limit = parseInt(req.query.limit, 10) || 10;
+      const relatedBusinesses = await this.businessService.getRelatedBusinesses(req.params.id, limit);
+      return sendResponse(res, HttpCodes.OK, 'Related Businesses fetched sucessfully', relatedBusinesses);
+    } catch (error) {
+      next(error);
+    }
   }
 
   public async createBusiness(req: RequestWithBody<CreateBusinessDto>, res: Response, next: NextFunction) {

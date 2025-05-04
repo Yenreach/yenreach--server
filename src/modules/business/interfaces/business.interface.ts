@@ -1,16 +1,24 @@
+import { BusinessCategories } from '../../../core/database/postgres/business-categories.entity';
 import { BusinessPhotos } from '../../../core/database/postgres/business-photos.entity';
 import { BusinessReviews } from '../../../core/database/postgres/business-reviews.entity';
 import { BusinessWorkingHours } from '../../../core/database/postgres/business-working-hours.entity';
 import { Businesses } from '../../../core/database/postgres/businesses.entity';
+import { Categories } from '../../../core/database/postgres/category.entity';
 import { Jobs } from '../../../core/database/postgres/jobs.entity';
+import { LocalGovernments } from '../../../core/database/postgres/local-governments.entity';
 import { Products } from '../../../core/database/postgres/product.entity';
+import { States } from '../../../core/database/postgres/states.entity';
 import { PaginationResponse } from '../../../core/utils/pagination/pagination.interface';
 
 import { AddBusinessWorkingHoursDto, AddBussinessPhotoDto, CreateBusinessDto, ReviewBusinessDto, UpdateBusinessDto } from '../schemas';
 
 interface IBusinessService {
+  getStates(): Promise<States[]>;
+  getRelatedBusinesses(businessId: string, limit?: number): Promise<BusinessDto[]>;
+  getLgas(stateId: string): Promise<LocalGovernments[]>;
+  getBusinessCategories(): Promise<Categories[]>;
   getBusinesses(page?: number, limit?: number, search?: string): Promise<PaginationResponse<BusinessDto>>;
-  getBusinessById(id: string): Promise<Businesses | null>;
+  getBusinessById(id: string): Promise<BusinessDto>;
   getJobsByBusinessId(businessId: string, page?: number, limit?: number): Promise<PaginationResponse<Jobs>>;
   getProductsByBusinessId(businessId: string, page?: number, limit?: number): Promise<PaginationResponse<Products>>;
   deleteBusinessProductById(businessId: string, productId: string): Promise<boolean>;
@@ -36,11 +44,14 @@ interface IBusinessAdminService {
 
 type BusinessDto = {
   name: string;
+  userId: string;
   description: string;
   address: string;
   lgaId: string;
   town: string;
   stateId: string;
+  state: string;
+  lga: string;
   email: string;
   phoneNumber: string;
   whatsapp: string;
@@ -55,6 +66,7 @@ type BusinessDto = {
   yearStarted: string;
   categories: string[];
   photos: string[];
+  reviews: BusinessReviews[];
 };
 
 export type PathParams = {

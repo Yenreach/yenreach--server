@@ -23,6 +23,10 @@ class BusinessRoute implements Routes {
       next();
     });
 
+    this.router.get(`/states`, authMiddleware, this.businessController.getStates);
+    this.router.get(`/states/:id/lgas`, authMiddleware, this.businessController.getLga);
+    this.router.get(`${this.path}/categories`, authMiddleware, this.businessController.getCategories);
+    this.router.get(`${this.path}/:id/related`, this.businessController.getRelatedBusiness);
     this.router.get(`${this.path}/:id`, this.businessController.getBusiness);
     this.router.get(`${this.path}`, this.businessController.getBusinesses);
     this.router.get(`user/${this.path}`, authMiddleware, this.businessController.getUserBusinesses);

@@ -12,9 +12,14 @@ import { LocalGovernments } from '../../../core/database/postgres/local-governme
 import { Jobs } from '../../../core/database/postgres/jobs.entity';
 import { BusinessWorkingHours } from '../../../core/database/postgres/business-working-hours.entity';
 import { BusinessPhotos } from '../../../core/database/postgres/business-photos.entity';
-import { FindManyOptions, ILike, Like, Or } from 'typeorm';
+import { FindManyOptions, ILike, In, Like, Not, Or } from 'typeorm';
 import { HttpException } from '../../../core/exceptions';
 import { HttpCodes } from '../../../core/constants';
+import { BusinessCategories } from '../../../core/database/postgres/business-categories.entity';
+
+import { CategoryType } from '../../../enums';
+import { Categories } from '../../../core/database/postgres/category.entity';
+import { isDataView } from 'node:util/types';
 
 export class BusinessService implements IBusinessService {
   private readonly businessRepository = AppDataSource.getRepository(Businesses);
@@ -24,7 +29,8 @@ export class BusinessService implements IBusinessService {
   private readonly jobRepository = AppDataSource.getRepository(Jobs);
   private readonly productRepository = AppDataSource.getRepository(Products);
   private readonly stateRepository = AppDataSource.getRepository(States);
-  private readonly lGaRepository = AppDataSource.getRepository(LocalGovernments);
+  private readonly lgaRepository = AppDataSource.getRepository(LocalGovernments);
+  private readonly categoryRepository = AppDataSource.getRepository(Categories);
 
   private transformBusiness = (business: Businesses) => {
     return {
@@ -33,6 +39,7 @@ export class BusinessService implements IBusinessService {
       photos: business.photos.map(p => p.mediaPath),
       state: business.state?.name,
       lga: business.lga?.name,
+      reviews: business.reviews,
     };
   };
 
@@ -42,7 +49,7 @@ export class BusinessService implements IBusinessService {
       throw new HttpException(HttpCodes.BAD_REQUEST, 'State not found');
     }
 
-    const lga = await this.lGaRepository.findOneBy({ id: data.lgaId });
+    const lga = await this.lgaRepository.findOneBy({ id: data.lgaId });
 
     if (!lga) {
       throw new HttpException(HttpCodes.BAD_REQUEST, 'Lga not found');
@@ -132,12 +139,27 @@ export class BusinessService implements IBusinessService {
     return paginate(transformedBusiness, total, page, limit);
   }
 
-  public async getBusinessById(id: string): Promise<Businesses | null> {
-    const business = await this.businessRepository.findOneBy({ id });
+  public async getBusinessById(id: string): Promise<BusinessDto> {
+    const business = await this.businessRepository.findOne({
+      where: {
+        id,
+        registrationStatus: BusinessRegistrationState.APPROVED,
+      },
+      relations: {
+        categories: {
+          category: true,
+        },
+        photos: true,
+        workingHours: true,
+        reviews: true,
+        state: true,
+        lga: true,
+      },
+    });
     if (!business) {
-      throw new Error('Business not found');
+      throw new HttpException(HttpCodes.NOT_FOUND, 'Business not found');
     }
-    return business;
+    return this.transformBusiness(business);
   }
 
   public async getJobsByBusinessId(businessId: string, page = 1, limit = 10): Promise<PaginationResponse<Jobs>> {
@@ -171,21 +193,21 @@ export class BusinessService implements IBusinessService {
       id: productId,
       businessId: businessId,
     });
-    if (!product) throw new Error('Product not found');
+    if (!product) throw new HttpException(HttpCodes.BAD_REQUEST, 'Product not found');
     const result = await this.productRepository.delete(product);
     return result.affected > 0;
   }
 
   public async addWorkingHours(businessId: string, data: AddBusinessWorkingHoursDto): Promise<BusinessWorkingHours> {
     const business = await this.businessRepository.findOneBy({ id: businessId });
-    if (!business) throw new Error('Business not found');
+    if (!business) throw new HttpException(HttpCodes.BAD_REQUEST, 'Business not found');
     const workingHours = this.BusinessWorkingHoursRepository.create(data);
     return await this.BusinessWorkingHoursRepository.save(workingHours);
   }
 
   public async reviewBusiness(businessId: string, userId: string, data: ReviewBusinessDto): Promise<BusinessReviews> {
-    const business = await this.businessRepository.findOneBy({ verifyString: businessId });
-    if (!business) throw new Error('Business not found');
+    const business = await this.businessRepository.findOneBy({ id: businessId });
+    if (!business) throw new HttpException(HttpCodes.BAD_REQUEST, 'Business not found');
     const newReview = this.businessReviewRepository.create({
       businessId: businessId,
       userId: userId,
@@ -196,13 +218,79 @@ export class BusinessService implements IBusinessService {
   }
 
   public async addBusinessPhotos(businessId: string, data: AddBussinessPhotoDto): Promise<BusinessPhotos> {
-    const business = await this.businessRepository.findOneBy({ verifyString: businessId });
-    if (!business) throw new Error('Business not found');
+    const business = await this.businessRepository.findOneBy({ id: businessId });
+    if (!business) throw new HttpException(HttpCodes.BAD_REQUEST, 'Business not found');
     const newpPhoto = this.businessPhotoRepository.create({
       ...data,
       businessId,
     });
     return await this.businessPhotoRepository.save(newpPhoto);
+  }
+
+  public async getBusinessCategories(): Promise<Categories[]> {
+    return await this.categoryRepository.find({
+      where: {
+        categoryType: CategoryType.Business,
+      },
+    });
+  }
+
+  public async getStates(): Promise<States[]> {
+    return await this.stateRepository.find();
+  }
+
+  public async getLgas(stateId: string): Promise<LocalGovernments[]> {
+    if (!stateId || stateId == '') throw new HttpException(HttpCodes.BAD_REQUEST, 'State id not found or invalid');
+    const state = await this.stateRepository.findOneBy({ id: stateId });
+    if (!state) throw new HttpException(HttpCodes.BAD_REQUEST, 'State not found');
+    return await this.lgaRepository.find({
+      where: {
+        stateId,
+      },
+    });
+  }
+
+  public async getRelatedBusinesses(businessId: string, limit: number = 5): Promise<BusinessDto[]> {
+    if (!businessId || businessId == '') throw new HttpException(HttpCodes.BAD_REQUEST, 'Invalid or Empty Business id');
+    const business = await this.businessRepository.findOne({
+      where: {
+        id: businessId,
+      },
+      relations: {
+        categories: {
+          category: true,
+        },
+      },
+    });
+    if (!business) throw new HttpException(HttpCodes.BAD_REQUEST, 'Business not found');
+
+    const categories = business.categories.map(c => c.category.id);
+
+    const relatedBusinesses = await this.businessRepository.find({
+      where: {
+        id: Not(businessId),
+        categories: {
+          category: {
+            id: In(categories),
+          },
+        },
+      },
+      take: limit,
+      relations: {
+        categories: {
+          category: true,
+        },
+        photos: true,
+        workingHours: true,
+        reviews: true,
+        state: true,
+        lga: true,
+      },
+    });
+
+    const transformedBusinesses = relatedBusinesses.map(this.transformBusiness);
+
+    return transformedBusinesses;
   }
 
   // public async addBusinessBranch(businessId: string): Promise<any> {

@@ -2,16 +2,15 @@ import { spawn } from 'child_process';
 import path from 'path';
 
 const migrations: string[] = [
-  // './src/data-migrations/scripts/migrate-state.ts',
-  // './src/data-migrations/scripts/migrate-lgas.ts',
-  // './src/data-migrations/scripts/migrate-sections.ts',
-  // './src/data-migrations/scripts/migrate-categories.ts',
-  // './src/data-migrations/scripts/migrate-users.ts',
-  // './src/data-migrations/scripts/migrate-business.ts',
-  // './src/data-migrations/scripts/migrate-business-photos.ts',
-  // './src/data-migrations/scripts/migrate-business-videos.ts',
-  // './src/data-migrations/scripts/migrate-business-categories.ts',
-  './src/data-migrations/scripts/migrate-business-reviews.ts',
+  './src/data-migrations/scripts/migrate-state.ts',
+  './src/data-migrations/scripts/migrate-lgas.ts',
+  './src/data-migrations/scripts/migrate-sections.ts',
+  './src/data-migrations/scripts/migrate-categories.ts',
+  './src/data-migrations/scripts/migrate-users.ts',
+  './src/data-migrations/scripts/migrate-business.ts',
+  './src/data-migrations/scripts/migrate-business-photos.ts',
+  './src/data-migrations/scripts/migrate-business-videos.ts',
+  './src/data-migrations/scripts/migrate-business-categories.ts',
   './src/data-migrations/scripts/migrate-business-working-hours.ts',
   './src/data-migrations/scripts/migrate-saved-businesses.ts',
   './src/data-migrations/scripts/migrate-products.ts',
@@ -21,6 +20,7 @@ const migrations: string[] = [
   './src/data-migrations/scripts/migrate-feedbacks.ts',
   './src/data-migrations/scripts/migrate-jobs.ts',
   './src/data-migrations/scripts/migrate-job-tags.ts',
+  './src/data-migrations/scripts/migrate-business-reviews.ts',
 ];
 
 const runMigration = (scriptsPath: string): Promise<void> => {
