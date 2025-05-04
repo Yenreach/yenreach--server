@@ -130,7 +130,7 @@ class ProductsService {
     return paginate(products, total, page, limit);
   }
 
-  async getProducts({ page = 0, limit = 20, search = "", business }: GetProductsDto) {
+  async getProducts({ page = 1, limit = 20, search = "", business }: GetProductsDto) {
     const { skip } = calculatePagination(page, limit);
 
     const queryConditions: any = {
