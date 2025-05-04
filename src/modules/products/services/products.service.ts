@@ -212,7 +212,16 @@ class ProductsService {
   }
 
   async getProductById(id: string): Promise<Products | null> {
-    return await this.productRepository.findOneBy({ id });
+    return await this.productRepository.findOne({ 
+      where: {
+        id,
+      },
+      relations: {
+        categories: true,
+        photos: true,
+        business: true,
+      },
+     });
   }
 
   async deleteProduct(id: string): Promise<boolean> {
