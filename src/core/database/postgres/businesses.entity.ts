@@ -51,10 +51,10 @@ export class Businesses {
   @Column('varchar', { name: 'town', length: 500 })
   public town: string;
 
-  @Column('varchar', { name: 'lga_id' })
+  @Column('varchar', { name: 'lga_id', nullable: true })
   public lgaId: string;
 
-  @Column('varchar', { name: 'state_id' })
+  @Column('varchar', { name: 'state_id', nullable: true })
   public stateId: string;
 
   @Column('varchar', { name: 'phone_number', length: 100 })

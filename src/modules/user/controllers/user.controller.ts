@@ -57,6 +57,20 @@ class UserController {
     }
   }
 
+  async getUserProfile(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = req.user.id;
+      console.log({ userId })
+      const user = await userService.getUserById(userId);
+      if (!user) {
+        throw new HttpException(HttpCodes.NOT_FOUND, "user do not exists");
+      }
+      return sendResponse(res, HttpCodes.OK, "user fetched successfully", user)
+    } catch (error) {
+      next(error)
+    }
+  }
+
   async deleteUser(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.params.id;

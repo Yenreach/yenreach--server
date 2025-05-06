@@ -18,13 +18,15 @@ class UserRoute implements Routes {
 
     this.router.post(`${this.path}/`, authMiddleware, this.UserController.createUser)
 
-    this.router.get(`${this.path}/`, this.UserController.getAllUsers)
+    this.router.get(`${this.path}/`, authMiddleware, this.UserController.getAllUsers)
 
-    this.router.get(`${this.path}/:id`, this.UserController.getUserById)
+    this.router.get(`${this.path}/me`, authMiddleware, this.UserController.getUserProfile)
 
-    this.router.put(`${this.path}/:id`, this.UserController.updateUser)
+    this.router.get(`${this.path}/:id`, authMiddleware, this.UserController.getUserById)
 
-    this.router.delete(`${this.path}/:id`, this.UserController.deleteUser)
+    this.router.put(`${this.path}/:id`, authMiddleware, this.UserController.updateUser)
+
+    this.router.delete(`${this.path}/:id`, authMiddleware, this.UserController.deleteUser)
   }
 }
 
