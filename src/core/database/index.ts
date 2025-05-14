@@ -10,11 +10,14 @@ const AppDataSource = new DataSource({
   database: env.DB_NAME,
   synchronize: true,
   logging: true,
-  ssl: {
-    rejectUnauthorized: false,
-  },
-  entities: ['dist/core/database/postgres/*.entity.js'],
- 
+  ...(env.NODE_ENV === 'production' ? {
+    ssl: {
+      rejectUnauthorized: false,
+    },
+    entities: ['dist/core/database/postgres/*.entity.js'],
+  } : {
+    entities: ['src/core/database/postgres/*.entity.ts'],
+  }),
   subscribers: [],
 });
 

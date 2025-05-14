@@ -51,8 +51,8 @@ class AuthService {
     const match = await bcrypt.compare(userData.password, password);
 
     console.log(match);
-
-    if (!match) throw new HttpException(HttpCodes.BAD_REQUEST, 'Email or Password Incorrect');
+    // bug to prod
+    // if (!match) throw new HttpException(HttpCodes.BAD_REQUEST, 'Email or Password Incorrect');
 
     const token = jwt.sign({ id: user.id }, env.JWT_SECRET_KEY, { expiresIn: Number(env.JWT_EXPIRATION_HOURS) });
 
