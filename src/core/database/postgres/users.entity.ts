@@ -50,6 +50,9 @@ export class Users {
   @Column('varchar', { name: 'gender', length: 250, nullable: true })
   public gender: string;
 
+  @Column('int', { name: 'timer', nullable: true })
+  timer: number;
+
   @OneToMany(() => Businesses, bussiness => bussiness.user, { cascade: ['soft-remove', 'remove'] })
   public businesses: Businesses[];
 }

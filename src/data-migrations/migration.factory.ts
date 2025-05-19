@@ -3,6 +3,54 @@ import { DataSource, DeepPartial } from 'typeorm';
 export class MigrationFactory {
   constructor(private oldDataSource: DataSource, private newDataSource: DataSource) {}
 
+  // === Update Migrated Records in a single transaction ====
+
+  public async updateAllInTransaction<OldEntity, NewEntity>(
+    oldEntityClass: new () => OldEntity,
+    newEntityClass: new () => NewEntity,
+    matchField: keyof OldEntity & keyof NewEntity, // Field to match by
+    mapData: (old: OldEntity) => Partial<NewEntity>, // Mapping function
+  ) {
+    const queryRunner = this.newDataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      const oldRepo = this.oldDataSource.getRepository(oldEntityClass);
+      const newRepo = queryRunner.manager.getRepository(newEntityClass);
+
+      // Fetch all old records
+      const oldEntities = await oldRepo.find();
+
+      for (const old of oldEntities) {
+        // Get the value of the matching field from the old record
+        const matchValue = old[matchField];
+
+        // Find the corresponding new record by the specified field
+        const newRecord = await newRepo.findOneBy({ [matchField]: matchValue } as any);
+
+        if (newRecord) {
+          // Map the old record to the new data format
+          const updateData = mapData(old);
+
+          // Update the new record with the mapped data
+          Object.assign(newRecord, updateData);
+          await newRepo.save(newRecord);
+          console.log(`→ Updated entity where ${String(matchField)} = ${matchValue}`);
+        }
+      }
+
+      await queryRunner.commitTransaction();
+      console.log(`✅ All records updated successfully.`);
+    } catch (err) {
+      await queryRunner.rollbackTransaction();
+      console.error('❌ Update failed in transaction:', err);
+      throw err;
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
   // === Migrate all records in a single transaction ===
   public async migrateAllInTransaction<OldEntity, NewEntity>(
     oldEntityClass: new () => OldEntity,

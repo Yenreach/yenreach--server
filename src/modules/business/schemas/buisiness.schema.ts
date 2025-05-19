@@ -11,6 +11,8 @@ export const CreateBusinessSchema = z.object({
   email: z.string().min(1, 'Business must have an email address'),
   phoneNumber: z.string().min(1, 'Business must have a phone number'),
   experience: z.number(),
+  categories: z.array(z.string().min(1, 'At least 1 category are required').max(5, 'Only a maximum of 5 categories are allowed')),
+  photos: z.array(z.string()).optional().default([]),
   whatsapp: z.string().optional(),
   website: z.string().optional(),
   twitterLink: z.string().optional(),
@@ -33,7 +35,7 @@ export const UpdateBusinessSchema = z.object({
   town: z.string().optional(),
   stateId: z.string().optional(),
   email: z.string().optional(),
-  phonenumber: z.string().optional(),
+  phoneNumber: z.string().optional(),
   whatsapp: z.string().optional(),
   website: z.string().optional(),
   twitterLink: z.string().optional(),
@@ -45,6 +47,8 @@ export const UpdateBusinessSchema = z.object({
   coverImg: z.string().optional(),
   monthStarted: z.string().optional(),
   yearStarted: z.string().optional(),
+  categories: z.array(z.string()).optional().default([]),
+  photos: z.array(z.string()).optional().default([]),
 });
 
 export const AddBusinessReviewSchema = z.object({

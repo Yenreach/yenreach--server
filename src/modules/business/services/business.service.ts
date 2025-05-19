@@ -16,10 +16,8 @@ import { FindManyOptions, ILike, In, Like, Not, Or } from 'typeorm';
 import { HttpException } from '../../../core/exceptions';
 import { HttpCodes } from '../../../core/constants';
 import { BusinessCategories } from '../../../core/database/postgres/business-categories.entity';
-
 import { CategoryType } from '../../../enums';
 import { Categories } from '../../../core/database/postgres/category.entity';
-import { isDataView } from 'node:util/types';
 
 export class BusinessService implements IBusinessService {
   private readonly businessRepository = AppDataSource.getRepository(Businesses);
@@ -31,6 +29,7 @@ export class BusinessService implements IBusinessService {
   private readonly stateRepository = AppDataSource.getRepository(States);
   private readonly lgaRepository = AppDataSource.getRepository(LocalGovernments);
   private readonly categoryRepository = AppDataSource.getRepository(Categories);
+  private readonly businessCategoryRepository = AppDataSource.getRepository(BusinessCategories);
 
   private transformBusiness = (business: Businesses) => {
     return {
@@ -43,41 +42,87 @@ export class BusinessService implements IBusinessService {
     };
   };
 
-  public async createBusiness(data: CreateBusinessDto, userId: string): Promise<Businesses> {
-    const state = await this.stateRepository.findOneBy({ id: data.stateId });
-    if (!state) {
-      throw new HttpException(HttpCodes.BAD_REQUEST, 'State not found');
-    }
+  public async createBusiness(data: CreateBusinessDto, userId: string): Promise<any> {
+    const [state, lga] = await Promise.all([this.stateRepository.findOneBy({ id: data.stateId }), this.lgaRepository.findOneBy({ id: data.lgaId })]);
 
-    const lga = await this.lgaRepository.findOneBy({ id: data.lgaId });
+    if (!state) throw new HttpException(HttpCodes.BAD_REQUEST, 'State not found');
+    if (!lga) throw new HttpException(HttpCodes.BAD_REQUEST, 'Lga not found');
+    if (lga.stateId !== state.id) throw new HttpException(HttpCodes.BAD_REQUEST, 'Lga does not belong to state');
 
-    if (!lga) {
-      throw new HttpException(HttpCodes.BAD_REQUEST, 'Lga not found');
-    }
+    const registrationStatus = data.coverImg && data.profileImg ? BusinessRegistrationState.PENDING : BusinessRegistrationState.INCOMPLETE;
 
-    if (lga.stateId != state.id) {
-      throw new HttpException(HttpCodes.BAD_REQUEST, 'Lga does not belong to state');
-    }
+    const { photos: medias, categories: catIds, ...businessData } = data;
 
-    let registrationStatus = BusinessRegistrationState.INCOMPLETE;
-
-    if (data.coverImg && data.profileImg) {
-      registrationStatus = BusinessRegistrationState.PENDING;
-    }
-    const baseData: Partial<Businesses> = {
+    const newBusiness = this.businessRepository.create({
+      ...businessData,
       registrationStatus,
-      userId: userId,
-      ...data,
-    };
+      userId,
+    });
 
-    const newBusiness = this.businessRepository.create(baseData);
-    return await this.businessRepository.save(newBusiness);
+    const savedBusiness = await this.businessRepository.save(newBusiness);
+
+    const categories = await this.categoryRepository.findBy({
+      id: In(catIds),
+    });
+    const businessCategories = categories.map(category => ({
+      businessId: savedBusiness.id,
+      categoryId: category.id,
+    }));
+
+    await this.businessCategoryRepository.save(businessCategories);
+
+    const photos = medias.map(media => ({
+      mediaPath: media,
+      businessId: savedBusiness.id,
+    }));
+
+    await this.businessPhotoRepository.save(photos);
+
+    return this.transformBusiness(savedBusiness);
   }
 
   public async updateBusiness(id: string, data: UpdateBusinessDto): Promise<Businesses> {
-    const business = await this.businessRepository.findOneBy({ id });
+    const business = await this.businessRepository.findOne({
+      where: { id },
+      relations: ['categories', 'photos'],
+    });
+
     if (!business) throw new Error('Business not found');
+
     Object.assign(business, data);
+
+    const { photos: medias, categories: catIds } = data;
+
+    if (catIds && catIds.length > 0) {
+      const existingCategories = new Set(business.categories.map(c => c.categoryId));
+      const newCategories = catIds.filter(id => !existingCategories.has(id));
+      const categoriesToRemove = business.categories.filter(c => !catIds.includes(c.categoryId));
+
+      if (categoriesToRemove.length > 0) {
+        await this.businessCategoryRepository.remove(categoriesToRemove);
+      }
+
+      if (newCategories.length > 0) {
+        const categoryEntities = newCategories.map(categoryId => this.businessCategoryRepository.create({ categoryId, businessId: business.id }));
+        await this.businessCategoryRepository.save(categoryEntities);
+      }
+    }
+
+    if (medias && medias.length > 0) {
+      const existingPhotos = new Set(business.photos.map(p => p.mediaPath));
+      const newPhotos = medias.filter(media => !existingPhotos.has(media));
+      const photosToRemove = business.photos.filter(p => !medias.includes(p.mediaPath));
+
+      if (photosToRemove.length > 0) {
+        await this.businessPhotoRepository.remove(photosToRemove);
+      }
+
+      if (newPhotos.length > 0) {
+        const photoEntities = newPhotos.map(mediaPath => this.businessPhotoRepository.create({ mediaPath, businessId: business.id }));
+        await this.businessPhotoRepository.save(photoEntities);
+      }
+    }
+
     return await this.businessRepository.save(business);
   }
 

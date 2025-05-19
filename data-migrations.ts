@@ -7,6 +7,7 @@ const migrations: string[] = [
   './src/data-migrations/scripts/migrate-sections.ts',
   './src/data-migrations/scripts/migrate-categories.ts',
   './src/data-migrations/scripts/migrate-users.ts',
+  './src/data-migrations/scripts/migrate-user-timer.ts',
   './src/data-migrations/scripts/migrate-business.ts',
   './src/data-migrations/scripts/migrate-business-photos.ts',
   './src/data-migrations/scripts/migrate-business-videos.ts',
