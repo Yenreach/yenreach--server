@@ -133,7 +133,9 @@ export class BusinessService implements IBusinessService {
         userId: userId,
       },
       relations: {
-        categories: true,
+        categories: {
+          category: true,
+        },
         photos: true,
         workingHours: true,
         reviews: true,
@@ -168,7 +170,6 @@ export class BusinessService implements IBusinessService {
       },
     };
 
-    console.log(search);
     if (search) {
       queryConditions.where = [
         { ...queryConditions.where, name: ILike(`%${search}%`) },
