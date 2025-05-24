@@ -8,6 +8,7 @@ import * as jwt from 'jsonwebtoken';
 import { Response } from 'express';
 import { Users } from '../../../core/database/postgres/users.entity';
 import { CreateAuthDto, CreateAuthSchema, LoginDto, LoginSchema } from '../schemas';
+import { encryptValue } from '../../../core/utils/helpers';
 
 const userService = new UserService();
 
@@ -52,7 +53,16 @@ class AuthService {
 
     console.log(match);
     // bug to prod
-    // if (!match) throw new HttpException(HttpCodes.BAD_REQUEST, 'Email or Password Incorrect');
+    if (!match) {
+      try {
+        const encryptedPassword = encryptValue(user.timer, password);
+        if (encryptedPassword !== password) {
+          throw new HttpException(HttpCodes.BAD_REQUEST, 'Email or Password Incorrect');
+        }
+      } catch (error) {
+        throw new HttpException(HttpCodes.BAD_REQUEST, 'Email or Password Incorrect');
+      }
+    };
 
     const token = jwt.sign({ id: user.id }, env.JWT_SECRET_KEY, { expiresIn: Number(env.JWT_EXPIRATION_HOURS) });
 
