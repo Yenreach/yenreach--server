@@ -1,5 +1,6 @@
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, Index, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Businesses } from './businesses.entity';
+import { CardToken } from './card-token';
 
 @Entity('users', { schema: 'yenreach' })
 export class Users {
@@ -52,6 +53,9 @@ export class Users {
 
   @Column('int', { name: 'timer', nullable: true })
   timer: number;
+
+  @OneToMany(() => CardToken, token => token.user)
+  cardTokens: CardToken[];
 
   @OneToMany(() => Businesses, bussiness => bussiness.user, { cascade: ['soft-remove', 'remove'] })
   public businesses: Businesses[];

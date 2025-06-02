@@ -1,27 +1,33 @@
 import AppDataSource from '../../../core/database';
 import { SubPlan } from '../../../core/database/postgres/subplan.entity';
+import { CreateSubPlanDto, UpdateSubPlanDto } from '../schemas';
 
 export class SubPlanService {
   private repo = AppDataSource.getRepository(SubPlan);
 
-  create(data: Partial<SubPlan>) {
-    return this.repo.save(this.repo.create(data));
+  create(data: CreateSubPlanDto) {
+    const savedSubPlan = this.repo.save(this.repo.create(data));
+    return savedSubPlan;
   }
 
   findAll() {
-    return this.repo.find({ relations: ['plan'] });
+    const subPlans = this.repo.find({ relations: ['plan'] });
+    return subPlans;
   }
 
   findById(id: string) {
-    return this.repo.findOne({ where: { id }, relations: ['plan'] });
+    const subPlan = this.repo.findOne({ where: { id }, relations: ['plan'] });
+    return subPlan;
   }
 
-  async update(id: string, data: Partial<SubPlan>) {
+  async update(id: string, data: Partial<UpdateSubPlanDto>) {
     await this.repo.update(id, data);
-    return this.findById(id);
+    const updatedSubPlan = this.findById(id);
+    return updatedSubPlan;
   }
 
   async delete(id: string) {
-    return this.repo.delete(id);
+    const result = this.repo.delete(id);
+    return result;
   }
 }

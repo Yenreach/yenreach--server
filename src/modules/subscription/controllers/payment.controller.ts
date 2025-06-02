@@ -6,8 +6,7 @@ export class PaymentController {
 
   public create = async (req: Request, res: Response) => {
     try {
-      const { userId, businessId, subPlanId, amountPaid } = req.body;
-      const payment = await this.service.create(userId, businessId, subPlanId, amountPaid);
+      const payment = await this.service.create(req.body);
       res.status(201).json(payment);
     } catch (err: any) {
       res.status(500).json({ error: 'Failed to record payment', details: err.message });
@@ -23,15 +22,15 @@ export class PaymentController {
     }
   }
 
-  public initiatePaystack = async (req: Request, res: Response) => {
-    try {
-      const { email, subPlanId } = req.body;
-      const response = await this.service.initiatePaystackPayment(email, subPlanId);
-      res.json(response);
-    } catch (err: any) {
-      res.status(500).json({ error: 'Failed to initiate payment', details: err.message });
-    }
-  }
+  // public initiatePaystack = async (req: Request, res: Response) => {
+  //   try {
+  //     const { email, subPlanId } = req.body;
+  //     const response = await this.service.initiatePaystackPayment(email, subPlanId);
+  //     res.json(response);
+  //   } catch (err: any) {
+  //     res.status(500).json({ error: 'Failed to initiate payment', details: err.message });
+  //   }
+  // }
 
   public update = async (req: Request, res: Response) => {
     try {
