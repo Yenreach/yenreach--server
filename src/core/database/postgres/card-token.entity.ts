@@ -30,7 +30,10 @@ export class CardToken {
   @Column({ nullable: true })
   expiry: string;
 
-  @ManyToOne(() => Users, user => user.cardTokens, { onDelete: 'CASCADE' })
+  // @ManyToOne(() => Users, user => user.cardTokens, { onDelete: 'CASCADE' })
+  // user: Users;
+
+  @ManyToOne(() => Users, user => user.cardTokens)
   user: Users;
 
   @CreateDateColumn()
