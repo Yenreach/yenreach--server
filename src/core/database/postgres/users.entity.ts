@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, Index, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Businesses } from './businesses.entity';
-import { CardToken } from './card-token';
+import { CardToken } from './card-token.entity';
 
 @Entity('users', { schema: 'yenreach' })
 export class Users {

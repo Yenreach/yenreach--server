@@ -3,7 +3,7 @@ import { SubscriptionPayment } from '../../../core/database/postgres/payment.ent
 import axios from 'axios';
 import { SubPlanService } from './subplan.service';
 import { CreatePaymentDto, UpdatePaymentDto } from '../schemas';
-import { CardToken } from '../../../core/database/postgres/card-token';
+import { CardToken } from '../../../core/database/postgres/card-token.entity';
 import { Users } from '../../../core/database/postgres/users.entity';
 import { HttpException } from '../../../core/exceptions';
 

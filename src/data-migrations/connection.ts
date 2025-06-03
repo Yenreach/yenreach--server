@@ -80,7 +80,7 @@ export const PostgresDataSource = new DataSource({
 });
 
 export const SqlDataSource = new DataSource({
-  type: 'mysql',
+  type: "postgres",
   host: env.DB_HOST_OLD,
   port: env.DB_PORT_OLD,
   username: env.DB_USER_OLD,
