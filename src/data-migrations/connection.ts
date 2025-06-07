@@ -42,6 +42,10 @@ import { Blogpost } from '../core/database/entities/entities/Blogpost';
 import { Businessreviews } from '../core/database/entities/entities/Businessreviews';
 import { Businessworkinghours } from '../core/database/entities/entities/Businessworkinghours';
 import { Productcategories } from '../core/database/entities/entities/Productcategories';
+import { CardToken } from '../core/database/postgres/card-token.entity';
+import { SubPlan } from '../core/database/postgres/subplan.entity';
+import { Plan } from '../core/database/postgres/plan.entity';
+import { SubscriptionPayment } from '../core/database/postgres/payment.entity';
 
 export const PostgresDataSource = new DataSource({
   type: 'postgres',
@@ -76,11 +80,15 @@ export const PostgresDataSource = new DataSource({
     SavedBusinesses,
     States,
     Users,
+    CardToken,
+    SubPlan,
+    Plan,
+    SubscriptionPayment,
   ],
 });
 
 export const SqlDataSource = new DataSource({
-  type: "postgres",
+  type: 'mysql',
   host: env.DB_HOST_OLD,
   port: env.DB_PORT_OLD,
   username: env.DB_USER_OLD,

@@ -1,15 +1,7 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  ManyToOne,
-  CreateDateColumn,
-  UpdateDateColumn,
-  Unique,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn, Unique } from 'typeorm';
 import { Users } from './users.entity';
 
-@Entity()
+@Entity('card_token', { schema: 'yenreach' })
 @Unique(['token']) // Prevents duplicate tokens
 export class CardToken {
   @PrimaryGeneratedColumn('uuid')

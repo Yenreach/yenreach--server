@@ -10,19 +10,16 @@ const AppDataSource = new DataSource({
   database: env.DB_NAME,
   synchronize: true,
   logging: true,
-  ...(env.NODE_ENV === 'production' ? {
-    ssl: {
-      rejectUnauthorized: false,
-    },
-    entities: ['dist/core/database/postgres/*.entity.js'],
-  } : {
-    entities: ['src/core/database/postgres/*.entity.ts'],
-  }),
-  // ssl: {
-  //   rejectUnauthorized: false,
-  // },
-  // entities: ['dist/core/database/postgres/*.entity.js'],
-  subscribers: [],
+  ...(env.NODE_ENV === 'production'
+    ? {
+        ssl: {
+          rejectUnauthorized: false,
+        },
+        entities: ['dist/core/database/postgres/*.entity.js'],
+      }
+    : {
+        entities: ['src/core/database/postgres/*.entity.ts'],
+      }),
 });
 
 export default AppDataSource;

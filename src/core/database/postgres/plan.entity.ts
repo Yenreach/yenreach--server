@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { SubPlan } from './subplan.entity';
 
-@Entity()
+@Entity('plan', { schema: 'yenreach' })
 export class Plan {
   @PrimaryGeneratedColumn('uuid')
   id: string;

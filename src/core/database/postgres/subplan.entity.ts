@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'ty
 import { Plan } from './plan.entity';
 import { SubscriptionPayment } from './payment.entity';
 
-@Entity()
+@Entity('sub_plan', { schema: 'yenreach' })
 export class SubPlan {
   @PrimaryGeneratedColumn('uuid')
   id: string;

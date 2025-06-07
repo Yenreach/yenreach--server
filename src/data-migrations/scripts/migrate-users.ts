@@ -23,6 +23,7 @@ const migrateUsers = async () => {
     const transformUser = (oldUser: Users): DeepPartial<NewUsers> => {
       return {
         verifyString: oldUser.verifyString,
+        timer: oldUser.timer,
         name: oldUser.name,
         email: oldUser.email,
         password: oldUser.password,

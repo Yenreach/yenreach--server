@@ -1,15 +1,9 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  ManyToOne,
-  Column,
-  CreateDateColumn,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, ManyToOne, Column, CreateDateColumn } from 'typeorm';
 import { SubPlan } from './subplan.entity';
 import { Users } from './users.entity';
 import { Businesses } from './businesses.entity';
 
-@Entity()
+@Entity('subscription_payment', { schema: 'yenreach' })
 export class SubscriptionPayment {
   @PrimaryGeneratedColumn('uuid')
   id: string;

@@ -64,7 +64,7 @@ export class MigrationFactory {
     try {
       const oldEntities = await this.oldDataSource.getRepository(oldEntityClass).find();
 
-      const transformed = (await Promise.all(oldEntities.map(old => transform(old)))).filter(t => t !== null);
+      const transformed = (await Promise.all(oldEntities.map(old => transform(old)))).filter(t => !!t && Object.keys(t).length > 0);
 
       const newEntities = transformed.map(data => queryRunner.manager.create(newEntityClass, data));
 
