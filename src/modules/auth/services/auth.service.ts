@@ -20,7 +20,7 @@ class AuthService {
 
     const userExists = await userService.getUserByEmail({ email: data.email });
 
-    console.log({userExists});
+    // console.log({userExists});
 
     if (!!userExists) {
       throw new HttpException(HttpCodes.BAD_REQUEST, 'email already exists');
@@ -51,16 +51,23 @@ class AuthService {
 
     const match = await bcrypt.compare(userData.password, password);
 
-    console.log(match);
-    // bug to prod
     if (!match) {
       try {
-        const encryptedPassword = encryptValue(user.timer, password);
+        const encryptedPassword = encryptValue(user.timer, userData.password);
+        console.log({ encryptedPassword, password })
         if (encryptedPassword !== password) {
           throw new HttpException(HttpCodes.BAD_REQUEST, 'Email or Password Incorrect');
         }
       } catch (error) {
         throw new HttpException(HttpCodes.BAD_REQUEST, 'Email or Password Incorrect');
+      }
+      try {
+        await userService.updateUser(user.id, {
+          password: userData.password,
+        });
+      } catch (error) {
+        // fail silently and allow login
+        console.log({ error })
       }
     };
 

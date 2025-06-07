@@ -19,3 +19,4 @@ export const encryptValue = (timer: number, value: string): string => {
 
   return encrypted;
 };
+

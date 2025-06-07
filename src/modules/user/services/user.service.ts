@@ -3,6 +3,7 @@ import { Users } from '../../../core/database/postgres/users.entity';
 import { calculatePagination, paginate } from '../../../core/utils/pagination/paginate';
 import { PaginationResponse } from '../../../core/utils/pagination/pagination.interface';
 import { CreateUserDto, UpdateUserDto } from '../schemas';
+import * as bcrypt from 'bcrypt';
 
 class UserService {
   private readonly userRepository = AppDataSource.getRepository(Users);
@@ -16,6 +17,9 @@ class UserService {
     const user = await this.userRepository.findOneBy({ id });
     if (!user) {
       throw new Error('User not found');
+    }
+    if (data.password) {
+      data.password = await bcrypt.hash(data.password, 10);
     }
     Object.assign(user, data);
     return await this.userRepository.save(user);
