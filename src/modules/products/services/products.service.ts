@@ -139,13 +139,18 @@ class ProductsService {
     });
   }
 
-  async getProducts({ page = 1, limit = 20, search = "", business }: GetProductsDto) {
+  async getProducts({ page = 1, limit = 20, search = "", business, category }: GetProductsDto) {
     const { skip } = calculatePagination(page, limit);
 
     const queryConditions: FindManyOptions<Products>  = {
       where: {
         status: ProductStatus.Available,
         ...(business && { businessId: business }),
+        ...(category && { 
+          categories: {
+            categoryId: category,
+          }, 
+        }),
       },
       relations: ["categories", "photos"],
       skip,

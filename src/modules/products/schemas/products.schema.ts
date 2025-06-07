@@ -75,6 +75,7 @@ export const GetProductsSchema = z.object({
   limit: z.string().optional().default("20").transform(Number),
   search: z.string().optional(),
   business: z.string().optional(),
+  category: z.string().optional(),
 });
 
 export const RemoveProductCategorySchema = z.object({
