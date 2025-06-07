@@ -3,7 +3,7 @@ import { ProductsController } from '../controllers';
 import { Routes } from '../../../core/routes/interfaces';
 import { authMiddleware } from '../../../core/middlewares';
 import { validateRequest } from '../../../core/middlewares/ValidationMiddleware';
-import { AddCategorySchema, AddProductCategorySchema, ProductSchema } from '../schemas/products.schema';
+import { AddCategorySchema, AddProductCategorySchema, ProductSchema, UpdateProductSchema } from '../schemas/products.schema';
 import { z } from 'zod';
 
 class ProductsRoute implements Routes {
@@ -35,7 +35,7 @@ class ProductsRoute implements Routes {
     this.router.get(`${this.path}/:id`, this.ProductsController.getProductById)
 
 
-    this.router.put(`${this.path}/:id`, this.ProductsController.updateProducts)
+    this.router.put(`${this.path}/:id`,  authMiddleware, validateRequest([z.object({ body: UpdateProductSchema })]), this.ProductsController.updateProducts)
 
     this.router.delete(`${this.path}/:id`, this.ProductsController.deleteProduct)
     
