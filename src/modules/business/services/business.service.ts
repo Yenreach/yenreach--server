@@ -34,8 +34,8 @@ export class BusinessService implements IBusinessService {
   private transformBusiness = (business: Businesses) => {
     return {
       ...business,
-      categories: business.categories.map(c => c.category.category),
-      photos: business.photos.map(p => p.mediaPath),
+      categories: business.categories,
+      photos: business.photos,
       state: business.state?.name,
       lga: business.lga?.name,
       reviews: business.reviews,

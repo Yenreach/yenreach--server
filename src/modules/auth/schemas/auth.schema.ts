@@ -1,4 +1,5 @@
-import { z } from 'zod';
+import { nativeEnum, z } from 'zod';
+import { AdminAuthorizationLevel } from '../enums';
 
 // Password regex: Min 8 chars, 1 uppercase, 1 number, 1 special char
 const strongPasswordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{8,}$/;
@@ -17,10 +18,34 @@ export const CreateAuthSchema = z.object({
   gender: z.string().optional(),
 });
 
+export const CreateAdminSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  username: z.string().min(1, 'username is required'),
+  official_email: z.string().email('Invalid email address'),
+  personal_email: z.string().email('Invalid email address'),
+  password: z
+    .string()
+    .regex(strongPasswordRegex, 'Password must be at least 8 characters, include one uppercase letter, one number, and one special character'),
+  phoneNumber: z.string().optional(),
+  authorizationLevel: nativeEnum(AdminAuthorizationLevel, {
+    required_error: 'authorizationLevel is required',
+    message: `authorizationLevel must be of type ${Object.values(AdminAuthorizationLevel)}`,
+    invalid_type_error: `authorizationLevel must be in ${Object.values(AdminAuthorizationLevel)}`
+  }),
+});
+
 export const LoginSchema = z.object({
   email: z.string().email('Invalid email address'),
   password: z.string().min(1, 'Password cannot be empty'),
 });
 
+export const AdminLoginSchema = z.object({
+  email: z.string().email('Invalid email address').optional(),
+  username: z.string().optional(),
+  password: z.string().min(1, 'Password cannot be empty'),
+});
+
 export type CreateAuthDto = z.infer<typeof CreateAuthSchema>;
+export type CreateAdminDto = z.infer<typeof CreateAdminSchema>;
 export type LoginDto = z.infer<typeof LoginSchema>;
+export type AdminLoginDto = z.infer<typeof AdminLoginSchema>;

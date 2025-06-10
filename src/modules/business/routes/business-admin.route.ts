@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction, Router } from 'express';
 import { Routes } from '../../../core/routes/interfaces';
-import { authMiddleware } from '../../../core/middlewares';
+import { adminAuthMiddleware } from '../../../core/middlewares';
 import { BusinessAdminService } from '../services/busines.admin.service';
 import { BusinessAdminController } from '../controllers/business-admin.controller';
 
-class BusinessRoute implements Routes {
+class AdminBusinessRoute implements Routes {
   public path = '/admin/business';
   public router = Router();
   public businessAdminService = new BusinessAdminService();
@@ -19,12 +19,12 @@ class BusinessRoute implements Routes {
       next();
     });
 
-    this.router.get(`${this.path}/`, authMiddleware, this.businessAdminController.getBusinesses);
-    this.router.patch(`${this.path}/:id`, authMiddleware, this.businessAdminController.editBusiness);
-    this.router.post(`${this.path}/:id/approve`, authMiddleware, this.businessAdminController.approveBusiness);
-    this.router.post(`${this.path}/:id/decline`, authMiddleware, this.businessAdminController.declineBusiness);
-    this.router.delete(`${this.path}/:id`, authMiddleware, this.businessAdminController.deleteBusiness);
+    this.router.get(`${this.path}/`, adminAuthMiddleware, this.businessAdminController.getBusinesses);
+    this.router.patch(`${this.path}/:id`, adminAuthMiddleware, this.businessAdminController.editBusiness);
+    this.router.post(`${this.path}/:id/approve`, adminAuthMiddleware, this.businessAdminController.approveBusiness);
+    this.router.post(`${this.path}/:id/decline`, adminAuthMiddleware, this.businessAdminController.declineBusiness);
+    this.router.delete(`${this.path}/:id`, adminAuthMiddleware, this.businessAdminController.deleteBusiness);
   }
 }
 
-export { BusinessRoute };
+export { AdminBusinessRoute };

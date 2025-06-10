@@ -16,6 +16,9 @@ export class BusinessAdminService implements IBusinessAdminService {
       where: {
         registrationStatus: Not(Equal(BusinessRegistrationState.DECLINED)),
       },
+      relations: {
+        user: true,
+      },
       skip,
       take: limit,
     });
@@ -28,6 +31,9 @@ export class BusinessAdminService implements IBusinessAdminService {
       where: {
         registrationStatus: BusinessRegistrationState.PENDING,
       },
+      relations: {
+        user: true,
+      },
       skip,
       take: limit,
     });
@@ -39,6 +45,9 @@ export class BusinessAdminService implements IBusinessAdminService {
     const [businesses, total] = await this.businessRepository.findAndCount({
       where: {
         registrationStatus: BusinessRegistrationState.INCOMPLETE,
+      },
+      relations: {
+        user: true,
       },
       skip,
       take: limit,

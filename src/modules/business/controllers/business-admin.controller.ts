@@ -10,6 +10,11 @@ export class BusinessAdminController {
 
   constructor(businessAdminService: IBusinessAdminService) {
     this.businessAdminService = businessAdminService;
+    this.approveBusiness = this.approveBusiness.bind(this);
+    this.declineBusiness = this.declineBusiness.bind(this);
+    this.editBusiness = this.editBusiness.bind(this);
+    this.getBusinesses = this.getBusinesses.bind(this);
+    this.deleteBusiness = this.deleteBusiness.bind(this);
   }
 
   public async approveBusiness(req: RequestWithParam<PathParams>, res: Response, next: NextFunction) {

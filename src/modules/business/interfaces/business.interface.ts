@@ -64,8 +64,8 @@ type BusinessDto = {
   coverImg: string;
   monthStarted: string;
   yearStarted: string;
-  categories: string[];
-  photos: string[];
+  categories: BusinessCategories[];
+  photos: BusinessPhotos[];
   reviews: BusinessReviews[];
 };
 
