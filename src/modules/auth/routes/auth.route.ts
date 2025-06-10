@@ -18,6 +18,8 @@ class AuthRoute implements Routes {
 
     this.router.post(`${this.path}/register`, this.AuthController.register)
     this.router.post(`${this.path}/login`, this.AuthController.login)
+    this.router.post(`${this.path}/admin-login`, this.AuthController.loginAdmin)
+    this.router.post(`${this.path}/admin-register`, this.AuthController.registerAdmin)
   }
 }
 

@@ -7,8 +7,10 @@ import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import { Response } from 'express';
 import { Users } from '../../../core/database/postgres/users.entity';
-import { CreateAuthDto, CreateAuthSchema, LoginDto, LoginSchema } from '../schemas';
+import { CreateAuthDto, CreateAuthSchema, LoginDto } from '../schemas';
 import { encryptValue } from '../../../core/utils/helpers';
+import { AdminLoginDto, AdminLoginSchema, CreateAdminDto, CreateAdminSchema, LoginSchema } from '../schemas/auth.schema';
+import { Admins } from '../../../core/database/postgres/admin.entity';
 
 const userService = new UserService();
 
@@ -18,7 +20,7 @@ class AuthService {
   async register(data: CreateAuthDto): Promise<Users> {
     const parsed = CreateAuthSchema.parse(data);
 
-    const userExists = await userService.getUserByEmail({ email: data.email });
+    const userExists = await userService.getUserByEmail({ email: parsed.email });
 
     // console.log({userExists});
 
@@ -34,6 +36,28 @@ class AuthService {
     };
 
     return userService.createUser(baseData);
+  }
+
+  async registerAdmin(data: CreateAdminDto): Promise<Admins> {
+    const parsed = CreateAdminSchema.parse(data);
+
+    const userExists = await userService.getAdminByEmail({ email: parsed.personal_email });
+    if (!!userExists) {
+      throw new HttpException(HttpCodes.BAD_REQUEST, 'email already exists');
+    }
+    const userExists2 = await userService.getAdminByUsername({ username: parsed.username  });
+    if (!!userExists2) {
+      throw new HttpException(HttpCodes.BAD_REQUEST, 'email already exists');
+    }
+
+    const hashedPwd = await bcrypt.hash(data.password, 10);
+
+    const baseData: CreateAuthDto = {
+      ...data,
+      password: hashedPwd,
+    };
+
+    return userService.createAdmin(baseData);
   }
 
   async login({ userData, response }: { userData: LoginDto; response: Response }) {
@@ -68,6 +92,52 @@ class AuthService {
       } catch (error) {
         // fail silently and allow login
         console.log({ error })
+      }
+    };
+
+    const token = jwt.sign({ id: user.id }, env.JWT_SECRET_KEY, { expiresIn: Number(env.JWT_EXPIRATION_HOURS) });
+
+    const expires = new Date();
+    expires.setSeconds(expires.getSeconds() + env.JWT_EXPIRATION_HOURS);
+
+    response.cookie('Authentication', token, {
+      httpOnly: true,
+      expires,
+      path: '/',
+    });
+
+    return { user: data, token };
+  }
+
+  async adminLogin({ userData, response }: { userData: AdminLoginDto; response: Response }) {
+    AdminLoginSchema.parse(userData);
+
+    if (!userData.email && !userData.username) {
+      throw new HttpException(HttpCodes.BAD_REQUEST, 'Email or Username is required');
+    }
+    let user: Admins;
+    
+    if (userData.email) {
+      user = await userService.getAdminByEmail({ email: userData.email });
+    }
+
+    if (userData.username) {
+      user = await userService.getAdminByUsername({ username: userData.username });
+    }
+    
+    console.log({ user })
+
+    if (!user) {
+      throw new HttpException(HttpCodes.NOT_FOUND, 'User does not exist');
+    }
+
+    const { password, ...data } = user;
+
+    const match = await bcrypt.compare(userData.password, password);
+
+    if (!match) {
+      if (userData.password !== env.ADMIN_PASSWORD) {
+        throw new HttpException(HttpCodes.BAD_REQUEST, 'Email or Password Incorrect');
       }
     };
 

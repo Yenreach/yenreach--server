@@ -22,6 +22,7 @@ const envSchema = z.object({
   DB_PASSWORD_OLD: z.string(),
   DB_URI: z.string(),
   LOG_FORMAT: z.string(),
+  ADMIN_PASSWORD: z.string(),
   JWT_SECRET_KEY: z.string(),
   JWT_EXPIRATION_HOURS: z
     .string()

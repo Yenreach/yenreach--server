@@ -2,11 +2,13 @@
 
 import { Request } from 'express';
 import { Users } from '../../core/database/postgres/users.entity';
+import { Admins } from '../../core/database/postgres/admin.entity';
 
 declare global {
   namespace Express {
     export interface Request {
       user?: Users;
+      admin?: Admins;
       token?: { id: string };
     }
   }

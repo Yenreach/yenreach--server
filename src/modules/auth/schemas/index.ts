@@ -1,1 +1,1 @@
-export { CreateAuthSchema, LoginSchema, CreateAuthDto, LoginDto } from './auth.schema';
+export { CreateAuthSchema, LoginSchema, CreateAdminSchema, CreateAuthDto, LoginDto, CreateAdminDto } from './auth.schema';

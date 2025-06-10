@@ -29,6 +29,28 @@ const authMiddleware = async (req: Request, res: Response, next: NextFunction) =
   }
 };
 
+const adminAuthMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const token = extractFromCookie(req) ?? extractTokenFromHeader(req);
+
+    if (!token) throw new HttpException(HttpCodes.UNAUTHORIZED, 'You are Not Authenticated');
+
+    const decoded = jwt.verify(token, env.JWT_SECRET_KEY) as { id: string };
+
+    const user = await userService.getAdminById(decoded.id);
+
+    if (!user) throw new HttpException(HttpCodes.UNAUTHORIZED, 'Unauthorized access: User does not exist');
+
+    req.admin = user;
+    req.token = decoded;
+
+    next();
+  } catch (error) {
+    next(error);
+    // next(new HttpException(HttpCodes.UNAUTHORIZED, 'Wrong authentication token used'));
+  }
+};
+
 export const extractTokenFromHeader = (request: Request): string | undefined => {
   const [type, token] = request.headers.authorization?.split(' ') ?? [];
   return type === 'Bearer' ? token : undefined;
@@ -42,4 +64,4 @@ export const extractFromCookie = (req: Request): string | null => {
   return token;
 };
 
-export { authMiddleware };
+export { authMiddleware, adminAuthMiddleware };
