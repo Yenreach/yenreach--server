@@ -6,6 +6,7 @@ export class SubPlanService {
   private repo = AppDataSource.getRepository(SubPlan);
 
   create(data: CreateSubPlanDto) {
+    console.log({ data })
     const savedSubPlan = this.repo.save(this.repo.create(data));
     return savedSubPlan;
   }

@@ -65,7 +65,7 @@ class App {
           logger.info(`========= DATABASE 🚀=======`);
           logger.info(`🚀 Database running 🚀`);
           logger.info(`=================================`);
-          console.log(AppDataSource.options.entities);
+          // console.log(AppDataSource.options.entities);
           resolve(undefined);
         })
         .catch(err => {

@@ -19,6 +19,8 @@ const envSchema = z.object({
   DB_TYPE_OLD: z.string(),
   DB_NAME_OLD: z.string(),
   DB_USER_OLD: z.string(),
+  FLW_TEST_KEY: z.string(),
+  FLW_LIVE_KEY: z.string(),
   DB_PASSWORD_OLD: z.string(),
   DB_URI: z.string(),
   LOG_FORMAT: z.string(),

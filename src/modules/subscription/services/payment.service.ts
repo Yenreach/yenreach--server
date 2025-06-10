@@ -6,6 +6,9 @@ import { CreatePaymentDto, UpdatePaymentDto } from '../schemas';
 import { CardToken } from '../../../core/database/postgres/card-token.entity';
 import { Users } from '../../../core/database/postgres/users.entity';
 import { HttpException } from '../../../core/exceptions';
+import env from '../../../config/env.config';
+import { uuid } from "uuidv4";
+import { SubPlan } from '../../../core/database/postgres/subplan.entity';
 
 export class PaymentService {
   private repo = AppDataSource.getRepository(SubscriptionPayment);
@@ -25,7 +28,7 @@ export class PaymentService {
     const payments = this.repo.find({
       where: { user: { id: userId } },
       relations: ['subPlan', 'subPlan.plan'],
-      order: { paymentDate: 'DESC' },
+      order: { createdAt: 'DESC' },
     });
     return payments;
   }
@@ -41,54 +44,71 @@ export class PaymentService {
     return result;
   }
 
-  // async initiateFlutterwavePayment(payload: {
-  //   amount: number;
-  //   email: string;
-  //   userId: string;
-  //   businessId: string;
-  //   subPlanId: string;
-  //   redirectUrl: string;
-  // }) {
-  //   const tx_ref = uuidv4();
+  async initiateFlutterwavePayment(payload: {
+    userId: string;
+    businessId: string;
+    subPlanId: string;
+    redirectUrl: string;
+  }) {
+    const tx_ref = uuid();
 
-  //   const res = await axios.post(
-  //     `${FLW_BASE_URL}/payments`,
-  //     {
-  //       tx_ref,
-  //       amount: payload.amount,
-  //       currency: 'NGN',
-  //       redirect_url: payload.redirectUrl,
-  //       customer: {
-  //         email: payload.email,
-  //       },
-  //       customizations: {
-  //         title: 'Subscription Payment',
-  //         description: 'Subscription for a selected plan',
-  //       },
-  //     },
-  //     {
-  //       headers: {
-  //         Authorization: `Bearer ${flutterwaveSecret}`,
-  //         'Content-Type': 'application/json',
-  //       },
-  //     }
-  //   );
+    // Fetch SubPlan details from the database
+    const subPlanRepository = AppDataSource.getRepository(SubPlan);
+    const subPlan = await subPlanRepository.findOne({
+      where: { id: payload.subPlanId },
+    });
 
-  //   return {
-  //     paymentLink: res.data?.data?.link,
-  //     reference: tx_ref,
-  //   };
-  // }
+    if (!subPlan) {
+      throw new Error("SubPlan not found");
+    }
+
+    // Fetch User details from the database
+    const userRepository = AppDataSource.getRepository(Users);
+    const user = await userRepository.findOne({
+      where: { id: payload.userId },
+    });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    // Send payment request to Flutterwave
+    const res = await axios.post(
+      `https://api.flutterwave.com/v3/payments`,
+      {
+        tx_ref,
+        amount: subPlan.amount, // Use amount from the SubPlan entity
+        currency: "NGN",
+        redirect_url: payload.redirectUrl,
+        customer: {
+          email: user.email, // Use email from the User entity
+        },
+        customizations: {
+          title: "Subscription Payment",
+          description: "Subscription for a selected plan",
+        },
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${env.FLW_TEST_KEY}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return {
+      paymentLink: res.data?.data?.link,
+      reference: tx_ref,
+    };
+  }
 
   async verifyPayment(txRef: string) {
     try {
-      const FLW_SECRET_KEY = process.env.FLW_SECRET_KEY;
-
       const response = await axios.get(
         `https://api.flutterwave.com/v3/transactions/verify_by_reference?tx_ref=${txRef}`,
         {
           headers: {
-            Authorization: `Bearer ${FLW_SECRET_KEY}`,
+            Authorization: `Bearer ${env.FLW_TEST_KEY}`,
           },
         }
       );

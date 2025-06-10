@@ -9,17 +9,17 @@ const AppDataSource = new DataSource({
   password: env.DB_PASSWORD,
   database: env.DB_NAME,
   synchronize: true,
-  logging: true,
+  logging: false,
   ...(env.NODE_ENV === 'production'
     ? {
-        ssl: {
-          rejectUnauthorized: false,
-        },
-        entities: ['dist/core/database/postgres/*.entity.js'],
-      }
+      ssl: {
+        rejectUnauthorized: false,
+      },
+      entities: ['dist/core/database/postgres/*.entity.js'],
+    }
     : {
-        entities: ['src/core/database/postgres/*.entity.ts'],
-      }),
+      entities: ['src/core/database/postgres/*.entity.ts'],
+    }),
 });
 
 export default AppDataSource;

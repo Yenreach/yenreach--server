@@ -4,7 +4,7 @@ export const createSubPlanSchema = z.object({
   name: z.enum(['Basic', 'Pro', 'X']),
   durationInMonths: z.number().int().positive(),
   amount: z.number().positive(),
-  planId: z.string().uuid(), // Assuming plan has a UUID primary key
+  planId: z.string(), // Assuming plan has a UUID primary key
 });
 
 export const updateSubPlanSchema = createSubPlanSchema.partial();

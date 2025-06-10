@@ -22,15 +22,25 @@ export class PaymentController {
     }
   }
 
-  // public initiatePaystack = async (req: Request, res: Response) => {
-  //   try {
-  //     const { email, subPlanId } = req.body;
-  //     const response = await this.service.initiatePaystackPayment(email, subPlanId);
-  //     res.json(response);
-  //   } catch (err: any) {
-  //     res.status(500).json({ error: 'Failed to initiate payment', details: err.message });
-  //   }
-  // }
+  public initiatePayment = async (req: Request, res: Response) => {
+    try {
+      const userId = req.user
+      const response = await this.service.initiateFlutterwavePayment({ ...req.body, userId });
+      res.json(response);
+    } catch (err: any) {
+      res.status(500).json({ error: 'Failed to initiate payment', details: err.message });
+    }
+  }
+
+  public verifyPayment = async (req: Request, res: Response) => {
+    try {
+      const trxref = req.query.trxref
+      const response = await this.service.verifyPayment(trxref as string);
+      res.json(response);
+    } catch (err: any) {
+      res.status(500).json({ error: 'Failed to verify payment', details: err.message });
+    }
+  }
 
   public update = async (req: Request, res: Response) => {
     try {
