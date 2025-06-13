@@ -22,7 +22,7 @@ const envSchema = z.object({
   FLW_TEST_KEY: z.string(),
   FLW_LIVE_KEY: z.string(),
   DB_PASSWORD_OLD: z.string(),
-  DB_URI: z.string(),
+  // DB_URI: z.string(),
   LOG_FORMAT: z.string(),
   ADMIN_PASSWORD: z.string(),
   JWT_SECRET_KEY: z.string(),
