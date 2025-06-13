@@ -108,7 +108,7 @@ class JobsController {
 
   async deleteJobs(req: Request, res: Response, next: NextFunction) {
     try {
-      const jobId = parseInt(req.params.id);
+      const jobId = req.params.id;
       const result = await jobsService.deleteJob(jobId);
       return sendResponse(res, HttpCodes.OK, 'job deleted successfully', result);
     } catch (error) {

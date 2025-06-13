@@ -37,7 +37,8 @@ class JobsRoute implements Routes {
 
     this.router.put(`${this.path}/:id`, this.JobsController.updateJobs)
 
-    this.router.delete(`${this.path}/:id`, this.JobsController.deleteJobs)
+    this.router.delete(`${this.adminPath}/:id`, adminAuthMiddleware, this.JobsController.deleteJobs)
+    this.router.delete(`${this.path}/:id`, authMiddleware, this.JobsController.deleteJobs)
   }
 }
 

@@ -159,24 +159,21 @@ class JobsService {
 
   async getAllJobs({ page = 1, limit = 20, search = "", business, tag }: GetJobsDto & { tag?: string }): Promise<PaginationResponse<Jobs>> {
     const { skip } = calculatePagination(page, limit);
-    const queryConditions: any = {
-      where: {
-        ...(business && { businessId: business }),
-        // ...(tag && {  --- have to make the tag model and then JobTags model ref job and tags
-        //   tags: {
-        //     tagds: tag,
-        //   }, 
-        // }),
-      },
+    const queryConditions: FindManyOptions<Jobs>  = {
       relations: ["tags"],
       skip,
       take: limit,
     };
 
+    if (business) {
+      queryConditions.where = {
+        businessId: business,
+      };
+    }
     if (search) {
       queryConditions.where = [
         {
-          ...queryConditions.where,
+          ...(queryConditions.where || {}),
           title: Like(`%${search}%`),
         },
         // { tags: { tag: In(`%${search}%`) } },
@@ -268,7 +265,7 @@ class JobsService {
     return await this.jobRepository.findOneBy({ id });
   }
 
-  async deleteJob(id: number): Promise<boolean> {
+  async deleteJob(id: string): Promise<boolean> {
     const result = await this.jobRepository.delete(id);
     return result.affected > 0;
   }
