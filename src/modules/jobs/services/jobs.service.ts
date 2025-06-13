@@ -1,4 +1,4 @@
-import { Like } from 'typeorm';
+import { FindManyOptions, Like } from 'typeorm';
 import AppDataSource from '../../../core/database';
 import { Businesses } from '../../../core/database/postgres/businesses.entity';
 import { JobTags } from '../../../core/database/postgres/job-tags.entity';
@@ -34,13 +34,41 @@ class JobsService {
     const savedJob = await this.jobRepository.save(job);
   
     // Insert job tags
-    const tagEntities = tags.map(tag =>
-      this.jobTagsRepository.create({
-        jobId: savedJob.id,
-        tag,
-      })
-    );
-    await this.jobTagsRepository.save(tagEntities);
+    // const tagEntities = tags.map(tag =>
+    //   this.jobTagsRepository.create({
+    //     jobId: savedJob.id,
+    //     tag,
+    //   })
+    // );
+    // await this.jobTagsRepository.save(tagEntities);
+  
+    return { status: 'success', data: savedJob };
+  }
+
+  async adminCreateJob(data: CreateJobDto): Promise<any> {
+    const {
+      businessId,
+      tags = [],
+      ...jobData
+    } = data;
+
+    // Create job entity
+    const job = this.jobRepository.create({
+      ...jobData,
+      isAdminJob: true,
+    });
+  
+    // Save the job entity
+    const savedJob = await this.jobRepository.save(job);
+  
+    // // Insert job tags
+    // const tagEntities = tags.map(tag =>
+    //   this.jobTagsRepository.create({
+    //     jobId: savedJob.id,
+    //     tag,
+    //   })
+    // );
+    // await this.jobTagsRepository.save(tagEntities);
   
     return { status: 'success', data: savedJob };
   }
@@ -129,21 +157,48 @@ class JobsService {
     return await this.jobRepository.save(jobs);
   }
 
-  async getAllJobs(page = 1, limit = 10): Promise<PaginationResponse<Jobs>> {
+  async getAllJobs({ page = 1, limit = 20, search = "", business, tag }: GetJobsDto & { tag?: string }): Promise<PaginationResponse<Jobs>> {
     const { skip } = calculatePagination(page, limit);
-
-    const [jobs, total] = await this.jobRepository.findAndCount({
+    const queryConditions: any = {
+      where: {
+        ...(business && { businessId: business }),
+        // ...(tag && {  --- have to make the tag model and then JobTags model ref job and tags
+        //   tags: {
+        //     tagds: tag,
+        //   }, 
+        // }),
+      },
+      relations: ["tags"],
       skip,
       take: limit,
-    });
+    };
+
+    if (search) {
+      queryConditions.where = [
+        {
+          ...queryConditions.where,
+          title: Like(`%${search}%`),
+        },
+        // { tags: { tag: In(`%${search}%`) } },
+      ];
+    
+      queryConditions.join = {
+        alias: "job",
+        leftJoinAndSelect: {
+          tags: "job.tags",
+        },
+      };
+    }
+
+    const [jobs, total] = await this.jobRepository.findAndCount(queryConditions);
 
     return paginate(jobs, total, page, limit);
   }
 
-  async getJobsPublic({ page = 1, limit = 20, search = "", business }: GetJobsDto) {
+  async getJobsPublic({ page = 1, limit = 20, search = "", business, tag }: GetJobsDto & { tag?: string }) {
     const { skip } = calculatePagination(page, limit);
 
-    const queryConditions: any = {
+    const queryConditions: FindManyOptions<Jobs>  = {
       where: {
         status: JobStatus.Open,
         ...(business && { businessId: business }),

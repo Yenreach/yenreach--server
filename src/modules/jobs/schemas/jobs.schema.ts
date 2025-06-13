@@ -2,7 +2,6 @@ import { z } from "zod";
 
 export const JobSchema = z.object({
   companyName: z.string(),
-  // name: z.string(),
   businessId: z.string(),
   title: z.string(),
   type: z.string(),
@@ -11,7 +10,6 @@ export const JobSchema = z.object({
   description: z.string(),
   benefit: z.string(),
   applicationMethod: z.string(),
-  // link: z.string().optional().default(""),
   overview: z.string().optional().default(""),
   applicationExpiry: z.string(),
   tags: z.array(z.string()).optional().default([]),

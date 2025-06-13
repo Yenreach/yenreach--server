@@ -20,6 +20,17 @@ class JobsController {
     }
   }
 
+  async adminCreateJob(req: Request, res: Response, next: NextFunction) {
+    try {
+      const jobsData: CreateJobDto = req.body;
+      const newJobs = await jobsService.adminCreateJob(jobsData);
+
+      return sendResponse(res, HttpCodes.CREATED, 'job created successfully', newJobs);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async updateJobs(req: Request, res: Response, next: NextFunction) {
     try {
       const jobId = req.params.id;
@@ -33,10 +44,9 @@ class JobsController {
 
   async getAllJobs(req: Request, res: Response, next: NextFunction) {
     try {
-      const page = parseInt(req.query.page as string, 10) || 1;
-      const limit = parseInt(req.query.limit as string, 10) || 10;
+      const queryParams = GetJobsSchema.parse(req.query);
 
-      const jobs = await jobsService.getAllJobs(page, limit);
+      const jobs = await jobsService.getAllJobs(queryParams);
 
       return sendResponse(res, HttpCodes.OK, 'jobs fetched successfully', jobs);
     } catch (error) {

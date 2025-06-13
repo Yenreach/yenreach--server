@@ -1,13 +1,14 @@
 import { Request, Response, NextFunction, Router } from 'express';
 import { JobsController } from '../controllers';
 import { Routes } from '../../../core/routes/interfaces';
-import { authMiddleware } from '../../../core/middlewares';
+import { adminAuthMiddleware, authMiddleware } from '../../../core/middlewares';
 import { validateRequest } from '../../../core/middlewares/ValidationMiddleware';
 import { JobSchema } from '../schemas/jobs.schema';
 import { z } from 'zod';
 
 class JobsRoute implements Routes {
   public path = '/jobs';
+  public adminPath = '/jobs/admin';
   public router = Router();
   public JobsController = new JobsController();
 
@@ -22,9 +23,11 @@ class JobsRoute implements Routes {
 
     this.router.post(`${this.path}/`, authMiddleware, validateRequest([z.object({ body: JobSchema })]), this.JobsController.createJobs)
 
+    this.router.post(`${this.adminPath}`, adminAuthMiddleware, validateRequest([z.object({ body: JobSchema })]), this.JobsController.adminCreateJob)
+
     this.router.get(`${this.path}`, this.JobsController.getJobs)
 
-    this.router.get(`${this.path}/all`, this.JobsController.getAllJobs)
+    this.router.get(`${this.path}/all`, adminAuthMiddleware, this.JobsController.getAllJobs)
 
     this.router.get(`${this.path}/:id`, this.JobsController.getJobsById)
 
