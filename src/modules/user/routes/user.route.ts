@@ -1,9 +1,10 @@
 import { Request, Response, NextFunction, Router } from 'express';
 import { UserController } from '../controllers';
 import { Routes } from '../../../core/routes/interfaces';
-import { authMiddleware } from '../../../core/middlewares';
+import { adminAuthMiddleware, authMiddleware } from '../../../core/middlewares';
 class UserRoute implements Routes {
   public path = '/users';
+  public adminPath = '/users/admin';
   public router = Router();
   public UserController = new UserController();
 
@@ -19,6 +20,8 @@ class UserRoute implements Routes {
     this.router.post(`${this.path}/`, authMiddleware, this.UserController.createUser)
 
     this.router.get(`${this.path}/`, authMiddleware, this.UserController.getAllUsers)
+    
+    this.router.get(`${this.adminPath}/`, adminAuthMiddleware, this.UserController.getAllAdmins)
 
     this.router.get(`${this.path}/me`, authMiddleware, this.UserController.getUserProfile)
 

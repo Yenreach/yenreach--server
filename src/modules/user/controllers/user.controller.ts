@@ -44,6 +44,19 @@ class UserController {
     }
   }
 
+  async getAllAdmins(req: Request, res: Response, next: NextFunction) {
+    try {
+      const page = parseInt(req.query.page as string, 10) || 1;
+      const limit = parseInt(req.query.limit as string, 10) || 10;
+
+      const admins = await userService.getAllAdmins(page, limit);
+
+      return sendResponse(res, HttpCodes.OK, "admins fetched successfully", admins)
+    } catch (error) {
+      next(error)
+    }
+  }
+
   async getUserById(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.params.id;

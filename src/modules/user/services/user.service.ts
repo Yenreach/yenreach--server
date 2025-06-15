@@ -43,6 +43,17 @@ class UserService {
 
     return paginate(users, total, page, limit);
   }
+ 
+  async getAllAdmins(page = 1, limit = 10): Promise<PaginationResponse<Admins>> {
+    const { skip } = calculatePagination(page, limit);
+
+    const [users, total] = await this.adminRepository.findAndCount({
+      skip,
+      take: limit,
+    });
+
+    return paginate(users, total, page, limit);
+  }
 
   async getUserById(id: string): Promise<Users | null> {
     return await this.userRepository.findOneBy({ id });
