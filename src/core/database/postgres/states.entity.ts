@@ -8,7 +8,7 @@ export class States {
   public id: string;
 
   @Column('int', { name: 'num_id' })
-  public num_id: number;
+  public numId: number;
 
   @Column('varchar', { name: 'name', length: 100 })
   public name: string;

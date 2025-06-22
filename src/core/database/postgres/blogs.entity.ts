@@ -17,9 +17,6 @@ export class Blogs {
   @PrimaryGeneratedColumn('uuid')
   public id: string;
 
-  @Column('varchar', { name: 'name', length: 100 })
-  public name: string;
-
   @Column('uuid', { name: 'author_id' })
   public authorId: string;
 
@@ -30,13 +27,13 @@ export class Blogs {
   public preview: string;
 
   @Column('varchar', { name: 'media_url', length: 200 })
-  public media_url: string;
+  public mediaUrl: string;
 
   @Column('text', { name: 'content' })
   public content: string;
 
   @Column('boolean', { name: 'is_featured', default: false })
-  public isFeatured: string;
+  public isFeatured: boolean;
 
   @ManyToOne(() => Admins)
   @JoinColumn({ name: 'author_id' })

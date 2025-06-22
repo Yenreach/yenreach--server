@@ -5,3 +5,8 @@ export interface PaginationResponse<T> {
   total: number;
   totalPages: number;
 }
+
+export type PaginationQueryParams = {
+  page: string | number;
+  limit: string | number;
+};
