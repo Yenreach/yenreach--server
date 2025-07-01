@@ -20,8 +20,8 @@ export class Blogs {
   @Column('uuid', { name: 'author_id' })
   public authorId: string;
 
-  @Column('varchar', { name: 'tittle', length: 500 })
-  public tittle: string;
+  @Column('varchar', { name: 'title', length: 500 })
+  public title: string;
 
   @Column('text', { name: 'preview' })
   public preview: string;

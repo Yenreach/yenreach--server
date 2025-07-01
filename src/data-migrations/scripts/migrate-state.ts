@@ -21,7 +21,7 @@ const migrateStates = async () => {
     // Define the transformation function to map old user data to the new user structure
     const transformState = (oldState: States): DeepPartial<NewStates> => {
       return {
-        num_id: oldState.id,
+        numId: oldState.id,
         name: oldState.name,
       };
     };

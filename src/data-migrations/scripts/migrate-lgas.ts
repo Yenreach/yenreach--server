@@ -18,7 +18,7 @@ const migrateLga = async () => {
     const migrationFactory = new MigrationFactory(SqlDataSource, PostgresDataSource);
 
     const transformLga = async (oldLga: LocalGovernments): Promise<DeepPartial<NewLgas>> => {
-      const state = await PostgresDataSource.getRepository(States).findOneBy({ num_id: oldLga.stateId });
+      const state = await PostgresDataSource.getRepository(States).findOneBy({ numId: oldLga.stateId });
       return {
         num_id: oldLga.id,
         name: oldLga.name,
