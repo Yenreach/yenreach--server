@@ -22,6 +22,7 @@ export class BlogsService {
 
   public async getBlogs(page: number = 1, limit: number = 10): Promise<PaginationResponse<Blogs>> {
     const { skip } = calculatePagination(page, limit);
+    console.log('hit here too');
     const [blogs, total] = await this.blogRepository.findAndCount({
       relations: {
         author: true,

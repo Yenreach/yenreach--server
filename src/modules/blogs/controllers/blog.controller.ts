@@ -4,13 +4,19 @@ import { PathParams } from '../interfaces';
 import { BlogsService } from '../services';
 import { PaginationQueryParams } from '../../../core/utils/pagination';
 import { CreateBlogDto, UpdateBlogDto } from '../schema';
+import { sendResponse } from '../../../core/utils';
+import { HttpCodes } from '../../../core/constants';
+import { HttpException } from '../../../core/exceptions';
+
+const blogsService = new BlogsService();
 
 export class BlogsController {
-  private readonly blogsService = new BlogsService();
-
   public async getBlog(req: RequestWithParam<PathParams>, res: Response, next: NextFunction) {
     try {
-      return await this.blogsService.getBlog(req.params.id);
+      const blog = await blogsService.getBlog(req.params.id);
+      if (!blog) throw new HttpException(HttpCodes.NOT_FOUND, 'Blog not found');
+
+      return sendResponse(res, HttpCodes.OK, 'Blog fetched successfully', blog);
     } catch (error) {
       next(error);
     }
@@ -20,7 +26,9 @@ export class BlogsController {
     try {
       const page = parseInt(req.query.page as string, 10) || 1;
       const limit = parseInt(req.query.limit as string, 10) || 10;
-      return await this.blogsService.getBlogs(page, limit);
+
+      const blogs = await blogsService.getBlogs(page, limit);
+      return sendResponse(res, HttpCodes.OK, 'Blogs fetched successfully', blogs);
     } catch (error) {
       next(error);
     }
@@ -28,7 +36,8 @@ export class BlogsController {
 
   public async createBlog(req: RequestWithBody<CreateBlogDto>, res: Response, next: NextFunction) {
     try {
-      return await this.blogsService.createBlog(req.user.id, req.body);
+      const newBlog = await blogsService.createBlog(req.user.id, req.body);
+      return sendResponse(res, HttpCodes.CREATED, 'Blog created successfully', newBlog);
     } catch (error) {
       next(error);
     }
@@ -36,7 +45,8 @@ export class BlogsController {
 
   public async updateBlog(req: RequestWithParamAndBody<PathParams, UpdateBlogDto>, res: Response, next: NextFunction) {
     try {
-      return await this.blogsService.updateBlog(req.params.id, req.body);
+      const updatedBlog = await blogsService.updateBlog(req.params.id, req.body);
+      return sendResponse(res, HttpCodes.OK, 'Blog updated successfully', updatedBlog);
     } catch (error) {
       next(error);
     }
@@ -44,7 +54,8 @@ export class BlogsController {
 
   public async deleteBlog(req: RequestWithParam<PathParams>, res: Response, next: NextFunction) {
     try {
-      return await this.blogsService.deleteBlog(req.params.id);
+      await blogsService.deleteBlog(req.params.id);
+      return sendResponse(res, HttpCodes.OK, 'Blog deleted successfully', null);
     } catch (error) {
       next(error);
     }
