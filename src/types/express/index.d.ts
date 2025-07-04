@@ -7,7 +7,7 @@ import { Admins } from '../../core/database/postgres/admin.entity';
 declare global {
   namespace Express {
     export interface Request {
-      user?: Users;
+      user?: Users | Admins;
       admin?: Admins;
       token?: { id: string };
     }

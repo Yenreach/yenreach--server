@@ -42,6 +42,7 @@ const adminAuthMiddleware = async (req: Request, res: Response, next: NextFuncti
     if (!user) throw new HttpException(HttpCodes.UNAUTHORIZED, 'Unauthorized access: User does not exist');
 
     req.admin = user;
+    req.user = user;
     req.token = decoded;
 
     next();
