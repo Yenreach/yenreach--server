@@ -68,7 +68,7 @@ export class BlogsService {
 
     if (!blog) throw new HttpException(HttpCodes.NOT_FOUND, 'Blog not found');
 
-    await this.blogRepository.delete(blog);
+    await this.blogRepository.delete({ id });
   }
 
   public async updateBlog(id: string, data: UpdateBlogDto): Promise<Blogs> {
