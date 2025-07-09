@@ -1,12 +1,14 @@
 POST http://localhost:3800/api/v1/auth/admin-register HTTP/1.1
 content-type: application/json
 
+
 {
-    "name": "Nicholas Duadei",
-    "username": "nick",
-    "official_email": "nicholasduadei14@gmail.com",
-    "personal_email": "nicholasduadei14@gmail.com",
+    "name": "Gboun Marvellous",
+    "username": "lankiman",
+    "official_email": "marvellousgboun@gmail.com",
+    "personal_email": "marvellousgboun@gmail.com",
     "password": "@JohnDoe123",
-    "phoneNumber": "09033398824",
+    "phoneNumber": "07058803416",
     "authorizationLevel": "owner"
 }
+

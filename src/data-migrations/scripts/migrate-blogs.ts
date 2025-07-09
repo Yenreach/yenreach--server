@@ -1,5 +1,9 @@
+import { DeepPartial } from 'typeorm';
+import { Blogs } from '../../core/database/postgres/blogs.entity';
 import { PostgresDataSource, SqlDataSource } from '../connection';
 import { MigrationFactory } from '../migration.factory';
+import { Blogpost } from '../../core/database/entities/entities/Blogpost';
+import { convertEpochToISO } from '../../core/utils/helpers';
 
 async function migrateBlogs() {
   try {
@@ -13,9 +17,22 @@ async function migrateBlogs() {
 
     const migrationFactory = new MigrationFactory(SqlDataSource, PostgresDataSource);
 
-    // const tranformBlogs = async (oldBlogs: Blogpost): Promise<DeepPartial<Blogs>> => {};
+    const tranformBlogs = async (oldBlogs: Blogpost): Promise<DeepPartial<Blogs>> => {
+      return {
+        authorId: 'a70e324c-d1bd-4eec-b539-d51aba4a167b',
+        title: oldBlogs.title,
+        content: oldBlogs.post,
+        preview: oldBlogs.snippet,
+        mediaUrl: oldBlogs.filePath,
+        isFeatured: false,
+        createdAt: convertEpochToISO(oldBlogs.createdAt),
+        updatedAt: convertEpochToISO(oldBlogs.updatedAt),
+      };
+    };
 
     console.log('Starting Blogs migration...');
+
+    await migrationFactory.migrateAllInTransaction(Blogpost, Blogs, tranformBlogs);
 
     console.log('Blogs migration completed successfully');
   } catch (error) {

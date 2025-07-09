@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   OneToMany,
@@ -17,6 +18,7 @@ export class Blogs {
   @PrimaryGeneratedColumn('uuid')
   public id: string;
 
+  @Index()
   @Column('uuid', { name: 'author_id' })
   public authorId: string;
 

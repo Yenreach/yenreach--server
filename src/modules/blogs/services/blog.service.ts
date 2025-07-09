@@ -22,28 +22,43 @@ export class BlogsService {
 
   public async getBlogs(page: number = 1, limit: number = 10): Promise<PaginationResponse<Blogs>> {
     const { skip } = calculatePagination(page, limit);
-    console.log('hit here too');
-    const [blogs, total] = await this.blogRepository.findAndCount({
-      relations: {
-        author: true,
-      },
-      skip,
-      take: limit,
-      order: {
-        createdAt: 'DESC',
-      },
-    });
+    // const [blogs, total] = await this.blogRepository.findAndCount({
+    //   relations: {
+    //     author: true,
+    //   },
+    //   skip,
+    //   take: limit,
+    //   order: {
+    //     createdAt: 'DESC',
+    //   },
+    // });
+
+    const [blogs, total] = await this.blogRepository
+      .createQueryBuilder('blog')
+      .leftJoin('blog.author', 'author')
+      .addSelect(['author.id', 'author.name']) // only fetch id and name from author
+      .orderBy('blog.createdAt', 'DESC')
+      .skip(skip)
+      .take(limit)
+      .getManyAndCount();
 
     return paginate(blogs, total, page, limit);
   }
 
   public async getBlog(id: string): Promise<Blogs> {
-    const blog = await this.blogRepository.findOne({
-      where: { id },
-      relations: {
-        author: true,
-      },
-    });
+    // const blog = await this.blogRepository.findOne({
+    //   where: { id },
+    //   relations: {
+    //     author: true,
+    //   },
+    // });
+
+    const blog = await this.blogRepository
+      .createQueryBuilder('blog')
+      .leftJoin('blog.author', 'author')
+      .addSelect(['author.id', 'author.name']) // select only needed author fields
+      .where('blog.id = :id', { id })
+      .getOne();
 
     return blog;
   }
