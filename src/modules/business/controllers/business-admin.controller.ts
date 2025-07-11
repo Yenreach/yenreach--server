@@ -1,9 +1,9 @@
-import { NextFunction, Response } from 'express';
+import { NextFunction, Response, Request } from 'express';
 import { BusinessQueryParams, IBusinessAdminService, PathParams } from '../interfaces';
-import { RequestWithParam, RequestWithParamAndBody, RequestWithQuery } from '../../../types/express';
 import { HttpCodes } from '../../../core/constants';
 import { sendResponse } from '../../../core/utils';
 import { UpdateBusinessDto } from '../schemas';
+import { RequestWithParam, RequestWithParamAndBody, RequestWithQuery } from '../../../shared/types';
 
 export class BusinessAdminController {
   private readonly businessAdminService: IBusinessAdminService;
@@ -15,6 +15,38 @@ export class BusinessAdminController {
     this.editBusiness = this.editBusiness.bind(this);
     this.getBusinesses = this.getBusinesses.bind(this);
     this.deleteBusiness = this.deleteBusiness.bind(this);
+    this.getCurrentBusinessOfTheWeek = this.getCurrentBusinessOfTheWeek.bind(this);
+    this.updateBusinessOfTheWeek = this.updateBusinessOfTheWeek.bind(this);
+    this.addBusinessOfTheWeek = this.addBusinessOfTheWeek.bind(this);
+  }
+
+  public async getCurrentBusinessOfTheWeek(req: Request, res: Response, next: NextFunction) {
+    try {
+      const businessOfTheWeek = await this.businessAdminService.getCurrentBusinessOfTheWeek();
+      return sendResponse(res, HttpCodes.OK, 'Business of the week gotten successfully', businessOfTheWeek);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async addBusinessOfTheWeek(req: RequestWithParam<PathParams>, res: Response, next: NextFunction) {
+    try {
+      const businessId = req.params.id;
+      const businessOfTheWeek = await this.businessAdminService.addBusinessOfTheWeek(businessId);
+      return sendResponse(res, HttpCodes.CREATED, 'Business of the week added Sucessfully', businessOfTheWeek);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async updateBusinessOfTheWeek(req: RequestWithParam<PathParams>, res: Response, next: NextFunction) {
+    try {
+      const businessId = req.params.id;
+      const businessOfTheWeek = await this.businessAdminService.updateBusinessOfTheWeek(businessId);
+      return sendResponse(res, HttpCodes.CREATED, 'Business of the week updated sucessfully', businessOfTheWeek);
+    } catch (error) {
+      next(error);
+    }
   }
 
   public async approveBusiness(req: RequestWithParam<PathParams>, res: Response, next: NextFunction) {

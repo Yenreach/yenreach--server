@@ -16,7 +16,7 @@ import { FindManyOptions, ILike, In, Like, Not, Or } from 'typeorm';
 import { HttpException } from '../../../core/exceptions';
 import { HttpCodes } from '../../../core/constants';
 import { BusinessCategories } from '../../../core/database/postgres/business-categories.entity';
-import { CategoryType } from '../../../enums';
+import { CategoryType } from '../../../shared/enums';
 import { Categories } from '../../../core/database/postgres/category.entity';
 
 export class BusinessService implements IBusinessService {

@@ -1,6 +1,5 @@
 import cote from 'cote';
 import { SMSProvider } from '../providers';
-import { CtxObject } from '../../interfaces';
 import { SMS } from '../interfaces';
 import moment from 'moment';
 const sentSMSs = [];

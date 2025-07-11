@@ -1,4 +1,5 @@
 import { BusinessCategories } from '../../../core/database/postgres/business-categories.entity';
+import { BusinessOfTheWeek } from '../../../core/database/postgres/business-of-the-week.entity';
 import { BusinessPhotos } from '../../../core/database/postgres/business-photos.entity';
 import { BusinessReviews } from '../../../core/database/postgres/business-reviews.entity';
 import { BusinessWorkingHours } from '../../../core/database/postgres/business-working-hours.entity';
@@ -40,6 +41,9 @@ interface IBusinessAdminService {
   declineBusiness(businessId: string): Promise<Businesses>;
   editBusinness(businessId: string, data: UpdateBusinessDto): Promise<Businesses>;
   deleteBusiness(businessId: string): Promise<void>;
+  addBusinessOfTheWeek(businessId: string): Promise<BusinessOfTheWeek>;
+  updateBusinessOfTheWeek(businessId: string): Promise<BusinessOfTheWeek>;
+  getCurrentBusinessOfTheWeek(): Promise<BusinessOfTheWeek | null>;
 }
 
 type BusinessDto = {

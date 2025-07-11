@@ -20,6 +20,9 @@ class AdminBusinessRoute implements Routes {
     });
 
     this.router.get(`${this.path}/`, adminAuthMiddleware, this.businessAdminController.getBusinesses);
+    this.router.get(`${this.path}/business-of-the-week`, adminAuthMiddleware, this.businessAdminController.getCurrentBusinessOfTheWeek);
+    this.router.post(`${this.path}/:id/business-of-the-week`, adminAuthMiddleware, this.businessAdminController.addBusinessOfTheWeek);
+    this.router.put(`${this.path}/:id/business-of-the-week`, adminAuthMiddleware, this.businessAdminController.updateBusinessOfTheWeek);
     this.router.patch(`${this.path}/:id`, adminAuthMiddleware, this.businessAdminController.editBusiness);
     this.router.post(`${this.path}/:id/approve`, adminAuthMiddleware, this.businessAdminController.approveBusiness);
     this.router.post(`${this.path}/:id/decline`, adminAuthMiddleware, this.businessAdminController.declineBusiness);

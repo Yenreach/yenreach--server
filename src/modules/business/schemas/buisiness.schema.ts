@@ -69,8 +69,13 @@ export const AddBusinessPhotoSchema = z.object({
   mediaPath: z.string().min(1, 'Photo url is required'),
 });
 
+export const AddBusinessOfTheWeekSchema = z.object({
+  businessId: z.string().uuid().min(1, 'Business id is required'),
+});
+
 export type AddBusinessWorkingHoursDto = z.infer<typeof AddBusinessWorkingHoursSchema>;
 export type ReviewBusinessDto = z.infer<typeof AddBusinessReviewSchema>;
 export type CreateBusinessDto = z.infer<typeof CreateBusinessSchema>;
 export type UpdateBusinessDto = z.infer<typeof UpdateBusinessSchema>;
 export type AddBussinessPhotoDto = z.infer<typeof AddBusinessPhotoSchema>;
+export type AddBusinessOfTheWeekDto = z.infer<typeof AddBusinessOfTheWeekSchema>;

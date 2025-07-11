@@ -1,5 +1,5 @@
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
-import { FeedbackStatus } from '../../../enums';
+import { FeedbackStatus } from '../../../shared/enums';
 
 @Entity('feedbacks', { schema: 'yenreach' })
 export class Feedbacks {

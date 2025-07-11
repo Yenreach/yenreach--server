@@ -2,13 +2,25 @@ import { FindManyOptions, ILike } from 'typeorm';
 import AppDataSource from '../../../core/database';
 import { calculatePagination, paginate } from '../../../core/utils/pagination/paginate';
 import { PaginationResponse } from '../../../core/utils/pagination/pagination.interface';
-import { AddCategoryDto, AddProductCategoryDto, AddProductPhotoDto, AddProductPhotoSchema, CreateProductDto, GetProductsDto, RemoveProductCategoryDto, RemoveProductCategorySchema, RemoveProductPhotoDto, RemoveProductPhotoSchema, UpdateProductDto } from '../schemas/products.schema';
+import {
+  AddCategoryDto,
+  AddProductCategoryDto,
+  AddProductPhotoDto,
+  AddProductPhotoSchema,
+  CreateProductDto,
+  GetProductsDto,
+  RemoveProductCategoryDto,
+  RemoveProductCategorySchema,
+  RemoveProductPhotoDto,
+  RemoveProductPhotoSchema,
+  UpdateProductDto,
+} from '../schemas/products.schema';
 import { Products } from '../../../core/database/postgres/product.entity';
 import { ProductPhotos } from '../../../core/database/postgres/product-photos.entity';
 import { ProductCategories } from '../../../core/database/postgres/product-category.entity';
 import { ProductStatus } from '../enums';
 import { Categories } from '../../../core/database/postgres/category.entity';
-import { CategoryType } from '../../../enums';
+import { CategoryType } from '../../../shared/enums';
 
 class ProductsService {
   private readonly dataSource = AppDataSource;
@@ -26,22 +38,22 @@ class ProductsService {
     // Create product
     const product = this.productRepository.create(productData);
 
-    const savedProduct = await this.productRepository.save(product)
+    const savedProduct = await this.productRepository.save(product);
 
     // Find Category
-    const categories = catIds.map(async (id) => {
+    const categories = catIds.map(async id => {
       let category = await this.productCategoryRepository.findOne({ where: { categoryId: id } });
 
       if (!category) {
-          category = this.productCategoryRepository.create({ categoryId: id, productId: savedProduct.id });
-          await this.productCategoryRepository.save(category);
+        category = this.productCategoryRepository.create({ categoryId: id, productId: savedProduct.id });
+        await this.productCategoryRepository.save(category);
       }
 
       return category;
     });
 
     // Create product photos and associate them with the product
-    const photos = medias.map((url) => {
+    const photos = medias.map(url => {
       const photo = this.productPhotoRepository.create({
         mediaPath: url,
         productId: savedProduct.id,
@@ -49,13 +61,13 @@ class ProductsService {
 
       return photo;
     });
-    
-    await this.productPhotoRepository.save(photos)
+
+    await this.productPhotoRepository.save(photos);
 
     return {
       ...savedProduct,
-     categories,
-     photos,
+      categories,
+      photos,
     };
   }
 
@@ -68,55 +80,50 @@ class ProductsService {
 
     const product = await this.productRepository.findOne({
       where: { id },
-      relations: ["categories", "photos"],
+      relations: ['categories', 'photos'],
       // pass the transaction through options here
     });
-  
+
     if (!product) {
-      throw new Error("Product not found");
+      throw new Error('Product not found');
     }
-  
+
     Object.assign(product, productData);
 
     // Update categories (only existing ones)
     if (catIds && catIds.length > 0) {
-      const existingCategories = new Set(product.categories.map((c) => c.categoryId));
-      const newCategories = catIds.filter((id) => !existingCategories.has(id)); // New ones
-      const categoriesToRemove = product.categories.filter((c) => !catIds.some((id) => id === c.categoryId)); // Old ones
+      const existingCategories = new Set(product.categories.map(c => c.categoryId));
+      const newCategories = catIds.filter(id => !existingCategories.has(id)); // New ones
+      const categoriesToRemove = product.categories.filter(c => !catIds.some(id => id === c.categoryId)); // Old ones
 
       // Remove only outdated categories
       if (categoriesToRemove.length > 0) {
         await this.productCategoryRepository.remove(categoriesToRemove);
-      } 
+      }
       // Add only new categories
       if (newCategories.length > 0) {
-        const categoryEntities = newCategories.map((catId) =>
-          this.productCategoryRepository.create({ categoryId: catId, productId: product.id })
-        );
+        const categoryEntities = newCategories.map(catId => this.productCategoryRepository.create({ categoryId: catId, productId: product.id }));
         await this.productCategoryRepository.save(categoryEntities);
-      } 
+      }
     }
 
-  
     if (medias && medias.length > 0) {
-      const existingPhotos = new Set(product.photos.map((p) => p.mediaPath));
-      const newPhotos = medias.filter((p) => !existingPhotos.has(p)); // New ones
-      const photosToRemove = product.photos.filter((p) => !medias.some((np) => np === p.mediaPath)); // Old ones
-  
+      const existingPhotos = new Set(product.photos.map(p => p.mediaPath));
+      const newPhotos = medias.filter(p => !existingPhotos.has(p)); // New ones
+      const photosToRemove = product.photos.filter(p => !medias.some(np => np === p.mediaPath)); // Old ones
+
       // Remove only outdated photos
       if (photosToRemove.length > 0) {
         await this.productPhotoRepository.remove(photosToRemove);
       }
-  
+
       // Add only new photos
       if (newPhotos.length > 0) {
-        const photoEntities = newPhotos.map((media) =>
-          this.productPhotoRepository.create({ mediaPath: media, product })
-        );
+        const photoEntities = newPhotos.map(media => this.productPhotoRepository.create({ mediaPath: media, product }));
         await this.productPhotoRepository.save(photoEntities);
       }
     }
-  
+
     return await this.productRepository.save(product);
   }
 
@@ -139,20 +146,20 @@ class ProductsService {
     });
   }
 
-  async getProducts({ page = 1, limit = 20, search = "", business, category }: GetProductsDto) {
+  async getProducts({ page = 1, limit = 20, search = '', business, category }: GetProductsDto) {
     const { skip } = calculatePagination(page, limit);
 
-    const queryConditions: FindManyOptions<Products>  = {
+    const queryConditions: FindManyOptions<Products> = {
       where: {
         status: ProductStatus.Available,
         ...(business && { businessId: business }),
-        ...(category && { 
+        ...(category && {
           categories: {
             categoryId: category,
-          }, 
+          },
         }),
       },
-      relations: ["categories", "photos"],
+      relations: ['categories', 'photos'],
       skip,
       take: limit,
     };
@@ -169,7 +176,7 @@ class ProductsService {
         },
         // { categories: { category: ILike(`%${search}%`) } },
       ];
-    
+
       // queryConditions.join = {
       //   alias: "product",
       //   leftJoinAndSelect: {
@@ -186,38 +193,38 @@ class ProductsService {
   async getRelatedProducts(productId: string, limit = 5) {
     const product = await this.productRepository.findOne({
       where: { id: productId },
-      relations: ["categories"],
+      relations: ['categories'],
     });
 
-    if (!product) throw new Error("Product not found");
+    if (!product) throw new Error('Product not found');
 
-    const categoryStrings = product.categories.map((cat) => cat.categoryId);
-    if (!categoryStrings?.length) { 
+    const categoryStrings = product.categories.map(cat => cat.categoryId);
+    if (!categoryStrings?.length) {
       // throw new Error("Product categories not found");
       return {
-        status: "success",
+        status: 'success',
         data: [],
       };
     }
 
     // Find related products that share at least one category
     const relatedProducts = await this.productRepository
-      .createQueryBuilder("product")
-      .innerJoin("product.categories", "category")
-      .where("category.id IN (:...categoryStrings)", { categoryStrings })
-      .andWhere("product.id != :productId", { productId }) // Exclude the current product
-      .andWhere("product.id = :status", { status: ProductStatus.Available }) // Filter active products
+      .createQueryBuilder('product')
+      .innerJoin('product.categories', 'category')
+      .where('category.id IN (:...categoryStrings)', { categoryStrings })
+      .andWhere('product.id != :productId', { productId }) // Exclude the current product
+      .andWhere('product.id = :status', { status: ProductStatus.Available }) // Filter active products
       .take(limit)
       .getMany();
 
     return {
-      status: "success",
+      status: 'success',
       data: relatedProducts,
     };
   }
 
   async getProductById(id: string): Promise<Products | null> {
-    return await this.productRepository.findOne({ 
+    return await this.productRepository.findOne({
       where: {
         id,
       },
@@ -226,7 +233,7 @@ class ProductsService {
         photos: true,
         business: true,
       },
-     });
+    });
   }
 
   async deleteProduct(id: string): Promise<boolean> {
@@ -240,7 +247,7 @@ class ProductsService {
     const { product_string, filename } = validatedData;
 
     const product = await this.productRepository.findOne({ where: { id: product_string } });
-    if (!product) throw new Error("Product not found");
+    if (!product) throw new Error('Product not found');
 
     const productPhoto = this.productPhotoRepository.create({
       product,
@@ -255,49 +262,49 @@ class ProductsService {
     const { category } = data;
 
     const existingCategory = await this.categoryRepository.findOne({ where: { category } });
-    if (existingCategory) throw new Error("Category already exists");
+    if (existingCategory) throw new Error('Category already exists');
 
     const newCategory = this.categoryRepository.create({
       category,
-
     });
 
     return await this.categoryRepository.save(newCategory);
   }
 
-  
   async deleteCategory(id: string): Promise<boolean> {
     const result = await this.productCategoryRepository.delete(id);
     return result.affected > 0;
   }
 
   async addProductCategory(data: AddProductCategoryDto) {
-    const product = await this.productRepository.findOne({ where: { id: data.productString }, relations: ["categories"] });
+    const product = await this.productRepository.findOne({ where: { id: data.productString }, relations: ['categories'] });
     if (!product) throw new Error('Product not found');
 
     // Check if the product already has 3 categories
     if (product.categories.length >= 3) throw new Error('Category limit exceeded (max: 3)');
 
     // Find or create category
-    let categoryEntity = await this.productCategoryRepository.findOne({ where: {
-      categoryId: data.category,
-      productId: product.id,
-    } });
+    let categoryEntity = await this.productCategoryRepository.findOne({
+      where: {
+        categoryId: data.category,
+        productId: product.id,
+      },
+    });
     if (!categoryEntity) {
-        categoryEntity = this.productCategoryRepository.create({ categoryId: data.category, productId: product.id });
-        await this.productCategoryRepository.save(categoryEntity);  
+      categoryEntity = this.productCategoryRepository.create({ categoryId: data.category, productId: product.id });
+      await this.productCategoryRepository.save(categoryEntity);
     }
 
     // Add category to product
     // await this.productCategoryRepository.save(product);
 
     // Return success response
-    return ({
-        id: categoryEntity.id,
-        category: categoryEntity.category,
-        productString: product.id,
-    })
-  };
+    return {
+      id: categoryEntity.id,
+      category: categoryEntity.category,
+      productString: product.id,
+    };
+  }
 
   async removeProductCategoryAssociation(data: RemoveProductCategoryDto) {
     const validatedData = RemoveProductCategorySchema.parse(data);
@@ -305,26 +312,24 @@ class ProductsService {
 
     const product = await this.productRepository.findOne({
       where: { id: product_string },
-      relations: ["categories"], // Ensure categories are loaded
+      relations: ['categories'], // Ensure categories are loaded
     });
 
     if (!product) {
-      throw new Error("Product not found");
+      throw new Error('Product not found');
     }
 
-    const categoryIndex = product.categories.findIndex(
-      (cat) => cat.categoryId === category_string
-    );
+    const categoryIndex = product.categories.findIndex(cat => cat.categoryId === category_string);
 
     if (categoryIndex === -1) {
-      throw new Error("Category is not associated with this product");
+      throw new Error('Category is not associated with this product');
     }
 
     // product.categories.splice(categoryIndex, 1);
 
     // await this.productRepository.save(product);
 
-    return { message: "Category removed from product successfully" };
+    return { message: 'Category removed from product successfully' };
   }
 
   async removeProductPhoto(data: RemoveProductPhotoDto) {
@@ -333,26 +338,24 @@ class ProductsService {
 
     const product = await this.productRepository.findOne({
       where: { id: product_string },
-      relations: ["photos"],
+      relations: ['photos'],
     });
 
     if (!product) {
-      throw new Error("Product not found");
+      throw new Error('Product not found');
     }
 
-    const photoIndex = product.photos.findIndex(
-      (photo) => photo.id.toString() === photo_string
-    );
+    const photoIndex = product.photos.findIndex(photo => photo.id.toString() === photo_string);
 
     if (photoIndex === -1) {
-      throw new Error("Image not found");
+      throw new Error('Image not found');
     }
 
     product.photos.splice(photoIndex, 1);
 
     await this.productRepository.save(product);
 
-    return { message: "Photo removed from product successfully" };
+    return { message: 'Photo removed from product successfully' };
   }
 }
 

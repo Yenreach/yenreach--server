@@ -5,7 +5,7 @@ import { MigrationFactory } from '../migration.factory';
 import { ProductCategories } from '../../core/database/postgres/product-category.entity';
 import { Products } from '../../core/database/postgres/product.entity';
 import { Categories } from '../../core/database/postgres/category.entity';
-import { CategoryType } from '../../enums';
+import { CategoryType } from '../../shared/enums';
 import { convertEpochToISO } from '../../core/utils/helpers';
 
 async function migrateProductsCategories() {

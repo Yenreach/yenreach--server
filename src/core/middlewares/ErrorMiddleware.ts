@@ -6,17 +6,32 @@ import { ZodError } from 'zod';
 const errorMiddleware = (error: any, req: Request, res: Response, next: NextFunction) => {
   try {
     // Check if the error is a ZodError (validation error)
+    // if (error instanceof ZodError) {
+    //   const formattedErrors = error.errors.map(e => ({
+    //     field: e.path.join('.'), // Joins path elements to create a clear field name
+    //     message: e.message, // The validation error message
+    //   }));
+
+    //   // Log the Zod validation error
+    //   logger.error(`[${req.method}] ${req.path} >> Validation Error: ${JSON.stringify(formattedErrors)}`);
+
+    //   return res.status(HttpCodes.BAD_REQUEST).json({
+    //     status: HttpCodes.BAD_REQUEST,
+    //     message: 'Validation failed',
+    //     errors: formattedErrors,
+    //   });
+    // }
+
     if (error instanceof ZodError) {
       const formattedErrors = error.errors.map(e => ({
-        field: e.path.join('.'), // Joins path elements to create a clear field name
-        message: e.message, // The validation error message
+        field: e.path.join('.'),
+        message: e.message,
       }));
 
-      // Log the Zod validation error
       logger.error(`[${req.method}] ${req.path} >> Validation Error: ${JSON.stringify(formattedErrors)}`);
 
       return res.status(HttpCodes.BAD_REQUEST).json({
-        status: HttpCodes.BAD_REQUEST,
+        success: false,
         message: 'Validation failed',
         errors: formattedErrors,
       });

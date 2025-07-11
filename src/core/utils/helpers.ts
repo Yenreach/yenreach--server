@@ -5,7 +5,6 @@ export const convertEpochToISO = (epoch: number): string => {
   return new Date(epoch * 1000).toISOString(); // Multiply by 1000 to convert epoch (in seconds) to milliseconds
 };
 
-
 /**
  * Encrypts a value using the same logic as the original PHP function.
  * Combines a salt derived from the timer and wraps the value with static strings.
@@ -20,3 +19,4 @@ export const encryptValue = (timer: number, value: string): string => {
   return encrypted;
 };
 
+export const expiresInDays = (value: number): Date => new Date(Date.now() + value * 24 * 60 * 60 * 1000);

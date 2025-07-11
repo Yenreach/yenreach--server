@@ -1,7 +1,7 @@
 import { DeepPartial } from 'typeorm';
 import { MigrationFactory } from '../migration.factory';
 import { Categories as OldCategories } from '../../core/database/entities/entities/Categories';
-import { CategoryType } from '../../enums';
+import { CategoryType } from '../../shared/enums';
 import { Productcategorylist } from '../../core/database/entities/entities/Productcategorylist';
 import { PostgresDataSource, SqlDataSource } from '../connection';
 import { Categories } from '../../core/database/postgres/category.entity';

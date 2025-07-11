@@ -5,7 +5,7 @@ import { Sections } from '../../core/database/entities/entities/Sections';
 
 import { PostgresDataSource, SqlDataSource } from '../connection';
 import { Categories } from '../../core/database/postgres/category.entity';
-import { CategoryType } from '../../enums';
+import { CategoryType } from '../../shared/enums';
 
 const migrateSections = async () => {
   try {

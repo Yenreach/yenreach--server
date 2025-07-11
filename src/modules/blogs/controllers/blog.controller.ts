@@ -1,5 +1,5 @@
 import { NextFunction, Response, Request } from 'express';
-import { RequestWithBody, RequestWithParam, RequestWithParamAndBody, RequestWithQuery } from '../../../types/express';
+import { RequestWithBody, RequestWithParam, RequestWithParamAndBody, RequestWithQuery } from '../../../shared/types';
 import { PathParams } from '../interfaces';
 import { BlogsService } from '../services';
 import { PaginationQueryParams } from '../../../core/utils/pagination';

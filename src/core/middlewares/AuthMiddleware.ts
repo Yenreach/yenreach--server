@@ -24,6 +24,9 @@ const authMiddleware = async (req: Request, res: Response, next: NextFunction) =
 
     next();
   } catch (error) {
+    if (error instanceof jwt.TokenExpiredError) {
+      return next(new HttpException(HttpCodes.UNAUTHORIZED, 'Unauthorized access:Invalid or expired token'));
+    }
     next(error);
     // next(new HttpException(HttpCodes.UNAUTHORIZED, 'Wrong authentication token used'));
   }
@@ -47,8 +50,10 @@ const adminAuthMiddleware = async (req: Request, res: Response, next: NextFuncti
 
     next();
   } catch (error) {
+    if (error instanceof jwt.TokenExpiredError) {
+      return next(new HttpException(HttpCodes.UNAUTHORIZED, 'Unauthorized access:Invalid or expired token'));
+    }
     next(error);
-    // next(new HttpException(HttpCodes.UNAUTHORIZED, 'Wrong authentication token used'));
   }
 };
 

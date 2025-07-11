@@ -4,7 +4,7 @@ import { PostgresDataSource, SqlDataSource } from '../connection';
 import { MigrationFactory } from '../migration.factory';
 import { Feedbacks } from '../../core/database/postgres/feedback.entity';
 import { convertEpochToISO } from '../../core/utils/helpers';
-import { FeedbackStatus } from '../../enums';
+import { FeedbackStatus } from '../../shared/enums';
 
 async function migrateFeedbacks() {
   try {

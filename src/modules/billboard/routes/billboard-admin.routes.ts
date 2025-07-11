@@ -1,0 +1,41 @@
+import { Router, Request, Response, NextFunction } from 'express';
+import { Routes } from '../../../core/routes/interfaces';
+import { adminAuthMiddleware } from '../../../core/middlewares';
+import { validateRequest } from '../../../core/middlewares/ValidationMiddleware';
+import { z } from 'zod';
+import { CreateBillboardEntrySchema, UpdateBillboardEntrySchema } from '../schemas/billboard.schema';
+import { BillboardAdminController } from '../controllers';
+
+class BillboardAdminRoute implements Routes {
+  public path = '/admin/billboards';
+  public router = Router();
+  public controller = new BillboardAdminController();
+
+  constructor() {
+    this.initializeRoutes();
+  }
+
+  private initializeRoutes() {
+    this.router.all(`${this.path}*`, (req: Request, res: Response, next: NextFunction) => {
+      next();
+    });
+
+    this.router.post(
+      `${this.path}`,
+      adminAuthMiddleware,
+      validateRequest([z.object({ body: CreateBillboardEntrySchema })]),
+      this.controller.addToBillboard,
+    );
+
+    this.router.patch(
+      `${this.path}/:id`,
+      adminAuthMiddleware,
+      validateRequest([z.object({ body: UpdateBillboardEntrySchema })]),
+      this.controller.updateBillboard,
+    );
+
+    this.router.get(`${this.path}`, adminAuthMiddleware, this.controller.getBillboards);
+  }
+}
+
+export { BillboardAdminRoute };

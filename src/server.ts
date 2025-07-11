@@ -14,10 +14,9 @@ import {
   AuthRoute,
   AdminBusinessRoute,
 } from './core/routes';
-import { validateEnv } from './core/utils/validateEnv';
-import { BlogsRoute } from './modules/blogs/routes';
+import { BillboardAdminRoute, BillboardRoute } from './modules/billboard/routes';
 
-validateEnv();
+import { BlogsRoute } from './modules/blogs/routes';
 
 const app = new App([
   new IndexRoute(),
@@ -34,6 +33,8 @@ const app = new App([
   new PaymentRoute(),
   new AdminBusinessRoute(),
   new BlogsRoute(),
+  new BillboardAdminRoute(),
+  new BillboardRoute(),
 ]);
 
 app.listen();

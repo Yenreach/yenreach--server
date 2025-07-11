@@ -1,4 +1,4 @@
-import { Equal, Not } from 'typeorm';
+import { Equal, LessThan, MoreThanOrEqual, Not } from 'typeorm';
 import AppDataSource from '../../../core/database';
 import { calculatePagination, paginate } from '../../../core/utils/pagination/paginate';
 import { PaginationResponse } from '../../../core/utils/pagination/pagination.interface';
@@ -8,11 +8,76 @@ import { Businesses } from '../../../core/database/postgres/businesses.entity';
 import { BusinessRegistrationState } from '../enums';
 import { BusinessPhotos } from '../../../core/database/postgres/business-photos.entity';
 import { BusinessCategories } from '../../../core/database/postgres/business-categories.entity';
+import { BusinessOfTheWeek } from '../../../core/database/postgres/business-of-the-week.entity';
+import { HttpException } from '../../../core/exceptions';
+import { HttpCodes } from '../../../core/constants';
+import { expiresInDays } from '../../../core/utils/helpers';
 
 export class BusinessAdminService implements IBusinessAdminService {
   private readonly businessRepository = AppDataSource.getRepository(Businesses);
   private readonly businessPhotoRepository = AppDataSource.getRepository(BusinessPhotos);
   private readonly businessCategoryRepository = AppDataSource.getRepository(BusinessCategories);
+  private readonly businessOfTheWeekReposiotry = AppDataSource.getRepository(BusinessOfTheWeek);
+
+  private async getActiveBusinessOfTheWeek() {
+    return this.businessOfTheWeekReposiotry.findOneBy({
+      startDate: MoreThanOrEqual(new Date()),
+      expiresAt: LessThan(new Date()),
+    });
+  }
+
+  public async addBusinessOfTheWeek(businessId: string): Promise<BusinessOfTheWeek> {
+    const businessOfTheWeek = await this.getActiveBusinessOfTheWeek();
+
+    if (businessOfTheWeek) {
+      throw new HttpException(HttpCodes.BAD_REQUEST, 'There is an active business of the week, update to change');
+    }
+
+    const business = await this.businessRepository.findOneBy({ id: businessId, registrationStatus: BusinessRegistrationState.APPROVED });
+
+    if (!business) {
+      throw new HttpException(HttpCodes.BAD_REQUEST, 'Business does not exist');
+    }
+
+    const newBusinessOfTheWeek = this.businessOfTheWeekReposiotry.create({
+      businessId,
+      startDate: new Date(),
+      expiresAt: expiresInDays(7),
+    });
+
+    return this.businessOfTheWeekReposiotry.save(newBusinessOfTheWeek);
+  }
+
+  public async updateBusinessOfTheWeek(businessId: string): Promise<BusinessOfTheWeek> {
+    const businessOfTheWeek = await this.getActiveBusinessOfTheWeek();
+
+    if (!businessOfTheWeek) {
+      throw new HttpException(HttpCodes.BAD_REQUEST, 'There is no active business of the week, proceed to add');
+    }
+
+    const business = await this.businessRepository.findOneBy({ id: businessId, registrationStatus: BusinessRegistrationState.APPROVED });
+
+    if (!business) {
+      throw new HttpException(HttpCodes.BAD_REQUEST, 'Business does not exist');
+    }
+
+    Object.assign(businessOfTheWeek, {
+      expiresAt: new Date(),
+    });
+
+    await this.businessOfTheWeekReposiotry.save(businessOfTheWeek);
+
+    const newBusinessOfTheWeek = this.businessOfTheWeekReposiotry.create({
+      businessId,
+      startDate: new Date(),
+      expiresAt: expiresInDays(7),
+    });
+
+    return this.businessOfTheWeekReposiotry.save(newBusinessOfTheWeek);
+  }
+  public async getCurrentBusinessOfTheWeek(): Promise<BusinessOfTheWeek | null> {
+    return this.getCurrentBusinessOfTheWeek();
+  }
 
   public async getAllBusinesses(page = 1, limit = 10): Promise<PaginationResponse<Businesses>> {
     const { skip } = calculatePagination(page, limit);
