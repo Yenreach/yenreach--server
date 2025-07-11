@@ -272,3 +272,10 @@
 //     }
 //   }
 // }
+
+// {
+//     "watch": ["src"],
+//     "ext": "ts",
+//     "ignore": ["src/logs/*", "**/*.spec.ts", "**/*.test.ts"],
+//     "exec": "npm run build && node dist/server.js"
+//   }

@@ -16,11 +16,12 @@ const AppDataSource = new DataSource({
           rejectUnauthorized: false,
         },
         entities: ['dist/core/database/postgres/*.entity.js'],
+        migrations: ['dist/core/database/migrations/*.js'],
       }
     : {
         entities: ['src/core/database/postgres/*.entity.ts'],
+        migrations: ['src/core/database/migrations/*.ts'],
       }),
-  migrations: ['src/core/database/migrations/*.ts'],
 });
 
 export default AppDataSource;
