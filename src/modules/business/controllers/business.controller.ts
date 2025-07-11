@@ -10,7 +10,7 @@ import {
   UpdateBusinessDto,
   UpdateBusinessSchema,
 } from '../schemas';
-import { RequestWithBody, RequestWithParam, RequestWithParamAndBody, RequestWithParamAndQuery, RequestWithQuery } from '../../../types/express';
+import { RequestWithBody, RequestWithParam, RequestWithParamAndBody, RequestWithParamAndQuery, RequestWithQuery } from '../../../shared/types';
 
 class BusinessController {
   private readonly businessService: IBusinessService;
