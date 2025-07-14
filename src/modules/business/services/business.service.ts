@@ -18,6 +18,7 @@ import { HttpCodes } from '../../../core/constants';
 import { BusinessCategories } from '../../../core/database/postgres/business-categories.entity';
 import { CategoryType } from '../../../shared/enums';
 import { Categories } from '../../../core/database/postgres/category.entity';
+import { BusinessOfTheWeek } from '../../../core/database/postgres/business-of-the-week.entity';
 
 export class BusinessService implements IBusinessService {
   private readonly businessRepository = AppDataSource.getRepository(Businesses);
@@ -30,6 +31,8 @@ export class BusinessService implements IBusinessService {
   private readonly lgaRepository = AppDataSource.getRepository(LocalGovernments);
   private readonly categoryRepository = AppDataSource.getRepository(Categories);
   private readonly businessCategoryRepository = AppDataSource.getRepository(BusinessCategories);
+  private readonly businessOfTheWeekReposiotry = AppDataSource.getRepository(BusinessOfTheWeek);
+
 
   private transformBusiness = (business: Businesses) => {
     return {
@@ -206,6 +209,17 @@ export class BusinessService implements IBusinessService {
       throw new HttpException(HttpCodes.NOT_FOUND, 'Business not found');
     }
     return this.transformBusiness(business);
+  }
+
+  public async getCurrentBusinessOfTheWeek(): Promise<BusinessOfTheWeek | null> {
+    return (await this.businessOfTheWeekReposiotry
+      .find({
+        // latest one
+        order: {
+          createdAt: 'DESC',
+        },
+        take: 1,
+      }))?.[0] ?? null;
   }
 
   public async getJobsByBusinessId(businessId: string, page = 1, limit = 10): Promise<PaginationResponse<Jobs>> {

@@ -29,6 +29,16 @@ class BusinessController {
     this.getStates = this.getStates.bind(this);
     this.getLga = this.getLga.bind(this);
     this.getRelatedBusiness = this.getRelatedBusiness.bind(this);
+    this.getCurrentBusinessOfTheWeek = this.getCurrentBusinessOfTheWeek.bind(this);
+  }
+
+  public async getCurrentBusinessOfTheWeek(req: Request, res: Response, next: NextFunction) {
+    try {
+      const businessOfTheWeek = await this.businessService.getCurrentBusinessOfTheWeek();
+      return sendResponse(res, HttpCodes.OK, 'Business of the week gotten successfully', businessOfTheWeek);
+    } catch (error) {
+      next(error);
+    }
   }
 
   public async getCategories(req: Request, res: Response, next: NextFunction) {

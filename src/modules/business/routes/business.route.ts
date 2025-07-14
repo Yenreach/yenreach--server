@@ -35,6 +35,7 @@ class BusinessRoute implements Routes {
     this.router.post(`${this.path}`, authMiddleware, this.businessController.createBusiness);
     this.router.put(`${this.path}/:id`, authMiddleware, this.businessController.updateBusiness);
     this.router.post(`${this.path}/:id/review`, authMiddleware, this.businessController.reviewBussiness);
+    this.router.get(`${this.path}/business-of-the-week`, this.businessController.getCurrentBusinessOfTheWeek);
   }
 }
 

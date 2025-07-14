@@ -29,6 +29,7 @@ interface IBusinessService {
   addWorkingHours(businessId: string, data: AddBusinessWorkingHoursDto): Promise<BusinessWorkingHours>;
   reviewBusiness(businessId: string, userId: string, data: ReviewBusinessDto): Promise<BusinessReviews>;
   addBusinessPhotos(businessId: string, data: AddBussinessPhotoDto): Promise<BusinessPhotos>;
+  getCurrentBusinessOfTheWeek(): Promise<BusinessOfTheWeek | null>;
   // addBusinessBranch(businessId: string): Promise<any>;
   // addBusinessFacitlity(businessId: string): Promise<any>;
 }
