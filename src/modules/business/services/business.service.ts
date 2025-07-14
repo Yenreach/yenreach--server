@@ -218,6 +218,13 @@ export class BusinessService implements IBusinessService {
         order: {
           createdAt: 'DESC',
         },
+        relations: {
+          business: {
+            categories: {
+              category: true,
+            },
+          },
+        },
         take: 1,
       }))?.[0] ?? null;
   }
