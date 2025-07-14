@@ -27,6 +27,7 @@ class BusinessRoute implements Routes {
     this.router.get(`/states/:id/lgas`, this.businessController.getLga);
     this.router.get(`${this.path}/categories`, this.businessController.getCategories);
     this.router.get(`${this.path}/:id/related`, this.businessController.getRelatedBusiness);
+    this.router.get(`${this.path}/business-of-the-week`, this.businessController.getCurrentBusinessOfTheWeek);
     this.router.get(`${this.path}/:id`, this.businessController.getBusiness);
     this.router.get(`${this.path}`, this.businessController.getBusinesses);
     this.router.get(`/user${this.path}`, authMiddleware, this.businessController.getUserBusinesses);
@@ -35,7 +36,6 @@ class BusinessRoute implements Routes {
     this.router.post(`${this.path}`, authMiddleware, this.businessController.createBusiness);
     this.router.put(`${this.path}/:id`, authMiddleware, this.businessController.updateBusiness);
     this.router.post(`${this.path}/:id/review`, authMiddleware, this.businessController.reviewBussiness);
-    this.router.get(`${this.path}/business-of-the-week`, this.businessController.getCurrentBusinessOfTheWeek);
   }
 }
 
