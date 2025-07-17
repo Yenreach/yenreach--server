@@ -162,4 +162,12 @@ export class BillboardAdminService {
 
     return paginate(billboards, count, page, limit);
   }
+
+  public async deleteBillboard(id: string): Promise<void> {
+    const billboard = await this.billboardRepository.findOneBy({ id });
+
+    if (!billboard) throw new HttpException(HttpCodes.NOT_FOUND, 'Billboard not found');
+
+    await this.billboardRepository.delete({ id });
+  }
 }

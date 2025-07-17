@@ -1,4 +1,4 @@
-import { RequestWithBody, RequestWithParamAndBody, RequestWithQuery } from '../../../shared/types';
+import { RequestWithBody, RequestWithParam, RequestWithParamAndBody, RequestWithQuery } from '../../../shared/types';
 import { NextFunction, Response } from 'express';
 import { sendResponse } from '../../../core/utils';
 import { HttpCodes } from '../../../core/constants';
@@ -68,6 +68,15 @@ export class BillboardAdminController {
       }
 
       return sendResponse(res, HttpCodes.OK, `Billboards (${status}) fetched`, result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async deleteBillboard(req: RequestWithParam<PathParams>, res: Response, next: NextFunction) {
+    try {
+      await billboardAdminService.deleteBillboard(req.params.id);
+      return sendResponse(res, HttpCodes.OK, 'Billboard deleted successfully', null);
     } catch (error) {
       next(error);
     }
