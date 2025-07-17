@@ -33,7 +33,7 @@ export class BillboardEntry {
   @Column({ name: 'title', type: 'varchar', length: 100 })
   title: string;
 
-  @Column({ name: 'description', type: 'text' })
+  @Column({ name: 'description', type: 'text', nullable: true })
   description: string;
 
   @Column({ name: 'image_url', type: 'varchar', length: 255 })
