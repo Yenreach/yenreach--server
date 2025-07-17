@@ -168,6 +168,6 @@ export class BillboardAdminService {
 
     if (!billboard) throw new HttpException(HttpCodes.NOT_FOUND, 'Billboard not found');
 
-    await this.billboardRepository.delete({ id });
+    await this.billboardRepository.delete(id);
   }
 }
