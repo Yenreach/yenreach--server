@@ -34,7 +34,7 @@ class BillboardAdminRoute implements Routes {
       this.controller.updateBillboard,
     );
 
-    this.router.get(`${this.path}`, adminAuthMiddleware, this.controller.getBillboards);
+    this.router.get(`${this.path}`, adminAuthMiddleware, this.controller.getBillboardsNew);
   }
 }
 

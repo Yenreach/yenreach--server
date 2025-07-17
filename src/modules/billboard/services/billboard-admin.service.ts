@@ -109,11 +109,37 @@ export class BillboardAdminService {
     });
   }
 
+  public async getApprovedBillboard(): Promise<BillboardEntry[]> {
+    const now = new Date();
+    return this.billboardRepository.find({
+      where: {
+        status: BillboardStatus.Approved,
+        // startDate: LessThanOrEqual(now),
+        // endDate: MoreThanOrEqual(now),
+      },
+      take: 10,
+    });
+  }
+
   public async getPendingBillboards(page: number = 1, limit: number = 10): Promise<PaginationResponse<BillboardEntry>> {
     const { skip } = calculatePagination(page, limit);
     const [billboards, count] = await this.billboardRepository.findAndCount({
       where: {
         status: BillboardStatus.Pending,
+      },
+      skip,
+      take: limit,
+    });
+
+    return paginate(billboards, count, page, limit);
+  }
+
+  public async getBillboards(page: number = 1, limit: number = 10, status?: BillboardStatus): Promise<PaginationResponse<BillboardEntry>> {
+    const { skip } = calculatePagination(page, limit);
+
+    const [billboards, count] = await this.billboardRepository.findAndCount({
+      where: {
+        ...(status ? { status } : {}),
       },
       skip,
       take: limit,

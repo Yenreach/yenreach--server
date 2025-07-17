@@ -8,6 +8,7 @@ import { PathParams } from '../../../shared/types/common';
 import { PaginationQueryParams } from '../../../core/utils/pagination';
 import { PaginationResponse } from '../../../core/utils/pagination/pagination.interface';
 import { BillboardEntry } from '../../../core/database/postgres/billboard-entries.entity';
+import { BillboardStatus } from '../../../shared/enums/common.enum';
 
 const billboardAdminService = new BillboardAdminService();
 
@@ -25,6 +26,20 @@ export class BillboardAdminController {
     try {
       const entry = await billboardAdminService.updateBillboardEntry(req.params.id, req.body);
       return sendResponse(res, HttpCodes.OK, 'Billboard entry updated', entry);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async getBillboardsNew(req: RequestWithQuery<PaginationQueryParams & { status: BillboardStatus }>, res: Response, next: NextFunction) {
+    try {
+      const { status } = req.query;
+      const page = parseInt(req.query.page as string, 10) || 1;
+      const limit = parseInt(req.query.limit as string, 10) || 10;
+      
+      const result = await billboardAdminService.getBillboards(page, limit, status);
+
+      return sendResponse(res, HttpCodes.OK, `Billboards (${status}) fetched`, result);
     } catch (error) {
       next(error);
     }
