@@ -36,7 +36,7 @@ class BillboardAdminRoute implements Routes {
 
     this.router.get(`${this.path}`, adminAuthMiddleware, this.controller.getBillboardsNew);
   
-    this.router.delete(`${this.path}/:id`, adminAuthMiddleware, this.controller.getBillboardsNew);
+    this.router.delete(`${this.path}/:id`, adminAuthMiddleware, this.controller.deleteBillboard);
   }
 }
 
