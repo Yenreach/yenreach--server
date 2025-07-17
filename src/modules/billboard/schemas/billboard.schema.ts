@@ -6,7 +6,7 @@ const isoDateString = z
     message: 'Invalid date format',
   })
   .transform(val => new Date(val))
-  .refine(date => date >= new Date(), {
+  .refine(date => date > new Date(), {
     message: 'Date must not be in the past',
   });
 
