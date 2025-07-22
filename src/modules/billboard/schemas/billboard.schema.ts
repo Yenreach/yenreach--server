@@ -6,7 +6,11 @@ const isoDateString = z
     message: 'Invalid date format',
   })
   .transform(val => new Date(val))
-  .refine(date => date > new Date(), {
+  .refine(date => {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    return date >= yesterday;
+  }, {
     message: 'Date must not be in the past',
   });
 
