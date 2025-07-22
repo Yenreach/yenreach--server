@@ -1,4 +1,4 @@
-import { Equal, LessThan, MoreThanOrEqual, Not } from 'typeorm';
+import { Equal, FindManyOptions, ILike, LessThan, MoreThanOrEqual, Not } from 'typeorm';
 import AppDataSource from '../../../core/database';
 import { calculatePagination, paginate } from '../../../core/utils/pagination/paginate';
 import { PaginationResponse } from '../../../core/utils/pagination/pagination.interface';
@@ -79,9 +79,10 @@ export class BusinessAdminService implements IBusinessAdminService {
     return this.getCurrentBusinessOfTheWeek();
   }
 
-  public async getAllBusinesses(page = 1, limit = 10): Promise<PaginationResponse<Businesses>> {
+  public async getAllBusinesses(page = 1, limit = 10, search?: string): Promise<PaginationResponse<Businesses>> {
     const { skip } = calculatePagination(page, limit);
-    const [businesses, total] = await this.businessRepository.findAndCount({
+
+    const queryConditions: FindManyOptions<Businesses> = {
       where: {
         registrationStatus: Not(Equal(BusinessRegistrationState.DECLINED)),
       },
@@ -90,7 +91,18 @@ export class BusinessAdminService implements IBusinessAdminService {
       },
       skip,
       take: limit,
-    });
+    };
+
+    if (search) {
+      queryConditions.where = [
+        { ...queryConditions.where, name: ILike(`%${search}%`) },
+        { ...queryConditions.where, description: ILike(`%${search}%`) },
+        // { ...queryConditions.where, categories: { category: Like(`%${search}%`) } },
+      ];
+    }
+
+    const [businesses, total] = await this.businessRepository.findAndCount(queryConditions);
+
     return paginate(businesses, total, page, limit);
   }
 

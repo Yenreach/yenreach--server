@@ -92,6 +92,7 @@ export class BusinessAdminController {
       const { type } = req.query;
       const page = parseInt(req.query.page, 10) || 1;
       const limit = parseInt(req.query.limit, 10) || 10;
+      const search = req.query.search || '';
 
       if (type == 'pending') {
         const pendingBusinesses = await this.businessAdminService.getPendingBusinesses(page, limit);
@@ -103,7 +104,7 @@ export class BusinessAdminController {
         return sendResponse(res, HttpCodes.OK, 'Incomplete businesses request sucessfull', incompleteBusinesses);
       }
 
-      const allBusinesses = await this.businessAdminService.getAllBusinesses(page, limit);
+      const allBusinesses = await this.businessAdminService.getAllBusinesses(page, limit, search);
 
       return sendResponse(res, HttpCodes.OK, 'All Business request sucessfull', allBusinesses);
     } catch (error) {

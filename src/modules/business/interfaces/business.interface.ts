@@ -35,7 +35,7 @@ interface IBusinessService {
 }
 
 interface IBusinessAdminService {
-  getAllBusinesses(page?: number, limit?: number): Promise<PaginationResponse<Businesses>>;
+  getAllBusinesses(page?: number, limit?: number, search?: string): Promise<PaginationResponse<Businesses>>;
   getPendingBusinesses(page?: number, limit?: number): Promise<PaginationResponse<Businesses>>;
   getIncompleteBusinesses(page?: number, limit?: number): Promise<PaginationResponse<Businesses>>;
   approveBusiness(businessId: string): Promise<Businesses>;
