@@ -58,7 +58,7 @@ export class BillboardAdminService {
         businessId: business.id,
         title: business.name,
         description: business.description,
-        imageUrl: business.coverImg,
+        imageUrl: business.coverImg || business.profileImg,
         ctaText: 'View Business',
         ctaLink: `https://yenreach.com/business/${business.id}`,
       };
