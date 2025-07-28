@@ -7,7 +7,7 @@ import { CardToken } from '../../../core/database/postgres/card-token.entity';
 import { Users } from '../../../core/database/postgres/users.entity';
 import { HttpException } from '../../../core/exceptions';
 import env from '../../../config/env.config';
-import { uuid } from "uuidv4";
+import { uuid } from 'uuidv4';
 import { SubPlan } from '../../../core/database/postgres/subplan.entity';
 
 export class PaymentService {
@@ -18,7 +18,7 @@ export class PaymentService {
 
   async create(data: CreatePaymentDto) {
     const payment = this.repo.create({
-      ...data
+      ...data,
     });
     const savedPayment = this.repo.save(payment);
     return savedPayment;
@@ -44,12 +44,7 @@ export class PaymentService {
     return result;
   }
 
-  async initiateFlutterwavePayment(payload: {
-    userId: string;
-    businessId: string;
-    subPlanId: string;
-    redirectUrl: string;
-  }) {
+  async initiateFlutterwavePayment(payload: { userId: string; businessId: string; subPlanId: string; redirectUrl: string }) {
     const tx_ref = uuid();
 
     // Fetch SubPlan details from the database
@@ -59,7 +54,7 @@ export class PaymentService {
     });
 
     if (!subPlan) {
-      throw new Error("SubPlan not found");
+      throw new Error('SubPlan not found');
     }
 
     // Fetch User details from the database
@@ -69,7 +64,7 @@ export class PaymentService {
     });
 
     if (!user) {
-      throw new Error("User not found");
+      throw new Error('User not found');
     }
 
     // Send payment request to Flutterwave
@@ -78,22 +73,22 @@ export class PaymentService {
       {
         tx_ref,
         amount: subPlan.amount, // Use amount from the SubPlan entity
-        currency: "NGN",
+        currency: 'NGN',
         redirect_url: payload.redirectUrl,
         customer: {
           email: user.email, // Use email from the User entity
         },
         customizations: {
-          title: "Subscription Payment",
-          description: "Subscription for a selected plan",
+          title: 'Subscription Payment',
+          description: 'Subscription for a selected plan',
         },
       },
       {
         headers: {
           Authorization: `Bearer ${env.FLW_TEST_KEY}`,
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
-      }
+      },
     );
 
     return {
@@ -104,14 +99,11 @@ export class PaymentService {
 
   async verifyPayment(txRef: string) {
     try {
-      const response = await axios.get(
-        `https://api.flutterwave.com/v3/transactions/verify_by_reference?tx_ref=${txRef}`,
-        {
-          headers: {
-            Authorization: `Bearer ${env.FLW_TEST_KEY}`,
-          },
-        }
-      );
+      const response = await axios.get(`https://api.flutterwave.com/v3/transactions/verify_by_reference?tx_ref=${txRef}`, {
+        headers: {
+          Authorization: `Bearer ${env.FLW_TEST_KEY}`,
+        },
+      });
 
       const txData = response.data.data;
 
@@ -119,13 +111,14 @@ export class PaymentService {
         // Save payment record
         const payment = this.create({
           reference: txData.tx_ref,
+          currency: txData.currency,
+          channel: txData.channel,
           amount: txData.amount,
           status: 'success',
           userId: txData.meta?.userId,
           businessId: txData.meta?.businessId,
           subPlanId: txData.meta?.subPlanId,
         });
-
 
         // Save card token if available
         if (txData.card?.token) {
@@ -148,10 +141,7 @@ export class PaymentService {
           });
 
           // Unset existing default cards
-          await this.cardTokenRepo.update(
-            { user: user, isDefault: true },
-            { isDefault: false }
-          );
+          await this.cardTokenRepo.update({ user: user, isDefault: true }, { isDefault: false });
 
           await this.cardTokenRepo.save(newCardToken);
 
@@ -167,5 +157,4 @@ export class PaymentService {
       throw new HttpException(500, 'Failed to verify payment');
     }
   }
-
 }

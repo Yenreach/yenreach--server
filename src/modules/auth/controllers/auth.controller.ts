@@ -3,7 +3,7 @@ import { AuthService } from '../services';
 import { sendResponse } from '../../../core/utils';
 import { HttpCodes } from '../../../core/constants';
 import { CreateAuthDto, LoginDto } from '../schemas';
-import { AdminLoginDto } from '../schemas/auth.schema';
+import { AdminLoginDto, CreateAdminDto } from '../schemas/auth.schema';
 
 const authService = new AuthService();
 
@@ -20,7 +20,7 @@ class AuthController {
   }
   async registerAdmin(req: Request, res: Response, next: NextFunction) {
     try {
-      const userData: CreateAuthDto = req.body;
+      const userData: CreateAdminDto = req.body;
       const newUser = await authService.registerAdmin(userData);
       return sendResponse(res, HttpCodes.CREATED, 'user created successfully', newUser);
     } catch (error) {
@@ -38,7 +38,7 @@ class AuthController {
       next(error);
     }
   }
- 
+
   async loginAdmin(req: Request, res: Response, next: NextFunction) {
     try {
       const userData: AdminLoginDto = req.body;

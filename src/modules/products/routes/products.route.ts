@@ -47,12 +47,17 @@ class ProductsRoute implements Routes {
     this.router.post(`${this.path}/add-photo`, authMiddleware, this.ProductsController.addPhoto);
 
     // product categories
-    this.router.post(`${this.path}/categories`, authMiddleware, validateRequest([AddCategorySchema]), this.ProductsController.createCategory);
+    this.router.post(
+      `${this.path}/categories`,
+      authMiddleware,
+      validateRequest([z.object({ body: AddCategorySchema })]),
+      this.ProductsController.createCategory,
+    );
 
     this.router.post(
       `${this.path}/assign-category`,
       authMiddleware,
-      validateRequest([AddProductCategorySchema]),
+      validateRequest([z.object({ body: AddProductCategorySchema })]),
       this.ProductsController.addProductCategory,
     );
   }

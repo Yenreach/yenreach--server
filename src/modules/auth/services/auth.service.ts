@@ -45,14 +45,14 @@ class AuthService {
     if (!!userExists) {
       throw new HttpException(HttpCodes.BAD_REQUEST, 'email already exists');
     }
-    const userExists2 = await userService.getAdminByUsername({ username: parsed.username  });
+    const userExists2 = await userService.getAdminByUsername({ username: parsed.username });
     if (!!userExists2) {
       throw new HttpException(HttpCodes.BAD_REQUEST, 'email already exists');
     }
 
     const hashedPwd = await bcrypt.hash(data.password, 10);
 
-    const baseData: CreateAuthDto = {
+    const baseData: CreateAdminDto = {
       ...data,
       password: hashedPwd,
     };
@@ -78,7 +78,7 @@ class AuthService {
     if (!match) {
       try {
         const encryptedPassword = encryptValue(user.timer, userData.password);
-        console.log({ encryptedPassword, password })
+        console.log({ encryptedPassword, password });
         if (encryptedPassword !== password) {
           throw new HttpException(HttpCodes.BAD_REQUEST, 'Email or Password Incorrect');
         }
@@ -91,9 +91,9 @@ class AuthService {
         });
       } catch (error) {
         // fail silently and allow login
-        console.log({ error })
+        console.log({ error });
       }
-    };
+    }
 
     const token = jwt.sign({ id: user.id }, env.JWT_SECRET_KEY, { expiresIn: Number(env.JWT_EXPIRATION_HOURS) });
 
@@ -116,7 +116,7 @@ class AuthService {
       throw new HttpException(HttpCodes.BAD_REQUEST, 'Email or Username is required');
     }
     let user: Admins;
-    
+
     if (userData.email) {
       user = await userService.getAdminByEmail({ email: userData.email });
     }
@@ -124,8 +124,8 @@ class AuthService {
     if (userData.username) {
       user = await userService.getAdminByUsername({ username: userData.username });
     }
-    
-    console.log({ user })
+
+    console.log({ user });
 
     if (!user) {
       throw new HttpException(HttpCodes.NOT_FOUND, 'User does not exist');
@@ -139,7 +139,7 @@ class AuthService {
       if (userData.password !== env.ADMIN_PASSWORD) {
         throw new HttpException(HttpCodes.BAD_REQUEST, 'Email or Password Incorrect');
       }
-    };
+    }
 
     const token = jwt.sign({ id: user.id }, env.JWT_SECRET_KEY, { expiresIn: Number(env.JWT_EXPIRATION_HOURS) });
 

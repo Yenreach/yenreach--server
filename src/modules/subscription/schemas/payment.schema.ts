@@ -1,9 +1,9 @@
 import { z } from 'zod';
 
 export const createPaymentSchema = z.object({
-  userId: z.string().uuid(),
-  businessId: z.string().uuid(),
-  subPlanId: z.string().uuid(),
+  userId: z.uuid(),
+  businessId: z.uuid(),
+  subPlanId: z.uuid(),
   reference: z.string(),
   cardToken: z.string().optional(),
   last4: z.string().optional(),
