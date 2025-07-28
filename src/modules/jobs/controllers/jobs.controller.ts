@@ -61,7 +61,7 @@ class JobsController {
 
       const result = await jobsService.getJobsPublic(queryParams);
 
-      return sendResponse(res, HttpCodes.OK, "Jobs retrieved successfully", result);
+      return sendResponse(res, HttpCodes.OK, 'Jobs retrieved successfully', result);
     } catch (error) {
       next(error);
     }
@@ -69,14 +69,14 @@ class JobsController {
 
   async getBusinessJobs(req: Request, res: Response, next: NextFunction) {
     try {
-      const business = req.params.business_string;
+      const business = req.params.business_id;
       const queryParams = GetJobsSchema.parse(req.query);
 
-      if (!business) throw Error('Business String must be sent')
+      if (!business) throw Error('Business ID must be sent');
 
       const result = await jobsService.getJobsPublic({ ...queryParams, business });
 
-      return sendResponse(res, HttpCodes.OK, "Jobs retrieved successfully", result);
+      return sendResponse(res, HttpCodes.OK, 'Jobs retrieved successfully', result);
     } catch (error) {
       next(error);
     }

@@ -5,15 +5,13 @@ import { HttpCodes } from '../../../core/constants';
 import { HttpException } from '../../../core/exceptions';
 import { AddCategoryDto, AddProductCategoryDto, CreateProductDto, GetProductsSchema, UpdateProductDto } from '../schemas/products.schema';
 
-
 const productsService = new ProductsService(); // Initialize the service in the constructor
 class ProductsController {
-
   async createProducts(req: Request, res: Response, next: NextFunction) {
-    console.log('hereee')
+    console.log('hereee');
     try {
       const productsData: CreateProductDto = req.body;
-      console.log({ productsData, service: productsService })
+      console.log({ productsData, service: productsService });
       const newProducts = await productsService.createProduct(productsData);
 
       return sendResponse(res, HttpCodes.CREATED, 'product created successfully', newProducts);
@@ -61,22 +59,22 @@ class ProductsController {
       const queryParams = GetProductsSchema.parse(req.query);
       const result = await productsService.getProducts(queryParams);
 
-      return sendResponse(res, HttpCodes.OK, "Products retrieved successfully", result);
+      return sendResponse(res, HttpCodes.OK, 'Products retrieved successfully', result);
     } catch (error) {
       next(error);
     }
   }
-  
+
   async getBusinessProducts(req: Request, res: Response, next: NextFunction) {
     try {
-      const business = req.params.business_string;
+      const business = req.params.business_id;
       const queryParams = GetProductsSchema.parse(req.query);
 
-      if (!business) throw Error('Business String must be sent')
+      if (!business) throw Error('Business ID must be sent');
 
       const result = await productsService.getProducts({ ...queryParams, business });
 
-      return sendResponse(res, HttpCodes.OK, "Products retrieved successfully", result);
+      return sendResponse(res, HttpCodes.OK, 'Products retrieved successfully', result);
     } catch (error) {
       next(error);
     }
@@ -120,7 +118,7 @@ class ProductsController {
   async addPhoto(req: Request, res: Response, next: NextFunction) {
     try {
       const result = await productsService.addPhoto(req.body);
-      return sendResponse(res, HttpCodes.CREATED, "Photo added successfully", result);
+      return sendResponse(res, HttpCodes.CREATED, 'Photo added successfully', result);
     } catch (error) {
       next(error);
     }

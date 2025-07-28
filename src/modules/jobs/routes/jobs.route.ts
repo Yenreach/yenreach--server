@@ -18,29 +18,28 @@ class JobsRoute implements Routes {
 
   private initializeRoutes() {
     this.router.all(`${this.path}*`, (req: Request, res: Response, next: NextFunction) => {
-      next()
-    })
+      next();
+    });
 
-    this.router.post(`${this.path}/`, authMiddleware, validateRequest([z.object({ body: JobSchema })]), this.JobsController.createJobs)
+    this.router.post(`${this.path}/`, authMiddleware, validateRequest([z.object({ body: JobSchema })]), this.JobsController.createJobs);
 
-    this.router.post(`${this.adminPath}`, adminAuthMiddleware, validateRequest([z.object({ body: JobSchema })]), this.JobsController.adminCreateJob)
+    this.router.post(`${this.adminPath}`, adminAuthMiddleware, validateRequest([z.object({ body: JobSchema })]), this.JobsController.adminCreateJob);
 
-    this.router.get(`${this.path}`, this.JobsController.getJobs)
+    this.router.get(`${this.path}`, this.JobsController.getJobs);
 
-    this.router.get(`${this.path}/all`, adminAuthMiddleware, this.JobsController.getAllJobs)
+    this.router.get(`${this.path}/all`, adminAuthMiddleware, this.JobsController.getAllJobs);
 
-    this.router.get(`${this.path}/:id`, this.JobsController.getJobsById)
+    this.router.get(`${this.path}/:id`, this.JobsController.getJobsById);
 
-    this.router.get(`${this.path}/:id/related`, this.JobsController.getRelatedJobs)
+    this.router.get(`${this.path}/:id/related`, this.JobsController.getRelatedJobs);
 
-    this.router.get(`${this.path}/:business_string/jobs`, this.JobsController.getBusinessJobs)
+    this.router.get(`${this.path}/:business_id/jobs`, this.JobsController.getBusinessJobs);
 
-    this.router.put(`${this.path}/:id`, this.JobsController.updateJobs)
+    this.router.put(`${this.path}/:id`, this.JobsController.updateJobs);
 
-    this.router.delete(`${this.adminPath}/:id`, adminAuthMiddleware, this.JobsController.deleteJobs)
-    this.router.delete(`${this.path}/:id`, authMiddleware, this.JobsController.deleteJobs)
+    this.router.delete(`${this.adminPath}/:id`, adminAuthMiddleware, this.JobsController.deleteJobs);
+    this.router.delete(`${this.path}/:id`, authMiddleware, this.JobsController.deleteJobs);
   }
 }
 
 export { JobsRoute };
-

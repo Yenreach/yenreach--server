@@ -6,59 +6,26 @@ const isoDateString = z
     message: 'Invalid date format',
   })
   .transform(val => new Date(val))
-  .refine(date => {
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    return date >= yesterday;
-  }, {
-    message: 'Date must not be in the past',
-  });
-
-// export const CreateBillboardEntrySchema = z
-//   .object({
-//     businessId: z.string().uuid().optional(),
-
-//     title: z.string().max(100).optional(),
-//     description: z.string().max(160).optional(),
-//     imageUrl: z.string().url().optional(),
-//     ctaText: z.string().max(255).optional(),
-//     ctaLink: z.string().url().optional(),
-
-//     startDate: isoDateString,
-//     endDate: isoDateString,
-//   })
-//   .superRefine((data, ctx) => {
-//     if (!data.businessId) {
-//       const requiredFields = ['title', 'description', 'imageUrl', 'ctaText', 'ctaLink'] as const;
-//       for (const field of requiredFields) {
-//         if (!data[field]) {
-//           ctx.addIssue({
-//             path: [field],
-//             code: z.ZodIssueCode.custom,
-//             message: `${field} is required when businessId is not provided`,
-//           });
-//         }
-//       }
-//     }
-
-//     if (data.endDate < data.startDate) {
-//       ctx.addIssue({
-//         path: ['endDate'],
-//         code: z.ZodIssueCode.custom,
-//         message: 'End Date must be after Start Date',
-//       });
-//     }
-//   });
+  .refine(
+    date => {
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      return date >= yesterday;
+    },
+    {
+      message: 'Date must not be in the past',
+    },
+  );
 
 export const CreateBillboardEntrySchema = z
   .object({
-    businessId: z.string().uuid().optional(),
+    businessId: z.uuid().optional(),
 
     title: z.string().max(100).optional(),
     description: z.string().max(160).optional(),
-    imageUrl: z.string().url().optional(),
+    imageUrl: z.url().optional(),
     ctaText: z.string().max(255).optional(),
-    ctaLink: z.string().url().optional(),
+    ctaLink: z.url().optional(),
 
     startDate: isoDateString,
     endDate: isoDateString,
@@ -71,7 +38,7 @@ export const CreateBillboardEntrySchema = z
         if (!data[field]) {
           ctx.addIssue({
             path: [field],
-            code: z.ZodIssueCode.custom,
+            code: 'custom',
             message: `${field} is required when businessId is not provided`,
           });
         }
@@ -81,7 +48,7 @@ export const CreateBillboardEntrySchema = z
         if (data[field]) {
           ctx.addIssue({
             path: [field],
-            code: z.ZodIssueCode.custom,
+            code: 'custom',
             message: `${field} must not be provided when businessId is used`,
           });
         }
@@ -91,7 +58,7 @@ export const CreateBillboardEntrySchema = z
     if (data.endDate < data.startDate) {
       ctx.addIssue({
         path: ['endDate'],
-        code: z.ZodIssueCode.custom,
+        code: 'custom',
         message: 'End Date must be after Start Date',
       });
     }
@@ -112,9 +79,9 @@ export const UpdateBillboardEntrySchema = z
   .object({
     title: z.string().max(100).optional(),
     description: z.string().max(160).optional(),
-    imageUrl: z.string().url().optional(),
+    imageUrl: z.url().optional(),
     ctaText: z.string().max(255).optional(),
-    ctaLink: z.string().url().optional(),
+    ctaLink: z.url().optional(),
     endDate: optionalIsoDateString,
   })
   .refine(data => Object.keys(data).length > 0, {

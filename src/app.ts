@@ -14,7 +14,10 @@ import { Routes } from './core/routes/interfaces/RouteInterface';
 import { errorMiddleware } from './core/middlewares/ErrorMiddleware';
 import { logger, stream, registerShutdownHandler } from './core/utils';
 import env from './config/env.config';
-import { swaggerSpecs } from './core/utils/swagger';
+import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
+import z from 'zod';
+extendZodWithOpenApi(z);
+import { swaggerSpecs } from './config';
 
 class App {
   public app: express.Application;

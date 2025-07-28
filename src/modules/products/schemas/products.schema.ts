@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const ProductSchema = z.object({
   name: z.string(),
@@ -6,29 +6,10 @@ export const ProductSchema = z.object({
   description: z.string(),
   price: z.number(),
   quantity: z.number(),
-  color: z.string().optional().default(""),
-  safetyTip: z.string().optional().default(""),
-  categories: z
-    .array(z.string())
-    .optional().default([]),
-  photos: z
-    .array(z.string())
-    .optional().default([]),
-  // categories: z
-  //   .array(
-  //     z.object({
-  //       category: z.string(),
-  //     })
-  //   )
-  //   .optional()
-  //   .default([]),
-  // photos: z
-  //   .array(
-  //     z.object({
-  //       filename: z.string(),
-  //     })
-  //   )
-  //   .default([]),
+  color: z.string().optional().default(''),
+  safetyTip: z.string().optional().default(''),
+  categories: z.array(z.string()).optional().default([]),
+  photos: z.array(z.string()).optional().default([]),
 });
 
 export const UpdateProductSchema = z.object({
@@ -39,24 +20,12 @@ export const UpdateProductSchema = z.object({
   quantity: z.number().optional(),
   color: z.string().optional(),
   safetyTip: z.string().optional(),
-  categories: z
-    .array(z.string())
-    .optional().default([]),
-  photos: z
-    .array(z.string())
-    .optional().default([]),
-  // photos: z
-  //   .array(
-  //     z.object({
-  //       filename: z.string(),
-  //     })
-  //   )
-  //   .optional(),
+  categories: z.array(z.string()).optional().default([]),
+  photos: z.array(z.string()).optional().default([]),
 });
 
 export const AddCategorySchema = z.object({
-  category: z.string().min(1, "Category name is required"),
-  // details: z.string().optional(),
+  category: z.string().min(1, 'Category name is required'),
 });
 
 export const AddProductCategorySchema = z.object({
@@ -64,30 +33,28 @@ export const AddProductCategorySchema = z.object({
   category: z.string().nonempty(),
 });
 
-
 export const AddProductPhotoSchema = z.object({
-  product_string: z.string().min(1, "Product string is required"),
-  filename: z.string().min(1, "Filename is required"),
+  product_string: z.string().min(1, 'Product string is required'),
+  filename: z.string().min(1, 'Filename is required'),
 });
 
 export const GetProductsSchema = z.object({
-  page: z.string().optional().default("1").transform(Number),
-  limit: z.string().optional().default("20").transform(Number),
+  page: z.string().optional().default('1').transform(Number),
+  limit: z.string().optional().default('20').transform(Number),
   search: z.string().optional(),
   business: z.string().optional(),
   category: z.string().optional(),
 });
 
 export const RemoveProductCategorySchema = z.object({
-  product_string: z.string().min(1, "Product string is required"),
-  category_string: z.string().min(1, "Category string is required"),
+  product_string: z.string().min(1, 'Product string is required'),
+  category_string: z.string().min(1, 'Category string is required'),
 });
 
 export const RemoveProductPhotoSchema = z.object({
-  product_string: z.string().min(1, "Product string is required"),
-  photo_string: z.string().min(1, "Photo string is required"),
+  product_string: z.string().min(1, 'Product string is required'),
+  photo_string: z.string().min(1, 'Photo string is required'),
 });
-
 
 export type CreateProductDto = z.infer<typeof ProductSchema>;
 export type UpdateProductDto = z.infer<typeof UpdateProductSchema>;
