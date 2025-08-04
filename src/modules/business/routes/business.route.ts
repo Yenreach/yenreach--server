@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction, Router } from 'express';
-import { Routes } from '../../../core/routes/interfaces';
+import { Routes } from '../../../lib/routes/interfaces';
 import { BusinessService } from '../services';
 import { BusinessController } from '../controllers';
-import { authMiddleware } from '../../../core/middlewares';
+import { authMiddleware } from '../../../lib/middlewares';
 
 class BusinessRoute implements Routes {
   public path = '/business';

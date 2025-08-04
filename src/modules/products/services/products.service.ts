@@ -1,7 +1,7 @@
 import { FindManyOptions, ILike } from 'typeorm';
-import AppDataSource from '../../../core/database';
-import { calculatePagination, paginate } from '../../../core/utils/pagination/paginate';
-import { PaginationResponse } from '../../../core/utils/pagination/pagination.interface';
+import AppDataSource from '../../../database';
+import { calculatePagination, paginate } from '../../../lib/pagination/paginate';
+import { PaginationResponse } from '../../../lib/pagination/pagination.interface';
 import {
   AddCategoryDto,
   AddProductCategoryDto,
@@ -15,11 +15,11 @@ import {
   RemoveProductPhotoSchema,
   UpdateProductDto,
 } from '../schemas/products.schema';
-import { Products } from '../../../core/database/postgres/product.entity';
-import { ProductPhotos } from '../../../core/database/postgres/product-photos.entity';
-import { ProductCategories } from '../../../core/database/postgres/product-category.entity';
+import { Products } from '../../../database/entities/product.entity';
+import { ProductPhotos } from '../../../database/entities/product-photos.entity';
+import { ProductCategories } from '../../../database/entities/product-category.entity';
 import { ProductStatus } from '../enums';
-import { Categories } from '../../../core/database/postgres/category.entity';
+import { Categories } from '../../../database/entities/category.entity';
 import { CategoryType } from '../../../shared/enums';
 
 class ProductsService {

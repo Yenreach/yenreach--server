@@ -1,7 +1,7 @@
 import { NextFunction, Response, Request } from 'express';
-import { HttpException } from '../../core/exceptions';
+import { HttpException } from '../exceptions';
 import * as jwt from 'jsonwebtoken';
-import { HttpCodes } from '../../core/constants';
+import { HttpCodes } from '../constants';
 import env from '../../config/env.config';
 import { UserService } from '../../modules/user/services';
 

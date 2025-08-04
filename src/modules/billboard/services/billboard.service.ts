@@ -1,6 +1,6 @@
 import { LessThanOrEqual, MoreThanOrEqual } from 'typeorm';
-import AppDataSource from '../../../core/database';
-import { BillboardEntry } from '../../../core/database/postgres/billboard-entries.entity';
+import AppDataSource from '../../../database';
+import { BillboardEntry } from '../../../database/entities/billboard-entries.entity';
 import { BillboardStatus } from '../../../shared/enums/common.enum';
 
 export class BillboardService {

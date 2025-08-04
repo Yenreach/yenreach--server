@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction, Router } from 'express';
 import { SMSController } from '../controllers';
-import { Routes } from '../../core/routes/interfaces';
+import { Routes } from '../../lib/routes/interfaces';
 class SMSRoute implements Routes {
   public path = '/sms';
   public router = Router();

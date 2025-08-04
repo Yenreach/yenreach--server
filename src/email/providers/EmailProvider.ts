@@ -4,7 +4,7 @@ import path, { join, resolve } from 'path';
 import { compile } from 'handlebars';
 import { SMTP_HOSTNAME, SMTP_USERNAME, SMTP_PASSWORD, APP_NAME, APP_URL, APP_LOGO, APP_EMAIL } from '../../config';
 import { EmailPayload } from '../interfaces';
-import { logger } from '../../core/utils';
+import { logger } from '../../lib/utils';
 import nodemailer from 'nodemailer';
 import { IEmail } from '../interfaces/EmailInterface';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';

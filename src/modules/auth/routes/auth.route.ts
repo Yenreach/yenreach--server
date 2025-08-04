@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction, Router } from 'express';
 import { AuthController } from '../controllers';
-import { Routes } from '../../../core/routes/interfaces';
+import { Routes } from '../../../lib/routes/interfaces';
 
 class AuthRoute implements Routes {
   public path = '/auth';
@@ -13,15 +13,14 @@ class AuthRoute implements Routes {
 
   private initializeRoutes() {
     this.router.all(`${this.path}*`, (req: Request, res: Response, next: NextFunction) => {
-      next()
-    })
+      next();
+    });
 
-    this.router.post(`${this.path}/register`, this.AuthController.register)
-    this.router.post(`${this.path}/login`, this.AuthController.login)
-    this.router.post(`${this.path}/admin-login`, this.AuthController.loginAdmin)
-    this.router.post(`${this.path}/admin-register`, this.AuthController.registerAdmin)
+    this.router.post(`${this.path}/register`, this.AuthController.register);
+    this.router.post(`${this.path}/login`, this.AuthController.login);
+    this.router.post(`${this.path}/admin-login`, this.AuthController.loginAdmin);
+    this.router.post(`${this.path}/admin-register`, this.AuthController.registerAdmin);
   }
 }
 
 export { AuthRoute };
-

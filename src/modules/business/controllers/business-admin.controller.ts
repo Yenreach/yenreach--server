@@ -1,7 +1,7 @@
 import { NextFunction, Response, Request } from 'express';
 import { BusinessQueryParams, IBusinessAdminService, PathParams } from '../interfaces';
-import { HttpCodes } from '../../../core/constants';
-import { sendResponse } from '../../../core/utils';
+import { HttpCodes } from '../../../lib/constants';
+import { sendResponse } from '../../../lib/utils';
 import { UpdateBusinessDto } from '../schemas';
 import { RequestWithParam, RequestWithParamAndBody, RequestWithQuery } from '../../../shared/types';
 

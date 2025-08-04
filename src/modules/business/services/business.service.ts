@@ -1,24 +1,24 @@
-import AppDataSource from '../../../core/database';
-import { calculatePagination, paginate } from '../../../core/utils/pagination/paginate';
-import { PaginationResponse } from '../../../core/utils/pagination/pagination.interface';
+import AppDataSource from '../../../database';
+import { calculatePagination, paginate } from '../../../lib/pagination/paginate';
+import { PaginationResponse } from '../../../lib/pagination/pagination.interface';
 import { BusinessDto, IBusinessService } from '../interfaces';
 import { AddBusinessWorkingHoursDto, AddBussinessPhotoDto, CreateBusinessDto, ReviewBusinessDto, UpdateBusinessDto } from '../schemas';
-import { Businesses } from '../../../core/database/postgres/businesses.entity';
-import { BusinessReviews } from '../../../core/database/postgres/business-reviews.entity';
+import { Businesses } from '../../../database/entities/businesses.entity';
+import { BusinessReviews } from '../../../database/entities/business-reviews.entity';
 import { BusinessRegistrationState } from '../enums';
-import { Products } from '../../../core/database/postgres/product.entity';
-import { States } from '../../../core/database/postgres/states.entity';
-import { LocalGovernments } from '../../../core/database/postgres/local-governments.entity';
-import { Jobs } from '../../../core/database/postgres/jobs.entity';
-import { BusinessWorkingHours } from '../../../core/database/postgres/business-working-hours.entity';
-import { BusinessPhotos } from '../../../core/database/postgres/business-photos.entity';
+import { Products } from '../../../database/entities/product.entity';
+import { States } from '../../../database/entities/states.entity';
+import { LocalGovernments } from '../../../database/entities/local-governments.entity';
+import { Jobs } from '../../../database/entities/jobs.entity';
+import { BusinessWorkingHours } from '../../../database/entities/business-working-hours.entity';
+import { BusinessPhotos } from '../../../database/entities/business-photos.entity';
 import { FindManyOptions, ILike, In, Like, Not, Or } from 'typeorm';
-import { HttpException } from '../../../core/exceptions';
-import { HttpCodes } from '../../../core/constants';
-import { BusinessCategories } from '../../../core/database/postgres/business-categories.entity';
+import { HttpException } from '../../../lib/exceptions';
+import { HttpCodes } from '../../../lib/constants';
+import { BusinessCategories } from '../../../database/entities/business-categories.entity';
 import { CategoryType } from '../../../shared/enums';
-import { Categories } from '../../../core/database/postgres/category.entity';
-import { BusinessOfTheWeek } from '../../../core/database/postgres/business-of-the-week.entity';
+import { Categories } from '../../../database/entities/category.entity';
+import { BusinessOfTheWeek } from '../../../database/entities/business-of-the-week.entity';
 
 export class BusinessService implements IBusinessService {
   private readonly businessRepository = AppDataSource.getRepository(Businesses);
@@ -32,7 +32,6 @@ export class BusinessService implements IBusinessService {
   private readonly categoryRepository = AppDataSource.getRepository(Categories);
   private readonly businessCategoryRepository = AppDataSource.getRepository(BusinessCategories);
   private readonly businessOfTheWeekReposiotry = AppDataSource.getRepository(BusinessOfTheWeek);
-
 
   private transformBusiness = (business: Businesses) => {
     return {
@@ -212,21 +211,24 @@ export class BusinessService implements IBusinessService {
   }
 
   public async getCurrentBusinessOfTheWeek(): Promise<BusinessOfTheWeek | null> {
-    return (await this.businessOfTheWeekReposiotry
-      .find({
-        // latest one
-        order: {
-          createdAt: 'DESC',
-        },
-        relations: {
-          business: {
-            categories: {
-              category: true,
+    return (
+      (
+        await this.businessOfTheWeekReposiotry.find({
+          // latest one
+          order: {
+            createdAt: 'DESC',
+          },
+          relations: {
+            business: {
+              categories: {
+                category: true,
+              },
             },
           },
-        },
-        take: 1,
-      }))?.[0] ?? null;
+          take: 1,
+        })
+      )?.[0] ?? null
+    );
   }
 
   public async getJobsByBusinessId(businessId: string, page = 1, limit = 10): Promise<PaginationResponse<Jobs>> {

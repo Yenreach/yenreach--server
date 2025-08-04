@@ -1,4 +1,4 @@
-import env from '../../config/env.config';
+import env from '../config/env.config';
 import { DataSource } from 'typeorm';
 
 const AppDataSource = new DataSource({
@@ -15,12 +15,12 @@ const AppDataSource = new DataSource({
         ssl: {
           rejectUnauthorized: false,
         },
-        entities: ['dist/core/database/postgres/*.entity.js'],
-        migrations: ['dist/core/database/migrations/*.js'],
+        entities: ['dist/database/entities/*.entity.js'],
+        migrations: ['dist/database/migrations/*.js'],
       }
     : {
-        entities: ['src/core/database/postgres/*.entity.ts'],
-        migrations: ['src/core/database/migrations/*.ts'],
+        entities: ['src/database/entities/*.entity.ts'],
+        migrations: ['src/database/migrations/*.ts'],
       }),
 });
 

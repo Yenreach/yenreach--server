@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction, Router } from 'express';
-import { Routes } from '../../../core/routes/interfaces';
+import { Routes } from '../../../lib/routes/interfaces';
 import { SubPlanController } from '../controllers/subplan.controller';
 
 class SubPlanRoute implements Routes {

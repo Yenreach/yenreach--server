@@ -1,9 +1,9 @@
-import { HttpCodes } from '../../../core/constants';
-import AppDataSource from '../../../core/database';
-import { Blogs } from '../../../core/database/postgres/blogs.entity';
-import { HttpException } from '../../../core/exceptions';
-import { calculatePagination, paginate } from '../../../core/utils/pagination/paginate';
-import { PaginationResponse } from '../../../core/utils/pagination/pagination.interface';
+import { HttpCodes } from '../../../lib/constants';
+import AppDataSource from '../../../database';
+import { Blogs } from '../../../database/entities/blogs.entity';
+import { HttpException } from '../../../lib/exceptions';
+import { calculatePagination, paginate } from '../../../lib/pagination/paginate';
+import { PaginationResponse } from '../../../lib/pagination/pagination.interface';
 import { CreateBlogDto, UpdateBlogDto } from '../schema';
 
 export class BlogsService {

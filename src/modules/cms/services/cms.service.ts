@@ -1,7 +1,7 @@
 import { Repository } from 'typeorm';
-import AppDataSource from '../../../core/database';
-import { Cms } from '../../../core/database/postgres/cms.entity';
-import { Images } from '../../../core/database/postgres/image.entity';
+import AppDataSource from '../../../database';
+import { Cms } from '../../../database/entities/cms.entity';
+import { Images } from '../../../database/entities/image.entity';
 
 export class CmsService {
   private cmsRepository: Repository<Cms>;

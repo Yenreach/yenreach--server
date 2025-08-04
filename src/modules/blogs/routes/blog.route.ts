@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction, Router } from 'express';
-import { Routes } from '../../../core/routes/interfaces';
-import { adminAuthMiddleware, authMiddleware } from '../../../core/middlewares';
-import { validateRequest } from '../../../core/middlewares/ValidationMiddleware';
+import { Routes } from '../../../lib/routes/interfaces';
+import { adminAuthMiddleware, authMiddleware } from '../../../lib/middlewares';
+import { validateRequest } from '../../../lib/middlewares/ValidationMiddleware';
 import { z } from 'zod';
 import { BlogsController } from '../controllers';
 import { CreateBlogSchema, UpdateBlogSchema } from '../schema';

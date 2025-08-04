@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { AuthService } from '../services';
-import { sendResponse } from '../../../core/utils';
-import { HttpCodes } from '../../../core/constants';
+import { sendResponse } from '../../../lib/utils';
+import { HttpCodes } from '../../../lib/constants';
 import { CreateAuthDto, LoginDto } from '../schemas';
 import { AdminLoginDto, CreateAdminDto } from '../schemas/auth.schema';
 

@@ -1,14 +1,14 @@
-import AppDataSource from '../../../core/database';
-import { SubscriptionPayment } from '../../../core/database/postgres/payment.entity';
+import AppDataSource from '../../../database';
+import { SubscriptionPayment } from '../../../database/entities/payment.entity';
 import axios from 'axios';
 import { SubPlanService } from './subplan.service';
 import { CreatePaymentDto, UpdatePaymentDto } from '../schemas';
-import { CardToken } from '../../../core/database/postgres/card-token.entity';
-import { Users } from '../../../core/database/postgres/users.entity';
-import { HttpException } from '../../../core/exceptions';
+import { CardToken } from '../../../database/entities/card-token.entity';
+import { Users } from '../../../database/entities/users.entity';
+import { HttpException } from '../../../lib/exceptions';
 import env from '../../../config/env.config';
 import { uuid } from 'uuidv4';
-import { SubPlan } from '../../../core/database/postgres/subplan.entity';
+import { SubPlan } from '../../../database/entities/subplan.entity';
 
 export class PaymentService {
   private repo = AppDataSource.getRepository(SubscriptionPayment);

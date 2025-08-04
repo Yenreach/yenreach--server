@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction, Router } from 'express';
 import { JobsController } from '../controllers';
-import { Routes } from '../../../core/routes/interfaces';
-import { adminAuthMiddleware, authMiddleware } from '../../../core/middlewares';
-import { validateRequest } from '../../../core/middlewares/ValidationMiddleware';
+import { Routes } from '../../../lib/routes/interfaces';
+import { adminAuthMiddleware, authMiddleware } from '../../../lib/middlewares';
+import { validateRequest } from '../../../lib/middlewares/ValidationMiddleware';
 import { JobSchema } from '../schemas/jobs.schema';
 import { z } from 'zod';
 

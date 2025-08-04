@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import { JobsService } from '../services';
-import { sendResponse } from '../../../core/utils';
-import { HttpCodes } from '../../../core/constants';
-import { HttpException } from '../../../core/exceptions';
+import { sendResponse } from '../../../lib/utils';
+import { HttpCodes } from '../../../lib/constants';
+import { HttpException } from '../../../lib/exceptions';
 import { CreateJobDto, GetJobsSchema, UpdateJobDto } from '../schemas/jobs.schema';
 
 const jobsService = new JobsService();

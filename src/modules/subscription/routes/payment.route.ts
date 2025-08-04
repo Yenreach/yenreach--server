@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction, Router } from 'express';
-import { Routes } from '../../../core/routes/interfaces';
+import { Routes } from '../../../lib/routes/interfaces';
 import { PaymentController } from '../controllers/payment.controller';
-import { authMiddleware } from '../../../core/middlewares';
+import { authMiddleware } from '../../../lib/middlewares';
 
 class PaymentRoute implements Routes {
   public path = '/payments';

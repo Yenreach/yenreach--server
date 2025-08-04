@@ -1,16 +1,16 @@
 import env from '../../../config/env.config';
-import { HttpCodes } from '../../../core/constants';
-import AppDataSource from '../../../core/database';
-import { HttpException } from '../../../core/exceptions';
+import { HttpCodes } from '../../../lib/constants';
+import AppDataSource from '../../../database';
+import { HttpException } from '../../../lib/exceptions';
 import { UserService } from '../../user/services';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import { Response } from 'express';
-import { Users } from '../../../core/database/postgres/users.entity';
+import { Users } from '../../../database/entities/users.entity';
 import { CreateAuthDto, CreateAuthSchema, LoginDto } from '../schemas';
-import { encryptValue } from '../../../core/utils/helpers';
+import { encryptValue } from '../../../lib/utils/helpers';
 import { AdminLoginDto, AdminLoginSchema, CreateAdminDto, CreateAdminSchema, LoginSchema } from '../schemas/auth.schema';
-import { Admins } from '../../../core/database/postgres/admin.entity';
+import { Admins } from '../../../database/entities/admin.entity';
 
 const userService = new UserService();
 

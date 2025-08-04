@@ -1,9 +1,9 @@
 import { SMS } from '../interfaces';
-import { HttpException } from '../../core/exceptions';
-import { logger } from '../../core/utils';
+import { HttpException } from '../../lib/exceptions';
+import { logger } from '../../lib/utils';
 import axios from 'axios';
 import { SENDCHAMP_APIKEY, SENDCHAMP_LIVEURL, SENDCHAMP_SENDER } from '../../config';
-import { HttpCodes } from '../../core/constants';
+import { HttpCodes } from '../../lib/constants';
 
 class SMSProvider {
   public async sendSMS(payload: SMS) {

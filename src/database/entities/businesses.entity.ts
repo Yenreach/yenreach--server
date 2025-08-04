@@ -19,7 +19,7 @@ import { BusinessReviews } from './business-reviews.entity';
 import { BusinessVideos } from './business-videos.entity';
 import { BusinessWorkingHours } from './business-working-hours.entity';
 import { Products } from './product.entity';
-import { BusinessRegistrationState } from '../../../modules/business/enums';
+import { BusinessRegistrationState } from '../../modules/business/enums';
 
 @Entity('businesses', { schema: 'yenreach' })
 export class Businesses {

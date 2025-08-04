@@ -1,13 +1,13 @@
 import { RequestWithBody, RequestWithParam, RequestWithParamAndBody, RequestWithQuery } from '../../../shared/types';
 import { NextFunction, Response } from 'express';
-import { sendResponse } from '../../../core/utils';
-import { HttpCodes } from '../../../core/constants';
+import { sendResponse } from '../../../lib/utils';
+import { HttpCodes } from '../../../lib/constants';
 import { BillboardAdminService } from '../services';
 import { CreateBillboardEntryDto, UpdateBillboardEntryDto } from '../schemas';
 import { PathParams } from '../../../shared/types/common';
-import { PaginationQueryParams } from '../../../core/utils/pagination';
-import { PaginationResponse } from '../../../core/utils/pagination/pagination.interface';
-import { BillboardEntry } from '../../../core/database/postgres/billboard-entries.entity';
+import { PaginationQueryParams } from '../../../lib/pagination';
+import { PaginationResponse } from '../../../lib/pagination/pagination.interface';
+import { BillboardEntry } from '../../../database/entities/billboard-entries.entity';
 import { BillboardStatus } from '../../../shared/enums/common.enum';
 
 const billboardAdminService = new BillboardAdminService();
@@ -36,7 +36,7 @@ export class BillboardAdminController {
       const { status } = req.query;
       const page = parseInt(req.query.page as string, 10) || 1;
       const limit = parseInt(req.query.limit as string, 10) || 10;
-      
+
       const result = await billboardAdminService.getBillboards(page, limit, status);
 
       return sendResponse(res, HttpCodes.OK, `Billboards (${status}) fetched`, result);

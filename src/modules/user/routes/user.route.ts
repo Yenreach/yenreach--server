@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction, Router } from 'express';
 import { UserController } from '../controllers';
-import { Routes } from '../../../core/routes/interfaces';
-import { adminAuthMiddleware, authMiddleware } from '../../../core/middlewares';
+import { Routes } from '../../../lib/routes/interfaces';
+import { adminAuthMiddleware, authMiddleware } from '../../../lib/middlewares';
 class UserRoute implements Routes {
   public path = '/users';
   public adminPath = '/users/admin';
@@ -14,24 +14,23 @@ class UserRoute implements Routes {
 
   private initializeRoutes() {
     this.router.all(`${this.path}*`, (req: Request, res: Response, next: NextFunction) => {
-      next()
-    })
+      next();
+    });
 
-    this.router.post(`${this.path}/`, authMiddleware, this.UserController.createUser)
+    this.router.post(`${this.path}/`, authMiddleware, this.UserController.createUser);
 
-    this.router.get(`${this.path}/`, authMiddleware, this.UserController.getAllUsers)
-    
-    this.router.get(`${this.adminPath}/`, adminAuthMiddleware, this.UserController.getAllAdmins)
+    this.router.get(`${this.path}/`, authMiddleware, this.UserController.getAllUsers);
 
-    this.router.get(`${this.path}/me`, authMiddleware, this.UserController.getUserProfile)
+    this.router.get(`${this.adminPath}/`, adminAuthMiddleware, this.UserController.getAllAdmins);
 
-    this.router.get(`${this.path}/:id`, authMiddleware, this.UserController.getUserById)
+    this.router.get(`${this.path}/me`, authMiddleware, this.UserController.getUserProfile);
 
-    this.router.put(`${this.path}/:id`, authMiddleware, this.UserController.updateUser)
+    this.router.get(`${this.path}/:id`, authMiddleware, this.UserController.getUserById);
 
-    this.router.delete(`${this.path}/:id`, authMiddleware, this.UserController.deleteUser)
+    this.router.put(`${this.path}/:id`, authMiddleware, this.UserController.updateUser);
+
+    this.router.delete(`${this.path}/:id`, authMiddleware, this.UserController.deleteUser);
   }
 }
 
 export { UserRoute };
-

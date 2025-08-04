@@ -1,8 +1,8 @@
-import AppDataSource from '../../../core/database';
-import { Admins } from '../../../core/database/postgres/admin.entity';
-import { Users } from '../../../core/database/postgres/users.entity';
-import { calculatePagination, paginate } from '../../../core/utils/pagination/paginate';
-import { PaginationResponse } from '../../../core/utils/pagination/pagination.interface';
+import AppDataSource from '../../../database';
+import { Admins } from '../../../database/entities/admin.entity';
+import { Users } from '../../../database/entities/users.entity';
+import { calculatePagination, paginate } from '../../../lib/pagination/paginate';
+import { PaginationResponse } from '../../../lib/pagination/pagination.interface';
 import { CreateAdminDto } from '../../auth/schemas';
 import { CreateUserDto, UpdateUserDto } from '../schemas';
 import * as bcrypt from 'bcrypt';
@@ -15,7 +15,7 @@ class UserService {
     const newUser = this.userRepository.create(data);
     return await this.userRepository.save(newUser);
   }
-  
+
   async createAdmin(data: CreateAdminDto): Promise<Admins> {
     const newUser = this.adminRepository.create(data);
     return await this.adminRepository.save(newUser);
@@ -43,7 +43,7 @@ class UserService {
 
     return paginate(users, total, page, limit);
   }
- 
+
   async getAllAdmins(page = 1, limit = 10): Promise<PaginationResponse<Admins>> {
     const { skip } = calculatePagination(page, limit);
 
@@ -69,10 +69,7 @@ class UserService {
 
   async getAdminByEmail({ email }: { email: string }): Promise<Admins | null> {
     return await this.adminRepository.findOne({
-      where:  [
-          { personal_email: email },
-          { official_email: email },
-        ]
+      where: [{ personal_email: email }, { official_email: email }],
     });
   }
   async getAdminByUsername({ username }: { username: string }): Promise<Admins | null> {

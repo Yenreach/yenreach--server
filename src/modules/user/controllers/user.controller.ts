@@ -1,22 +1,22 @@
 import { NextFunction, Request, Response } from 'express';
 import { UserService } from '../services';
-import { sendResponse } from '../../../core/utils';
-import { HttpCodes } from '../../../core/constants';
-import { HttpException } from '../../../core/exceptions';
+import { sendResponse } from '../../../lib/utils';
+import { HttpCodes } from '../../../lib/constants';
+import { HttpException } from '../../../lib/exceptions';
 import { CreateUserDto, UpdateUserDto } from '../schemas';
 
 const userService = new UserService();
 
 class UserController {
-  public test = new UserService()
+  public test = new UserService();
   async createUser(req: Request, res: Response, next: NextFunction) {
     try {
       const userData: CreateUserDto = req.body;
       const newUser = await userService.createUser(userData);
 
-      return sendResponse(res, HttpCodes.CREATED, "user created successfully", newUser)
+      return sendResponse(res, HttpCodes.CREATED, 'user created successfully', newUser);
     } catch (error) {
-      next(error)
+      next(error);
     }
   }
 
@@ -25,7 +25,7 @@ class UserController {
       const userId = req.params.id;
       const updateData: UpdateUserDto = req.body;
       const updatedUser = await userService.updateUser(userId, updateData);
-      return sendResponse(res, HttpCodes.OK, "user updated successfully", updatedUser)
+      return sendResponse(res, HttpCodes.OK, 'user updated successfully', updatedUser);
     } catch (error) {
       next(error);
     }
@@ -38,9 +38,9 @@ class UserController {
 
       const users = await userService.getAllUsers(page, limit);
 
-      return sendResponse(res, HttpCodes.OK, "users fetched successfully", users)
+      return sendResponse(res, HttpCodes.OK, 'users fetched successfully', users);
     } catch (error) {
-      next(error)
+      next(error);
     }
   }
 
@@ -51,9 +51,9 @@ class UserController {
 
       const admins = await userService.getAllAdmins(page, limit);
 
-      return sendResponse(res, HttpCodes.OK, "admins fetched successfully", admins)
+      return sendResponse(res, HttpCodes.OK, 'admins fetched successfully', admins);
     } catch (error) {
-      next(error)
+      next(error);
     }
   }
 
@@ -62,25 +62,25 @@ class UserController {
       const userId = req.params.id;
       const user = await userService.getUserById(userId);
       if (!user) {
-        throw new HttpException(HttpCodes.NOT_FOUND, "user do not exists");
+        throw new HttpException(HttpCodes.NOT_FOUND, 'user do not exists');
       }
-      return sendResponse(res, HttpCodes.OK, "user fetched successfully", user)
+      return sendResponse(res, HttpCodes.OK, 'user fetched successfully', user);
     } catch (error) {
-      next(error)
+      next(error);
     }
   }
 
   async getUserProfile(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.user.id;
-      console.log({ userId })
+      console.log({ userId });
       const user = await userService.getUserById(userId);
       if (!user) {
-        throw new HttpException(HttpCodes.NOT_FOUND, "user do not exists");
+        throw new HttpException(HttpCodes.NOT_FOUND, 'user do not exists');
       }
-      return sendResponse(res, HttpCodes.OK, "user fetched successfully", user)
+      return sendResponse(res, HttpCodes.OK, 'user fetched successfully', user);
     } catch (error) {
-      next(error)
+      next(error);
     }
   }
 
@@ -88,11 +88,11 @@ class UserController {
     try {
       const userId = req.params.id;
       const result = await userService.deleteUser(userId);
-      return sendResponse(res, HttpCodes.OK, "user deleted successfully", result)
+      return sendResponse(res, HttpCodes.OK, 'user deleted successfully', result);
     } catch (error) {
-      next(error)
+      next(error);
     }
   }
 }
 
-export { UserController }
+export { UserController };

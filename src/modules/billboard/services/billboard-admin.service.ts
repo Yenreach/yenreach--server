@@ -1,14 +1,14 @@
 import { LessThanOrEqual, MoreThanOrEqual } from 'typeorm';
-import AppDataSource from '../../../core/database';
-import { BillboardEntry } from '../../../core/database/postgres/billboard-entries.entity';
+import AppDataSource from '../../../database';
+import { BillboardEntry } from '../../../database/entities/billboard-entries.entity';
 import { BillboardStatus } from '../../../shared/enums/common.enum';
 import { CreateBillboardEntryDto, UpdateBillboardEntryDto } from '../schemas';
-import { Businesses } from '../../../core/database/postgres/businesses.entity';
-import { HttpException } from '../../../core/exceptions';
-import { HttpCodes } from '../../../core/constants';
+import { Businesses } from '../../../database/entities/businesses.entity';
+import { HttpException } from '../../../lib/exceptions';
+import { HttpCodes } from '../../../lib/constants';
 import { BusinessRegistrationState } from '../../business/enums';
-import { PaginationResponse } from '../../../core/utils/pagination/pagination.interface';
-import { calculatePagination, paginate } from '../../../core/utils/pagination/paginate';
+import { PaginationResponse } from '../../../lib/pagination/pagination.interface';
+import { calculatePagination, paginate } from '../../../lib/pagination/paginate';
 
 export class BillboardAdminService {
   private readonly billboardRepository = AppDataSource.getRepository(BillboardEntry);

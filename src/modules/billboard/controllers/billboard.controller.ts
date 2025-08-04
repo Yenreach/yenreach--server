@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { sendResponse } from '../../../core/utils';
-import { HttpCodes } from '../../../core/constants';
+import { sendResponse } from '../../../lib/utils';
+import { HttpCodes } from '../../../lib/constants';
 import { BillboardService } from '../services/billboard.service';
 
 const billboardService = new BillboardService();
