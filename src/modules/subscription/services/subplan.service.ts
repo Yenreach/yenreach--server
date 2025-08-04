@@ -1,12 +1,12 @@
-import AppDataSource from '../../../core/database';
-import { SubPlan } from '../../../core/database/postgres/subplan.entity';
+import AppDataSource from '../../../database';
+import { SubPlan } from '../../../database/entities/subplan.entity';
 import { CreateSubPlanDto, UpdateSubPlanDto } from '../schemas';
 
 export class SubPlanService {
   private repo = AppDataSource.getRepository(SubPlan);
 
   create(data: CreateSubPlanDto) {
-    console.log({ data })
+    console.log({ data });
     const savedSubPlan = this.repo.save(this.repo.create(data));
     return savedSubPlan;
   }

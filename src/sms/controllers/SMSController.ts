@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
-import { sendResponse } from '../../core/utils';
-import { HttpCodes } from '../../core/constants';
-import { logger } from '../../core/utils';
+import { sendResponse } from '../../lib/utils';
+import { HttpCodes } from '../../lib/constants';
+import { logger } from '../../lib/utils';
 import { SMSProvider } from '../providers';
-import { HttpException } from '../../core/exceptions';
+import { HttpException } from '../../lib/exceptions';
 import { SMS } from '../interfaces/SMSInterface';
 
 class SMSController {

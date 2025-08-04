@@ -1,5 +1,5 @@
-import AppDataSource from '../../../core/database';
-import { Plan } from '../../../core/database/postgres/plan.entity';
+import AppDataSource from '../../../database';
+import { Plan } from '../../../database/entities/plan.entity';
 import { CreatePlanDto, UpdatePlanDto } from '../schemas';
 
 export class PlanService {

@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { logger } from '../utils/logger';
-import { HttpCodes } from '../../core/constants';
+import { HttpCodes } from '../constants';
 import { ZodError } from 'zod';
 
 const errorMiddleware = (error: any, req: Request, res: Response, next: NextFunction) => {

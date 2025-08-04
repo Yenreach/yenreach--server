@@ -1,17 +1,17 @@
 import { Equal, FindManyOptions, ILike, LessThan, MoreThanOrEqual, Not } from 'typeorm';
-import AppDataSource from '../../../core/database';
-import { calculatePagination, paginate } from '../../../core/utils/pagination/paginate';
-import { PaginationResponse } from '../../../core/utils/pagination/pagination.interface';
+import AppDataSource from '../../../database';
+import { calculatePagination, paginate } from '../../../lib/pagination/paginate';
+import { PaginationResponse } from '../../../lib/pagination/pagination.interface';
 import { IBusinessAdminService } from '../interfaces';
 import { UpdateBusinessDto } from '../schemas';
-import { Businesses } from '../../../core/database/postgres/businesses.entity';
+import { Businesses } from '../../../database/entities/businesses.entity';
 import { BusinessRegistrationState } from '../enums';
-import { BusinessPhotos } from '../../../core/database/postgres/business-photos.entity';
-import { BusinessCategories } from '../../../core/database/postgres/business-categories.entity';
-import { BusinessOfTheWeek } from '../../../core/database/postgres/business-of-the-week.entity';
-import { HttpException } from '../../../core/exceptions';
-import { HttpCodes } from '../../../core/constants';
-import { expiresInDays } from '../../../core/utils/helpers';
+import { BusinessPhotos } from '../../../database/entities/business-photos.entity';
+import { BusinessCategories } from '../../../database/entities/business-categories.entity';
+import { BusinessOfTheWeek } from '../../../database/entities/business-of-the-week.entity';
+import { HttpException } from '../../../lib/exceptions';
+import { HttpCodes } from '../../../lib/constants';
+import { expiresInDays } from '../../../lib/utils/helpers';
 
 export class BusinessAdminService implements IBusinessAdminService {
   private readonly businessRepository = AppDataSource.getRepository(Businesses);

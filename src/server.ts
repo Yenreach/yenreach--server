@@ -13,7 +13,7 @@ import {
   PaymentRoute,
   AuthRoute,
   AdminBusinessRoute,
-} from './core/routes';
+} from './lib/routes';
 import { BillboardAdminRoute, BillboardRoute } from './modules/billboard/routes';
 
 import { BlogsRoute } from './modules/blogs/routes';

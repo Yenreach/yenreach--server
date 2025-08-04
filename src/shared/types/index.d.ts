@@ -1,8 +1,8 @@
 // Extend the Request interface to include the user property when the middleware is used
 
 import { Request } from 'express';
-import { Users } from '../../core/database/postgres/users.entity';
-import { Admins } from '../../core/database/postgres/admin.entity';
+import { Users } from '../../database/entities/users.entity';
+import { Admins } from '../../database/entities/admin.entity';
 
 declare global {
   namespace Express {

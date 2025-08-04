@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction, Router } from 'express';
-import { Routes } from '../../../core/routes/interfaces';
+import { Routes } from '../../../lib/routes/interfaces';
 // import { authMiddleware } from '../../../core/middlewares';
 import { CmsController } from '../controllers';
 import { CmsService } from '../services';
@@ -18,7 +18,6 @@ class CmsRoute implements Routes {
     this.router.all(`${this.path}*`, (req: Request, res: Response, next: NextFunction) => {
       next();
     });
-
 
     this.router.post(`${this.path}/`, this.CmsController.create);
     this.router.get(`${this.path}`, this.CmsController.getAll);

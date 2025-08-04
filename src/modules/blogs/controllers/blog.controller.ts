@@ -2,11 +2,11 @@ import { NextFunction, Response, Request } from 'express';
 import { RequestWithBody, RequestWithParam, RequestWithParamAndBody, RequestWithQuery } from '../../../shared/types';
 import { PathParams } from '../interfaces';
 import { BlogsService } from '../services';
-import { PaginationQueryParams } from '../../../core/utils/pagination';
+import { PaginationQueryParams } from '../../../lib/pagination';
 import { CreateBlogDto, UpdateBlogDto } from '../schema';
-import { sendResponse } from '../../../core/utils';
-import { HttpCodes } from '../../../core/constants';
-import { HttpException } from '../../../core/exceptions';
+import { sendResponse } from '../../../lib/utils';
+import { HttpCodes } from '../../../lib/constants';
+import { HttpException } from '../../../lib/exceptions';
 
 const blogsService = new BlogsService();
 

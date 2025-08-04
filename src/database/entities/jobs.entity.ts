@@ -15,7 +15,7 @@ import {
 import { Businesses } from './businesses.entity';
 import { Admins } from './admin.entity';
 import { JobTags } from './job-tags.entity';
-import { JobStatus } from '../../../modules/jobs/enums';
+import { JobStatus } from '../../modules/jobs/enums';
 
 @Entity('jobs', { schema: 'yenreach' })
 export class Jobs {

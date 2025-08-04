@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction, Router } from 'express';
-import { Routes } from '../../../core/routes/interfaces';
-import { adminAuthMiddleware } from '../../../core/middlewares';
+import { Routes } from '../../../lib/routes/interfaces';
+import { adminAuthMiddleware } from '../../../lib/middlewares';
 import { BusinessAdminService } from '../services/busines.admin.service';
 import { BusinessAdminController } from '../controllers/business-admin.controller';
 

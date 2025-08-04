@@ -11,7 +11,7 @@ import {
 } from 'typeorm';
 import { BusinessCategories } from './business-categories.entity';
 import { ProductCategories } from './product-category.entity';
-import { CategoryType } from '../../../shared/enums';
+import { CategoryType } from '../../shared/enums';
 
 @Entity('categories', { schema: 'yenreach' })
 export class Categories {

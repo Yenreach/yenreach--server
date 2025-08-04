@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction, Router } from 'express';
 import { ProductsController } from '../controllers';
-import { Routes } from '../../../core/routes/interfaces';
-import { authMiddleware } from '../../../core/middlewares';
-import { validateRequest } from '../../../core/middlewares/ValidationMiddleware';
+import { Routes } from '../../../lib/routes/interfaces';
+import { authMiddleware } from '../../../lib/middlewares';
+import { validateRequest } from '../../../lib/middlewares/ValidationMiddleware';
 import { AddCategorySchema, AddProductCategorySchema, ProductSchema, UpdateProductSchema } from '../schemas/products.schema';
 import { z } from 'zod';
 

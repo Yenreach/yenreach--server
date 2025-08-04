@@ -1,15 +1,15 @@
-import { BusinessCategories } from '../../../core/database/postgres/business-categories.entity';
-import { BusinessOfTheWeek } from '../../../core/database/postgres/business-of-the-week.entity';
-import { BusinessPhotos } from '../../../core/database/postgres/business-photos.entity';
-import { BusinessReviews } from '../../../core/database/postgres/business-reviews.entity';
-import { BusinessWorkingHours } from '../../../core/database/postgres/business-working-hours.entity';
-import { Businesses } from '../../../core/database/postgres/businesses.entity';
-import { Categories } from '../../../core/database/postgres/category.entity';
-import { Jobs } from '../../../core/database/postgres/jobs.entity';
-import { LocalGovernments } from '../../../core/database/postgres/local-governments.entity';
-import { Products } from '../../../core/database/postgres/product.entity';
-import { States } from '../../../core/database/postgres/states.entity';
-import { PaginationResponse } from '../../../core/utils/pagination/pagination.interface';
+import { BusinessCategories } from '../../../database/entities/business-categories.entity';
+import { BusinessOfTheWeek } from '../../../database/entities/business-of-the-week.entity';
+import { BusinessPhotos } from '../../../database/entities/business-photos.entity';
+import { BusinessReviews } from '../../../database/entities/business-reviews.entity';
+import { BusinessWorkingHours } from '../../../database/entities/business-working-hours.entity';
+import { Businesses } from '../../../database/entities/businesses.entity';
+import { Categories } from '../../../database/entities/category.entity';
+import { Jobs } from '../../../database/entities/jobs.entity';
+import { LocalGovernments } from '../../../database/entities/local-governments.entity';
+import { Products } from '../../../database/entities/product.entity';
+import { States } from '../../../database/entities/states.entity';
+import { PaginationResponse } from '../../../lib/pagination/pagination.interface';
 
 import { AddBusinessWorkingHoursDto, AddBussinessPhotoDto, CreateBusinessDto, ReviewBusinessDto, UpdateBusinessDto } from '../schemas';
 

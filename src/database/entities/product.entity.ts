@@ -13,7 +13,7 @@ import {
 
 import { ProductPhotos } from './product-photos.entity';
 import { Businesses } from './businesses.entity';
-import { ProductStatus } from '../../../modules/products/enums';
+import { ProductStatus } from '../../modules/products/enums';
 import { ProductCategories } from './product-category.entity';
 
 @Entity('products', { schema: 'yenreach' })

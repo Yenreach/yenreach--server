@@ -1,7 +1,7 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { Routes } from '../../../core/routes/interfaces';
-import { adminAuthMiddleware } from '../../../core/middlewares';
-import { validateRequest } from '../../../core/middlewares/ValidationMiddleware';
+import { Routes } from '../../../lib/routes/interfaces';
+import { adminAuthMiddleware } from '../../../lib/middlewares';
+import { validateRequest } from '../../../lib/middlewares/ValidationMiddleware';
 import { z } from 'zod';
 import { CreateBillboardEntrySchema, UpdateBillboardEntrySchema } from '../schemas/billboard.schema';
 import { BillboardAdminController } from '../controllers';
@@ -35,7 +35,7 @@ class BillboardAdminRoute implements Routes {
     );
 
     this.router.get(`${this.path}`, adminAuthMiddleware, this.controller.getBillboardsNew);
-  
+
     this.router.delete(`${this.path}/:id`, adminAuthMiddleware, this.controller.deleteBillboard);
   }
 }

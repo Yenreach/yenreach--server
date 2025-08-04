@@ -1,5 +1,5 @@
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
-import { AdminAuthorizationLevel } from '../../../modules/auth/enums';
+import { AdminAuthorizationLevel } from '../../modules/auth/enums';
 
 @Entity('admins', { schema: 'yenreach' })
 export class Admins {

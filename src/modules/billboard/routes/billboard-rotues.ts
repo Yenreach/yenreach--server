@@ -1,5 +1,5 @@
 import { NextFunction, Router, Request, Response } from 'express';
-import { Routes } from '../../../core/routes/interfaces';
+import { Routes } from '../../../lib/routes/interfaces';
 import { BillboardController } from '../controllers/billboard.controller';
 
 class BillboardRoute implements Routes {

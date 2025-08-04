@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import { ProductsService } from '../services';
-import { sendResponse } from '../../../core/utils';
-import { HttpCodes } from '../../../core/constants';
-import { HttpException } from '../../../core/exceptions';
+import { sendResponse } from '../../../lib/utils';
+import { HttpCodes } from '../../../lib/constants';
+import { HttpException } from '../../../lib/exceptions';
 import { AddCategoryDto, AddProductCategoryDto, CreateProductDto, GetProductsSchema, UpdateProductDto } from '../schemas/products.schema';
 
 const productsService = new ProductsService(); // Initialize the service in the constructor

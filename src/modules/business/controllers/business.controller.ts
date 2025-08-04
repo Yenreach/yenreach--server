@@ -1,7 +1,7 @@
 import { NextFunction, Response, Request } from 'express';
 import { BusinessQueryParams, IBusinessService, PathParams } from '../interfaces';
-import { sendResponse } from '../../../core/utils';
-import { HttpCodes } from '../../../core/constants';
+import { sendResponse } from '../../../lib/utils';
+import { HttpCodes } from '../../../lib/constants';
 import {
   AddBusinessReviewSchema,
   CreateBusinessDto,
