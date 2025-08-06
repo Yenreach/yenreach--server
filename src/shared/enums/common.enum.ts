@@ -9,7 +9,9 @@ export enum FeedbackStatus {
 }
 
 export enum BillboardStatus {
+  Schedules = 'scheduled',
   Pending = 'pending',
   Approved = 'approved',
+  Expired = 'expired',
   Rejected = 'rejected',
 }

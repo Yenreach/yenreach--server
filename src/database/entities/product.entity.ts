@@ -7,6 +7,7 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -15,6 +16,7 @@ import { ProductPhotos } from './product-photos.entity';
 import { Businesses } from './businesses.entity';
 import { ProductStatus } from '../../modules/products/enums';
 import { ProductCategories } from './product-category.entity';
+import { BlackFridayDeals } from './black-friday-deals.entity';
 
 @Entity('products', { schema: 'yenreach' })
 export class Products {
@@ -38,8 +40,8 @@ export class Products {
   @Column('int', { name: 'quantity' })
   public quantity: number;
 
-  @Column('int', { name: 'price' })
-  public price: number;
+  @Column('decimal', { precision: 10, scale: 2, name: 'price' })
+  price: number;
 
   @Column('varchar', { name: 'color', length: 255 })
   public color: string;
@@ -53,6 +55,9 @@ export class Products {
   @ManyToOne(() => Businesses, (business: Businesses) => business.products, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'business_id' })
   public business: Businesses;
+
+  @OneToOne(() => BlackFridayDeals, (blackFridayDeal: BlackFridayDeals) => blackFridayDeal.product, { cascade: ['soft-remove', 'remove'] })
+  public blackFridayDeal: BlackFridayDeals;
 
   @OneToMany(() => ProductCategories, (productCategory: ProductCategories) => productCategory.product, { cascade: ['soft-remove', 'remove'] })
   public categories: ProductCategories[];

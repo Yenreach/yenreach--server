@@ -56,6 +56,22 @@ export const RemoveProductPhotoSchema = z.object({
   photo_string: z.string().min(1, 'Photo string is required'),
 });
 
+export const BlackFridayProductSchema = z.discriminatedUnion('type', [
+  z.object({
+    type: z.literal('existing'),
+    productId: z.string(),
+    discountedPrice: z.number(),
+    dealEndDate: z.date().optional(),
+  }),
+
+  ProductSchema.extend({
+    type: z.literal('new'),
+    discountedPrice: z.number(),
+    dealEndDate: z.date().optional(),
+  }),
+]);
+
+export type CreateBlackFridayDealDto = z.infer<typeof BlackFridayProductSchema>;
 export type CreateProductDto = z.infer<typeof ProductSchema>;
 export type UpdateProductDto = z.infer<typeof UpdateProductSchema>;
 export type AddCategoryDto = z.infer<typeof AddCategorySchema>;

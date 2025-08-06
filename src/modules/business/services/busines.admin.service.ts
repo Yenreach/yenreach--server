@@ -97,7 +97,6 @@ export class BusinessAdminService implements IBusinessAdminService {
       queryConditions.where = [
         { ...queryConditions.where, name: ILike(`%${search}%`) },
         { ...queryConditions.where, description: ILike(`%${search}%`) },
-        // { ...queryConditions.where, categories: { category: Like(`%${search}%`) } },
       ];
     }
 

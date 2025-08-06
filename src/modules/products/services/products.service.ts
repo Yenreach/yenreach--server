@@ -1,4 +1,4 @@
-import { FindManyOptions, ILike } from 'typeorm';
+import { EntityManager, FindManyOptions, ILike } from 'typeorm';
 import AppDataSource from '../../../database';
 import { calculatePagination, paginate } from '../../../lib/pagination/paginate';
 import { PaginationResponse } from '../../../lib/pagination/pagination.interface';
@@ -29,46 +29,95 @@ class ProductsService {
   private readonly productCategoryRepository = AppDataSource.getRepository(ProductCategories);
   private readonly productPhotoRepository = AppDataSource.getRepository(ProductPhotos);
 
-  async createProduct(data: CreateProductDto): Promise<any> {
-    // const newProduct = this.productRepository.create(data);
-    // return await this.productRepository.save(newProduct);
+  // async createProduct(data: CreateProductDto): Promise<any> {
+  //   // const newProduct = this.productRepository.create(data);
+  //   // return await this.productRepository.save(newProduct);
 
-    const { photos: medias, categories: catIds, ...productData } = data;
+  //   const { photos: medias, categories: catIds, ...productData } = data;
 
-    // Create product
-    const product = this.productRepository.create(productData);
+  //   // Create product
+  //   const product = this.productRepository.create(productData);
 
-    const savedProduct = await this.productRepository.save(product);
+  //   const savedProduct = await this.productRepository.save(product);
 
-    // Find Category
-    const categories = catIds.map(async id => {
-      let category = await this.productCategoryRepository.findOne({ where: { categoryId: id } });
+  //   // Find Category
+  //   const categories = catIds.map(async id => {
+  //     let category = await this.productCategoryRepository.findOne({ where: { categoryId: id } });
 
-      if (!category) {
-        category = this.productCategoryRepository.create({ categoryId: id, productId: savedProduct.id });
-        await this.productCategoryRepository.save(category);
-      }
+  //     if (!category) {
+  //       category = this.productCategoryRepository.create({ categoryId: id, productId: savedProduct.id });
+  //       await this.productCategoryRepository.save(category);
+  //     }
 
-      return category;
-    });
+  //     return category;
+  //   });
 
-    // Create product photos and associate them with the product
-    const photos = medias.map(url => {
-      const photo = this.productPhotoRepository.create({
-        mediaPath: url,
-        productId: savedProduct.id,
-      });
+  //   // Create product photos and associate them with the product
+  //   const photos = medias.map(url => {
+  //     const photo = this.productPhotoRepository.create({
+  //       mediaPath: url,
+  //       productId: savedProduct.id,
+  //     });
 
-      return photo;
-    });
+  //     return photo;
+  //   });
 
-    await this.productPhotoRepository.save(photos);
+  //   await this.productPhotoRepository.save(photos);
 
-    return {
-      ...savedProduct,
-      categories,
-      photos,
+  //   return {
+  //     ...savedProduct,
+  //     categories,
+  //     photos,
+  //   };
+  // }
+
+  async createProduct(data: CreateProductDto, manager?: EntityManager): Promise<any> {
+    const executeTransaction = async (entityManager: EntityManager) => {
+      const { photos: medias, categories: catIds, ...productData } = data;
+
+      // Create product
+      const product = entityManager.create(Products, productData);
+      const savedProduct = await entityManager.save(product);
+
+      // Find/Create Categories
+      const categories = await Promise.all(
+        catIds.map(async id => {
+          let category = await entityManager.findOne(ProductCategories, {
+            where: { categoryId: id, productId: savedProduct.id },
+          });
+
+          if (!category) {
+            category = entityManager.create(ProductCategories, {
+              categoryId: id,
+              productId: savedProduct.id,
+            });
+            await entityManager.save(category);
+          }
+
+          return category;
+        }),
+      );
+
+      // Create photos
+      const photos = medias.map(url =>
+        entityManager.create(ProductPhotos, {
+          mediaPath: url,
+          productId: savedProduct.id,
+        }),
+      );
+
+      await entityManager.save(photos);
+
+      return { ...savedProduct, categories, photos };
     };
+
+    // If manager provided, use it (part of larger transaction)
+    if (manager) {
+      return await executeTransaction(manager);
+    }
+
+    // Otherwise create own transaction
+    return await this.dataSource.manager.transaction(executeTransaction);
   }
 
   async updateProduct(id: string, data: UpdateProductDto): Promise<Products | null> {
