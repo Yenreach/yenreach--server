@@ -7,13 +7,13 @@ import { z } from 'zod';
 import { ProductsAdminController } from '../controllers/products-admin.controller';
 
 class ProductsAdminRoute implements Routes {
-  public path = 'admin/products';
+  public path = '/admin/products';
   public router = Router();
   private readonly ProductsAdminController: ProductsAdminController;
 
   constructor() {
-    this.initializeRoutes();
     this.ProductsAdminController = new ProductsAdminController();
+    this.initializeRoutes();
   }
 
   private initializeRoutes() {

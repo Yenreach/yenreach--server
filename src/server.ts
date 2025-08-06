@@ -17,6 +17,7 @@ import {
 import { BillboardAdminRoute, BillboardRoute } from './modules/billboard/routes';
 
 import { BlogsRoute } from './modules/blogs/routes';
+import { ProductsAdminRoute } from './modules/products/routes/product-admin.route';
 
 const app = new App([
   new IndexRoute(),
@@ -35,6 +36,7 @@ const app = new App([
   new BlogsRoute(),
   new BillboardAdminRoute(),
   new BillboardRoute(),
+  new ProductsAdminRoute(),
 ]);
 
 app.listen();

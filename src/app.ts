@@ -18,6 +18,7 @@ import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
 import z from 'zod';
 extendZodWithOpenApi(z);
 import { swaggerSpecs } from './config';
+import { initRedis } from './lib/redis/redis.service';
 
 class App {
   public app: express.Application;
@@ -34,6 +35,7 @@ class App {
     this.initializeRoutes(routes);
     this.initializeSwagger();
     this.initializeErrorHandling();
+    this.connectRedis();
   }
 
   public listen() {
@@ -76,6 +78,15 @@ class App {
           reject(err);
         });
     });
+  }
+
+  private async connectRedis() {
+    try {
+      await initRedis();
+    } catch (error) {
+      logger.error('Redis connecttion failed', error);
+      throw error;
+    }
   }
 
   private initializeMiddlewares() {

@@ -21,17 +21,23 @@ productsAdminRegistry.registerComponent('schemas', 'BlackFridayDealResponse', {
   },
 });
 
+const ExistingBlackFridayDealDto = productsAdminRegistry.register('ExistingBlackFridayDealDto', CreateBlackFridayDealSchema.options[0]);
+
+const NewBlackFridayDealDto = productsAdminRegistry.register('NewBlackFridayDealDto', CreateBlackFridayDealSchema.options[1]);
+
 productsAdminRegistry.registerPath({
   method: 'post',
   path: '/admin/products',
   tags: ['Products Admin'],
-  summary: 'Create Black Friday deal',
+  summary: 'Create Black Friday deal (uses exsting product or add new product)',
   security: [{ bearerAuth: [] }],
   request: {
     body: {
       content: {
         'application/json': {
-          schema: CreateBlackFridayDealDto,
+          schema: {
+            oneOf: [{ $ref: '#/components/schemas/ExistingBlackFridayDealDto' }, { $ref: '#/components/schemas/NewBlackFridayDealDto' }],
+          },
         },
       },
     },
@@ -47,7 +53,6 @@ productsAdminRegistry.registerPath({
     },
   },
 });
-
 // productsAdminRegistry.registerPath({
 //   method: 'put',
 //   path: '/admin/products/black-friday/{id}',

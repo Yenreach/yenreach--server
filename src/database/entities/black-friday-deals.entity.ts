@@ -11,7 +11,7 @@ export class BlackFridayDeals {
   @Column('uuid', { name: 'product_id' })
   public productId: string;
 
-  @Column({ name: 'created_at', type: 'timestamptz', nullable: true })
+  @Column({ name: 'deal_end_date', type: 'timestamptz', nullable: true })
   public dealEndDate: Date;
 
   @Column('decimal', { precision: 10, scale: 2, name: 'discounted_price' })

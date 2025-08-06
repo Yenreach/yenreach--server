@@ -45,6 +45,7 @@
     "nodemailer": "^6.9.13",
     "otp-generator": "^4.0.0",
     "pg": "^8.14.1",
+    "redis": "^4.7.1",
     "swagger-jsdoc": "^6.2.1",
     "swagger-ui-express": "^4.5.0",
     "tslib": "^2.8.1",

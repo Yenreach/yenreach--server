@@ -8,7 +8,6 @@ export class BillboardPaymentPlans {
   @Column({ type: 'varchar', unique: true })
   name: string;
 
-  
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt: Date;
 

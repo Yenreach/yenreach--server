@@ -4,7 +4,7 @@ import { authRegistry } from '../modules/auth/docs';
 import { businessRegistry } from '../modules/business/docs';
 import { adminBusinessRegistry } from '../modules/business/docs/business-admin.docs';
 import { jobsRegistry } from '../modules/jobs/docs';
-import { productsRegistry } from '../modules/products/docs';
+import { productsAdminRegistry, productsRegistry } from '../modules/products/docs';
 import { billboardRegistry, publicBillboardRegistry } from '../modules/billboard/docs';
 
 // Create a main registry to add global components
@@ -98,6 +98,7 @@ const allDefinitions = [
   ...productsRegistry.definitions,
   ...billboardRegistry.definitions,
   ...publicBillboardRegistry.definitions,
+  ...productsAdminRegistry.definitions,
 ];
 
 // Create generator

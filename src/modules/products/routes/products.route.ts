@@ -12,8 +12,8 @@ class ProductsRoute implements Routes {
   private readonly ProductsController: ProductsController;
 
   constructor() {
-    this.initializeRoutes();
     this.ProductsController = new ProductsController();
+    this.initializeRoutes();
   }
 
   private initializeRoutes() {

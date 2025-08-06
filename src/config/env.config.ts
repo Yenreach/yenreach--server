@@ -13,6 +13,7 @@ const envSchema = z.object({
   DB_TYPE: z.string(),
   DB_NAME: z.string(),
   DB_USER: z.string(),
+  REDIS_URL: z.string(),
   DB_PASSWORD: z.string(),
   DB_HOST_OLD: z.string(),
   DB_PORT_OLD: z.string().transform(Number).default(3306),
