@@ -9,10 +9,11 @@ import { z } from 'zod';
 class ProductsRoute implements Routes {
   public path = '/products';
   public router = Router();
-  public ProductsController = new ProductsController();
+  private readonly ProductsController: ProductsController;
 
   constructor() {
     this.initializeRoutes();
+    this.ProductsController = new ProductsController();
   }
 
   private initializeRoutes() {

@@ -5,14 +5,17 @@ import { HttpCodes } from '../../../lib/constants';
 import { HttpException } from '../../../lib/exceptions';
 import { AddCategoryDto, AddProductCategoryDto, CreateProductDto, GetProductsSchema, UpdateProductDto } from '../schemas/products.schema';
 
-const productsService = new ProductsService(); // Initialize the service in the constructor
 class ProductsController {
-  async createProducts(req: Request, res: Response, next: NextFunction) {
-    console.log('hereee');
+  private readonly productsService: ProductsService;
+
+  constructor() {
+    this.productsService = new ProductsService();
+  }
+
+  public async createProducts(req: Request, res: Response, next: NextFunction) {
     try {
       const productsData: CreateProductDto = req.body;
-      console.log({ productsData, service: productsService });
-      const newProducts = await productsService.createProduct(productsData);
+      const newProducts = await this.productsService.createProduct(productsData);
 
       return sendResponse(res, HttpCodes.CREATED, 'product created successfully', newProducts);
     } catch (error) {
@@ -20,23 +23,23 @@ class ProductsController {
     }
   }
 
-  async updateProducts(req: Request, res: Response, next: NextFunction) {
+  public async updateProducts(req: Request, res: Response, next: NextFunction) {
     try {
       const productId = req.params.id;
       const updateData: UpdateProductDto = req.body;
-      const updatedProduct = await productsService.updateProduct(productId, updateData);
+      const updatedProduct = await this.productsService.updateProduct(productId, updateData);
       return sendResponse(res, HttpCodes.OK, 'product updated successfully', updatedProduct);
     } catch (error) {
       next(error);
     }
   }
 
-  async getAllProducts(req: Request, res: Response, next: NextFunction) {
+  public async getAllProducts(req: Request, res: Response, next: NextFunction) {
     try {
       const page = parseInt(req.query.page as string, 10) || 1;
       const limit = parseInt(req.query.limit as string, 10) || 10;
 
-      const products = await productsService.getAllProducts(page, limit);
+      const products = await this.productsService.getAllProducts(page, limit);
 
       return sendResponse(res, HttpCodes.OK, 'products fetched successfully', products);
     } catch (error) {
@@ -44,20 +47,19 @@ class ProductsController {
     }
   }
 
-  async getCategories(req: Request, res: Response, next: NextFunction) {
+  public async getCategories(req: Request, res: Response, next: NextFunction) {
     try {
-      const categories = await productsService.getProductCategories();
+      const categories = await this.productsService.getProductCategories();
       return sendResponse(res, HttpCodes.OK, 'Categories fetched successfully', categories);
     } catch (error) {
       next(error);
     }
   }
 
-  async getProducts(req: Request, res: Response, next: NextFunction) {
+  public async getProducts(req: Request, res: Response, next: NextFunction) {
     try {
-      // Validate the query using Zod
       const queryParams = GetProductsSchema.parse(req.query);
-      const result = await productsService.getProducts(queryParams);
+      const result = await this.productsService.getProducts(queryParams);
 
       return sendResponse(res, HttpCodes.OK, 'Products retrieved successfully', result);
     } catch (error) {
@@ -65,14 +67,14 @@ class ProductsController {
     }
   }
 
-  async getBusinessProducts(req: Request, res: Response, next: NextFunction) {
+  public async getBusinessProducts(req: Request, res: Response, next: NextFunction) {
     try {
       const business = req.params.business_id;
       const queryParams = GetProductsSchema.parse(req.query);
 
       if (!business) throw Error('Business ID must be sent');
 
-      const result = await productsService.getProducts({ ...queryParams, business });
+      const result = await this.productsService.getProducts({ ...queryParams, business });
 
       return sendResponse(res, HttpCodes.OK, 'Products retrieved successfully', result);
     } catch (error) {
@@ -80,21 +82,20 @@ class ProductsController {
     }
   }
 
-  async getRelatedProducts(req: Request, res: Response, next: NextFunction) {
+  public async getRelatedProducts(req: Request, res: Response, next: NextFunction) {
     try {
-      // Validate the query using Zod
       const productId = req.params.id;
-      const products = await productsService.getRelatedProducts(productId);
+      const products = await this.productsService.getRelatedProducts(productId);
       return sendResponse(res, HttpCodes.OK, 'related products fetched successfully', products);
     } catch (error) {
       next(error);
     }
   }
 
-  async getProductById(req: Request, res: Response, next: NextFunction) {
+  public async getProductById(req: Request, res: Response, next: NextFunction) {
     try {
       const productId = req.params.id;
-      const products = await productsService.getProductById(productId);
+      const products = await this.productsService.getProductById(productId);
       if (!products) {
         throw new HttpException(HttpCodes.NOT_FOUND, 'product do not exists');
       }
@@ -104,31 +105,29 @@ class ProductsController {
     }
   }
 
-  async deleteProduct(req: Request, res: Response, next: NextFunction) {
+  public async deleteProduct(req: Request, res: Response, next: NextFunction) {
     try {
       const productId = req.params.id;
-      const result = await productsService.deleteProduct(productId);
+      const result = await this.productsService.deleteProduct(productId);
       return sendResponse(res, HttpCodes.OK, 'product deleted successfully', result);
     } catch (error) {
       next(error);
     }
   }
 
-  // product photo
-  async addPhoto(req: Request, res: Response, next: NextFunction) {
+  public async addPhoto(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await productsService.addPhoto(req.body);
+      const result = await this.productsService.addPhoto(req.body);
       return sendResponse(res, HttpCodes.CREATED, 'Photo added successfully', result);
     } catch (error) {
       next(error);
     }
   }
 
-  // product categories
-  async createCategory(req: Request, res: Response, next: NextFunction) {
+  public async createCategory(req: Request, res: Response, next: NextFunction) {
     try {
       const data: AddCategoryDto = req.body;
-      const result = await productsService.createCategory(data);
+      const result = await this.productsService.createCategory(data);
 
       return sendResponse(res, HttpCodes.CREATED, 'category CREATED successfully', result);
     } catch (error) {
@@ -136,10 +135,10 @@ class ProductsController {
     }
   }
 
-  async addProductCategory(req: Request, res: Response, next: NextFunction) {
+  public async addProductCategory(req: Request, res: Response, next: NextFunction) {
     try {
       const data: AddProductCategoryDto = req.body;
-      const result = await productsService.addProductCategory(data);
+      const result = await this.productsService.addProductCategory(data);
 
       return sendResponse(res, HttpCodes.CREATED, 'category added successfully', result);
     } catch (error) {

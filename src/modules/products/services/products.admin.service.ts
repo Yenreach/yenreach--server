@@ -14,7 +14,7 @@ class ProductAdminService {
     this.productService = new ProductsService();
   }
 
-  public async createBlackFridayDeal(data: CreateBlackFridayDealDto) {
+  public async createBlackFridayDeal(data: CreateBlackFridayDealDto): Promise<BlackFridayDeals> {
     return this.dataSource.manager.transaction(async manager => {
       let product: Products;
 
@@ -35,4 +35,28 @@ class ProductAdminService {
       return manager.save(deal);
     });
   }
+
+  // public async updateBlackFridayDeal(data: CreateBlackFridayDealDto) {
+  //   return this.dataSource.manager.transaction(async manager => {
+  //     let product: Products;
+
+  //     if (data.type === 'existing') {
+  //       product = await manager.findOne(Products, { where: { id: data.productId } });
+  //       if (!product) throw new HttpException(HttpCodes.NOT_FOUND, 'Product not found');
+  //     } else {
+  //       product = await this.productService.createProduct(data, manager);
+  //     }
+
+  //     const deal = manager.create(BlackFridayDeals, {
+  //       productId: product.id,
+  //       discountedPrice: data.discountedPrice,
+  //       discountPercentage: (data.discountedPrice / product.price) * 100,
+  //       dealEndDate: data.dealEndDate,
+  //     });
+
+  //     return manager.save(deal);
+  //   });
+  // }
 }
+
+export { ProductAdminService };

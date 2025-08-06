@@ -12,17 +12,25 @@ export const ProductSchema = z.object({
   photos: z.array(z.string()).optional().default([]),
 });
 
-export const UpdateProductSchema = z.object({
-  name: z.string().optional(),
-  businessId: z.string().optional(),
-  description: z.string().optional(),
-  price: z.number().optional(),
-  quantity: z.number().optional(),
-  color: z.string().optional(),
-  safetyTip: z.string().optional(),
-  categories: z.array(z.string()).optional().default([]),
-  photos: z.array(z.string()).optional().default([]),
-});
+export const UpdateProductSchema = z
+  .object({
+    name: z.string().optional(),
+    description: z.string().optional(),
+    price: z.number().optional(),
+    quantity: z.number().optional(),
+    color: z.string().optional(),
+    safetyTip: z.string().optional(),
+    categories: z.array(z.string()).optional().default([]),
+    photos: z.array(z.string()).optional().default([]),
+  })
+  .refine(
+    data => {
+      return Object.values(data).some(value => value !== undefined);
+    },
+    {
+      message: 'At least one field must be provided for update',
+    },
+  );
 
 export const AddCategorySchema = z.object({
   category: z.string().min(1, 'Category name is required'),
@@ -56,22 +64,53 @@ export const RemoveProductPhotoSchema = z.object({
   photo_string: z.string().min(1, 'Photo string is required'),
 });
 
-export const BlackFridayProductSchema = z.discriminatedUnion('type', [
+export const CreateBlackFridayDealSchema = z.discriminatedUnion('type', [
   z.object({
     type: z.literal('existing'),
     productId: z.string(),
-    discountedPrice: z.number(),
-    dealEndDate: z.date().optional(),
+    discountedPrice: z.number().positive(),
+    dealEndDate: z
+      .date()
+      .optional()
+      .refine(d => !d || d > new Date(), { message: 'Deal end date must be in the future' }),
   }),
 
   ProductSchema.extend({
     type: z.literal('new'),
-    discountedPrice: z.number(),
-    dealEndDate: z.date().optional(),
+    discountedPrice: z.number().positive(),
+    dealEndDate: z
+      .date()
+      .optional()
+      .refine(d => !d || d > new Date(), { message: 'Deal end date must be in the future' }),
+  }).refine(d => d.discountedPrice < d.price, {
+    message: 'Discounted price must be less than original price',
+    path: ['discountedPrice'],
   }),
 ]);
 
-export type CreateBlackFridayDealDto = z.infer<typeof BlackFridayProductSchema>;
+export const UpdateBlackFridayDealSchema = UpdateProductSchema.extend({
+  discountedPrice: z.number().optional(),
+  dealEndDate: z.date().optional(),
+})
+  .refine(
+    d => {
+      if (d.discountedPrice !== undefined && d.price !== undefined) {
+        return d.discountedPrice < d.price;
+      }
+      return true;
+    },
+    {
+      message: 'Discounted price must be less than original price',
+      path: ['discountedPrice'],
+    },
+  )
+  .refine(d => !d.dealEndDate || d.dealEndDate > new Date(), {
+    message: 'Deal end date must be in the future',
+    path: ['dealEndDate'],
+  });
+
+export type CreateBlackFridayDealDto = z.infer<typeof CreateBlackFridayDealSchema>;
+export type UpdateBlackFridayDealDto = z.infer<typeof UpdateBlackFridayDealSchema>;
 export type CreateProductDto = z.infer<typeof ProductSchema>;
 export type UpdateProductDto = z.infer<typeof UpdateProductSchema>;
 export type AddCategoryDto = z.infer<typeof AddCategorySchema>;
