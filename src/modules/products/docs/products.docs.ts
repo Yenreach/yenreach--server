@@ -7,7 +7,7 @@ export const productsRegistry = new OpenAPIRegistry();
 // DTOs
 const CreateProductDto = productsRegistry.register('CreateProductDto', ProductSchema);
 const UpdateProductDto = productsRegistry.register('UpdateProductDto', UpdateProductSchema);
-const GetProductsQuery = productsRegistry.register('GetProductsQuery', GetProductsSchema);
+export const GetProductsQuery = productsRegistry.register('GetProductsQuery', GetProductsSchema);
 const AddCategoryDto = productsRegistry.register('AddCategoryDto', AddCategorySchema);
 const AddProductCategoryDto = productsRegistry.register('AddProductCategoryDto', AddProductCategorySchema);
 

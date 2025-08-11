@@ -31,7 +31,7 @@ class ProductsAdminRoute implements Routes {
 
     // Get filtered Black Friday Deals (with search, category filters)
     this.router.get(
-      `products/black-friday`,
+      `/products/black-friday`,
       adminAuthMiddleware,
       requireSetting('is_black_friday_enabled', true),
       this.productsAdminController.getBlackFridayDeals,
@@ -39,7 +39,7 @@ class ProductsAdminRoute implements Routes {
 
     // Get all Black Friday Deals (no filters)
     this.router.get(
-      `products/black-friday/all`,
+      `/products/black-friday/all`,
       adminAuthMiddleware,
       requireSetting('is_black_friday_enabled', true),
       this.productsAdminController.getAllBlackFridayDeals,
@@ -47,7 +47,7 @@ class ProductsAdminRoute implements Routes {
 
     // Get single Black Friday Deal by ID
     this.router.get(
-      `$products/black-friday/:id`,
+      `/products/black-friday/:id`,
       adminAuthMiddleware,
       requireSetting('is_black_friday_enabled', true),
       this.productsAdminController.getBlackFridayDealById,

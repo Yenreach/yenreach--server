@@ -10,11 +10,10 @@ import { CreateSettingsDto, UpdateSettingsDto } from '../schema';
 
 export class SettingsService {
   private static instance: SettingsService;
-  private readonly redis: RedisClientType;
+  private redis: RedisClientType;
   private readonly SettingsRepository: Repository<Settings>;
 
   constructor() {
-    this.redis = getRedisClient();
     this.SettingsRepository = AppDataSource.getRepository(Settings);
   }
 
@@ -114,6 +113,7 @@ export class SettingsService {
 
   public async init() {
     try {
+      this.redis = getRedisClient();
       const settings = await this.SettingsRepository.find();
       const parsedSettings = this.parseSettings(settings);
       const pipeline = this.redis.multi();

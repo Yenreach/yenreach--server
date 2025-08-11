@@ -1,6 +1,7 @@
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import { CreateBlackFridayDealSchema, UpdateBlackFridayDealSchema } from '../schemas/products.schema';
 import { z } from 'zod';
+import { GetProductsQuery } from './products.docs';
 
 export const productsAdminRegistry = new OpenAPIRegistry();
 
@@ -21,6 +22,17 @@ productsAdminRegistry.registerComponent('schemas', 'BlackFridayDealResponse', {
     productId: { type: 'string', nullable: true },
     created_at: { type: 'string', format: 'date-time' },
     product: { $ref: '#/components/schemas/ProductResponse' },
+  },
+});
+//paginated response
+productsAdminRegistry.registerComponent('schemas', 'BlackFridayDealPaginatedResponse', {
+  type: 'object',
+  properties: {
+    data: {
+      type: 'array',
+      items: { $ref: '#/components/schemas/BlackFridayDealResponse' },
+    },
+    meta: { $ref: '#/components/schemas/PaginationMeta' },
   },
 });
 
@@ -77,10 +89,13 @@ productsAdminRegistry.registerPath({
 // Get paginated Black Friday Deals
 productsAdminRegistry.registerPath({
   method: 'get',
-  path: 'products/black-friday',
+  path: '/products/black-friday',
   tags: ['Products Admin'],
   summary: 'Get paginated Black Friday deals with optional search and category filters',
   security: [{ bearerAuth: [] }],
+  request: {
+    query: GetProductsQuery,
+  },
   responses: {
     200: {
       description: 'Paginated list of Black Friday deals',
@@ -88,7 +103,7 @@ productsAdminRegistry.registerPath({
         'application/json': {
           schema: {
             type: 'array',
-            items: { $ref: '#/components/schemas/BlackFridayDealResponse' },
+            items: { $ref: '#/components/schemas/BlackFridayDealPaginatedResponse' },
           },
         },
       },
@@ -99,7 +114,7 @@ productsAdminRegistry.registerPath({
 // Get single Black Friday Deal by ID
 productsAdminRegistry.registerPath({
   method: 'get',
-  path: 'products/black-friday/{id}',
+  path: '/products/black-friday/{id}',
   tags: ['Products Admin'],
   summary: 'Get a single Black Friday deal by ID',
   security: [{ bearerAuth: [] }],
@@ -124,7 +139,7 @@ productsAdminRegistry.registerPath({
 // Get all Black Friday Deals (no filters, no pagination)
 productsAdminRegistry.registerPath({
   method: 'get',
-  path: 'products/black-friday/all',
+  path: '/products/black-friday/all',
   tags: ['Products Admin'],
   summary: 'Get all Black Friday deals without filters or pagination',
   security: [{ bearerAuth: [] }],
@@ -135,7 +150,7 @@ productsAdminRegistry.registerPath({
         'application/json': {
           schema: {
             type: 'array',
-            items: { $ref: '#/components/schemas/BlackFridayDealResponse' },
+            items: { $ref: '#/components/schemas/BlackFridayDealPaginatedResponse' },
           },
         },
       },

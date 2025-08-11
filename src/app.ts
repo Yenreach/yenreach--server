@@ -19,6 +19,7 @@ import z from 'zod';
 extendZodWithOpenApi(z);
 import { swaggerSpecs } from './config';
 import { initRedis } from './lib/redis/redis.service';
+import { SettingsService } from './modules/settings/services';
 
 class App {
   public app: express.Application;
@@ -26,16 +27,28 @@ class App {
   public port: string | number;
   public io: any;
 
-  constructor(routes: Routes[]) {
+  constructor() {
     this.app = express();
     this.env = env.NODE_ENV || 'development';
     this.port = env.PORT || 3000;
-    this.connectDatabase();
-    this.initializeMiddlewares();
-    this.initializeRoutes(routes);
-    this.initializeSwagger();
-    this.initializeErrorHandling();
-    this.connectRedis();
+  }
+
+  public async initialize(routes: Routes[]) {
+    try {
+      await this.connectDatabase();
+      await this.connectRedis();
+      await this.initSettings();
+
+      this.initializeMiddlewares();
+      this.initializeRoutes(routes);
+      this.initializeSwagger();
+      this.initializeErrorHandling();
+
+      logger.info('App initialized successfully');
+    } catch (error) {
+      logger.error('Error during app initialization:', error);
+      process.exit(1); // Stop process if initialization fails
+    }
   }
 
   public listen() {
@@ -62,29 +75,76 @@ class App {
     return this.app;
   }
 
+  // private async connectDatabase() {
+  //   return new Promise((resolve, reject) => {
+  //     AppDataSource.initialize()
+  //       .then(() => {
+  //         logger.info(`=================================`);
+  //         logger.info(`========= DATABASE 🚀=======`);
+  //         logger.info(`🚀 Database running 🚀`);
+  //         logger.info(`=================================`);
+  //         // console.log(AppDataSource.options.entities);
+  //         resolve(undefined);
+  //       })
+  //       .catch(err => {
+  //         logger.error(`Database Error: ${err}`);
+  //         reject(err);
+  //       });
+  //   });
+  // }
+
+  // private async connectRedis() {
+  //   return new Promise<void>((resolve, reject) => {
+  //     initRedis()
+  //       .then(() => {
+  //         logger.info('=================================');
+  //         logger.info('========= REDIS 🚀 =========');
+  //         logger.info('🚀 Redis connected 🚀');
+  //         logger.info('=================================');
+  //         resolve();
+  //       })
+  //       .catch(error => {
+  //         logger.error('Redis connection failed', error);
+  //         reject(error);
+  //       });
+  //   });
+  // }
+
   private async connectDatabase() {
-    return new Promise((resolve, reject) => {
-      AppDataSource.initialize()
-        .then(() => {
-          logger.info(`=================================`);
-          logger.info(`========= DATABASE 🚀=======`);
-          logger.info(`🚀 Database running 🚀`);
-          logger.info(`=================================`);
-          // console.log(AppDataSource.options.entities);
-          resolve(undefined);
-        })
-        .catch(err => {
-          logger.error(`Database Error: ${err}`);
-          reject(err);
-        });
-    });
+    try {
+      await AppDataSource.initialize();
+      logger.info(`=================================`);
+      logger.info(`========= DATABASE 🚀=======`);
+      logger.info(`🚀 Database running 🚀`);
+      logger.info(`=================================`);
+    } catch (err) {
+      logger.error(`Database Error: ${err}`);
+      throw err;
+    }
   }
 
   private async connectRedis() {
     try {
       await initRedis();
+      logger.info('=================================');
+      logger.info('========= REDIS 🚀 =========');
+      logger.info('🚀 Redis connected 🚀');
+      logger.info('=================================');
     } catch (error) {
-      logger.error('Redis connecttion failed', error);
+      logger.error('Redis connection failed', error);
+      throw error;
+    }
+  }
+
+  private async initSettings() {
+    try {
+      await SettingsService.getInstance().init();
+      logger.info('=================================');
+      logger.info('======= SETTINGS INIT 🚀 =======');
+      logger.info('🚀 Settings initialized 🚀');
+      logger.info('=================================');
+    } catch (error) {
+      logger.error('Settings initialization failed', error);
       throw error;
     }
   }
