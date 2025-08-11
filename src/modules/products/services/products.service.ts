@@ -254,9 +254,9 @@ class ProductsService {
   // product photo
   public async addPhoto(data: AddProductPhotoDto) {
     const validatedData = AddProductPhotoSchema.parse(data);
-    const { product_string, filename } = validatedData;
+    const { productId, filename } = validatedData;
 
-    const product = await this.productRepository.findOne({ where: { id: product_string } });
+    const product = await this.productRepository.findOne({ where: { id: productId } });
     if (!product) throw new Error('Product not found');
 
     const productPhoto = this.productPhotoRepository.create({
@@ -287,7 +287,7 @@ class ProductsService {
   }
 
   public async addProductCategory(data: AddProductCategoryDto) {
-    const product = await this.productRepository.findOne({ where: { id: data.productString }, relations: ['categories'] });
+    const product = await this.productRepository.findOne({ where: { id: data.productId }, relations: ['categories'] });
     if (!product) throw new Error('Product not found');
 
     // Check if the product already has 3 categories
@@ -318,10 +318,10 @@ class ProductsService {
 
   public async removeProductCategoryAssociation(data: RemoveProductCategoryDto) {
     const validatedData = RemoveProductCategorySchema.parse(data);
-    const { product_string, category_string } = validatedData;
+    const { productId, categoryId } = validatedData;
 
     const product = await this.productRepository.findOne({
-      where: { id: product_string },
+      where: { id: productId },
       relations: ['categories'], // Ensure categories are loaded
     });
 
@@ -329,7 +329,7 @@ class ProductsService {
       throw new Error('Product not found');
     }
 
-    const categoryIndex = product.categories.findIndex(cat => cat.categoryId === category_string);
+    const categoryIndex = product.categories.findIndex(cat => cat.categoryId === categoryId);
 
     if (categoryIndex === -1) {
       throw new Error('Category is not associated with this product');
@@ -340,10 +340,10 @@ class ProductsService {
 
   async removeProductPhoto(data: RemoveProductPhotoDto) {
     const validatedData = RemoveProductPhotoSchema.parse(data);
-    const { product_string, photo_string } = validatedData;
+    const { productId, photoId } = validatedData;
 
     const product = await this.productRepository.findOne({
-      where: { id: product_string },
+      where: { id: productId },
       relations: ['photos'],
     });
 
@@ -351,7 +351,7 @@ class ProductsService {
       throw new Error('Product not found');
     }
 
-    const photoIndex = product.photos.findIndex(photo => photo.id.toString() === photo_string);
+    const photoIndex = product.photos.findIndex(photo => photo.id.toString() === photoId);
 
     if (photoIndex === -1) {
       throw new Error('Image not found');

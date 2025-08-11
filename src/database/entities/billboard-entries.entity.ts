@@ -1,8 +1,9 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, JoinColumn, ManyToOne, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
 import { Users } from './users.entity';
 import { Businesses } from './businesses.entity';
-import { BillboardStatus } from '../../shared/enums/common.enum';
+
 import { Admins } from './admin.entity';
+import { BillboardStatus } from '../../shared/enums';
 
 @Entity('billboard_entries')
 export class BillboardEntry {

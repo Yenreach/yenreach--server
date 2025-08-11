@@ -6,6 +6,7 @@ import { adminBusinessRegistry } from '../modules/business/docs/business-admin.d
 import { jobsRegistry } from '../modules/jobs/docs';
 import { productsAdminRegistry, productsRegistry } from '../modules/products/docs';
 import { billboardRegistry, publicBillboardRegistry } from '../modules/billboard/docs';
+import { settingsRegistry } from '../modules/settings/docs';
 
 // Create a main registry to add global components
 const mainRegistry = new OpenAPIRegistry();
@@ -99,6 +100,7 @@ const allDefinitions = [
   ...billboardRegistry.definitions,
   ...publicBillboardRegistry.definitions,
   ...productsAdminRegistry.definitions,
+  ...settingsRegistry.definitions,
 ];
 
 // Create generator

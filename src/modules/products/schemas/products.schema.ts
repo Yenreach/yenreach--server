@@ -37,12 +37,12 @@ export const AddCategorySchema = z.object({
 });
 
 export const AddProductCategorySchema = z.object({
-  productString: z.string().nonempty(),
+  productId: z.string().nonempty(),
   category: z.string().nonempty(),
 });
 
 export const AddProductPhotoSchema = z.object({
-  product_string: z.string().min(1, 'Product string is required'),
+  productId: z.string().min(1, 'Product id is required'),
   filename: z.string().min(1, 'Filename is required'),
 });
 
@@ -55,13 +55,13 @@ export const GetProductsSchema = z.object({
 });
 
 export const RemoveProductCategorySchema = z.object({
-  product_string: z.string().min(1, 'Product string is required'),
-  category_string: z.string().min(1, 'Category string is required'),
+  productId: z.string().min(1, 'Product id is required'),
+  categoryId: z.string().min(1, 'Category id is required'),
 });
 
 export const RemoveProductPhotoSchema = z.object({
-  product_string: z.string().min(1, 'Product string is required'),
-  photo_string: z.string().min(1, 'Photo string is required'),
+  productId: z.string().min(1, 'Product id is required'),
+  photoId: z.string().min(1, 'Photo id is required'),
 });
 
 export const CreateBlackFridayDealSchema = z.discriminatedUnion('type', [

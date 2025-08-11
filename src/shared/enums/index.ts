@@ -1,1 +1,1 @@
-export { FeedbackStatus, CategoryType } from './common.enum';
+export { FeedbackStatus, CategoryType, BillboardStatus, SettingsValueType } from './common.enum';

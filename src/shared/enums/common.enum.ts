@@ -15,3 +15,15 @@ export enum BillboardStatus {
   Expired = 'expired',
   Rejected = 'rejected',
 }
+
+export enum SettingsValueType {
+  String = 'string',
+  Number = 'number',
+  Boolean = 'boolean',
+  Enum = 'enum',
+  Options = 'options',
+  Object = 'object',
+  StringArray = 'string_array',
+  NumberArray = 'number_array',
+  ObjectArray = 'object_array',
+}
