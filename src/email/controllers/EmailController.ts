@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { getFileLink, sendResponse } from '../../lib/utils';
+import { sendResponse } from '../../lib/utils';
 import { HttpCodes } from '../../lib/constants';
 import { logger } from '../../lib/utils';
 import { EmailProvider } from '../../email/providers';
