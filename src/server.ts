@@ -53,7 +53,6 @@ app.initialize([
   new UserRoute(),
   new AuthRoute(),
   new BusinessRoute(),
-  new ProductsRoute(),
   new JobsRoute(),
   new PlanRoute(),
   new SubPlanRoute(),
@@ -63,6 +62,7 @@ app.initialize([
   new BillboardAdminRoute(),
   new BillboardRoute(),
   new ProductsAdminRoute(),
+  new ProductsRoute(),
   new SettingsRoute(),
 ]);
 

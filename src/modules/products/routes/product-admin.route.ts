@@ -45,14 +45,6 @@ class ProductsAdminRoute implements Routes {
       this.productsAdminController.getAllBlackFridayDeals,
     );
 
-    // Get single Black Friday Deal by ID
-    this.router.get(
-      `/products/black-friday/:id`,
-      adminAuthMiddleware,
-      requireSetting('is_black_friday_enabled', true),
-      this.productsAdminController.getBlackFridayDealById,
-    );
-
     // Update Black Friday Deal
     this.router.put(
       `${this.path}/black-friday/:id`,
@@ -68,6 +60,14 @@ class ProductsAdminRoute implements Routes {
       adminAuthMiddleware,
       requireSetting('is_black_friday_enabled', true),
       this.productsAdminController.deleteBlackFridayDeal,
+    );
+
+    // Get single Black Friday Deal by ID
+    this.router.get(
+      `/products/black-friday/:id`,
+      adminAuthMiddleware,
+      requireSetting('is_black_friday_enabled', true),
+      this.productsAdminController.getBlackFridayDealById,
     );
   }
 }
