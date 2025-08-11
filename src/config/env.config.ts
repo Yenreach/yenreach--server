@@ -27,7 +27,8 @@ const envSchema = z.object({
   LOG_FORMAT: z.string(),
   ADMIN_PASSWORD: z.string(),
   JWT_SECRET_KEY: z.string(),
-  JWT_EXPIRATION_HOURS: z
+  JWT_EXPIRATION_TIME: z.string() || z.number(),
+  COOKIE_EXPIRATION_TIME: z
     .string()
     .refine(value => !isNaN(Number(value)) && Number(value) > 0, {
       message: 'JWT_EXPIRATION_HOURS must be a positive number',

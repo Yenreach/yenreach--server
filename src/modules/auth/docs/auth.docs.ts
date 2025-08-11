@@ -181,7 +181,7 @@ authRegistry.registerPath({
 
 authRegistry.registerPath({
   method: 'post',
-  path: '/auth/admin/login',
+  path: '/auth/admin-login',
   tags: ['Admin Auth'],
   request: {
     body: {

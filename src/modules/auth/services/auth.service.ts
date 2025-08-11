@@ -95,14 +95,11 @@ class AuthService {
       }
     }
 
-    const token = jwt.sign({ id: user.id }, env.JWT_SECRET_KEY, { expiresIn: Number(env.JWT_EXPIRATION_HOURS) });
-
-    const expires = new Date();
-    expires.setSeconds(expires.getSeconds() + env.JWT_EXPIRATION_HOURS);
+    const token = jwt.sign({ id: user.id }, env.JWT_SECRET_KEY, { expiresIn: env.JWT_EXPIRATION_TIME });
 
     response.cookie('Authentication', token, {
       httpOnly: true,
-      expires,
+      maxAge: env.COOKIE_EXPIRATION_TIME,
       path: '/',
     });
 
@@ -140,15 +137,11 @@ class AuthService {
         throw new HttpException(HttpCodes.BAD_REQUEST, 'Email or Password Incorrect');
       }
     }
-
-    const token = jwt.sign({ id: user.id }, env.JWT_SECRET_KEY, { expiresIn: Number(env.JWT_EXPIRATION_HOURS) });
-
-    const expires = new Date();
-    expires.setSeconds(expires.getSeconds() + env.JWT_EXPIRATION_HOURS);
+    const token = jwt.sign({ id: user.id }, env.JWT_SECRET_KEY, { expiresIn: env.JWT_EXPIRATION_TIME });
 
     response.cookie('Authentication', token, {
       httpOnly: true,
-      expires,
+      maxAge: env.COOKIE_EXPIRATION_TIME,
       path: '/',
     });
 

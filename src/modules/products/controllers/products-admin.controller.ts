@@ -21,7 +21,6 @@ class ProductsAdminController {
 
   public async getBlackFridayDealById(req: Request, res: Response, next: NextFunction) {
     try {
-      console.log('called');
       const dealId = req.params.id;
       const deal = await productsAdminService.getBlackFridayDealById(dealId);
       if (!deal) return sendResponse(res, HttpCodes.NOT_FOUND, 'Black Friday deal not found');

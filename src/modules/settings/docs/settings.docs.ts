@@ -84,6 +84,34 @@ settingsRegistry.registerPath({
 });
 
 settingsRegistry.registerPath({
+  method: 'patch',
+  path: '/settings/{name}',
+  tags: ['Settings'],
+  summary: 'Update a setting',
+  security: [{ bearerAuth: [] }],
+  request: {
+    params: settingsRegistry.register('SettingNameParam', NameParam),
+    body: {
+      content: {
+        'application/json': {
+          schema: UpdateSettingsDto,
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: 'Setting updated',
+      content: {
+        'application/json': {
+          schema: { $ref: '#/components/schemas/SettingEntityResponse' },
+        },
+      },
+    },
+  },
+});
+
+settingsRegistry.registerPath({
   method: 'get',
   path: '/settings/{name}',
   tags: ['Settings'],
