@@ -186,11 +186,16 @@ export class SettingsService {
   }
 
   public async createSetting(data: CreateSettingsDto): Promise<Settings> {
-    const newSetting = this.SettingsRepository.create(data);
-    const savedSetting = await this.SettingsRepository.save(newSetting);
-    const parsedSetting = this.parseSetting(savedSetting);
-    await this.redis.set(parsedSetting.name, JSON.stringify(parsedSetting.value));
-    return savedSetting;
+    const setting = await this.getSetting(data.name);
+    if (setting) {
+      return await this.updateSetting(data.name, data)
+    } else {
+      const newSetting = this.SettingsRepository.create(data);
+      const savedSetting = await this.SettingsRepository.save(newSetting);
+      const parsedSetting = this.parseSetting(savedSetting);
+      await this.redis.set(parsedSetting.name, JSON.stringify(parsedSetting.value));
+      return savedSetting;
+    }
   }
 
   public async updateSetting(name: string, data: UpdateSettingsDto): Promise<Settings> {
