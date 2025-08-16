@@ -70,18 +70,18 @@ export const CreateBlackFridayDealSchema = z.discriminatedUnion('type', [
     productId: z.string(),
     discountedPrice: z.number().positive(),
     dealEndDate: z
-      .date()
+      .string()
       .optional()
-      .refine(d => !d || d > new Date(), { message: 'Deal end date must be in the future' }),
+      .refine(d => !d || new Date(d) > new Date(), { message: 'Deal end date must be in the future' }),
   }),
 
   ProductSchema.extend({
     type: z.literal('new'),
     discountedPrice: z.number().positive(),
     dealEndDate: z
-      .date()
+      .string()
       .optional()
-      .refine(d => !d || d > new Date(), { message: 'Deal end date must be in the future' }),
+      .refine(d => !d || new Date(d) > new Date(), { message: 'Deal end date must be in the future' }),
   }).refine(d => d.discountedPrice < d.price, {
     message: 'Discounted price must be less than original price',
     path: ['discountedPrice'],

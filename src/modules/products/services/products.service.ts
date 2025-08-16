@@ -67,7 +67,7 @@ class ProductsService {
         }),
       );
 
-      await productCategoryRepository.save(photos);
+      await productPhotoRepository.save(photos);
 
       return { ...savedProduct, categories, photos };
     };
