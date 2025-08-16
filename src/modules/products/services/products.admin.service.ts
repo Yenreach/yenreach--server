@@ -38,7 +38,7 @@ class ProductAdminService {
         productId: product.id,
         discountedPrice: data.discountedPrice,
         discountPercentage: (data.discountedPrice / product.price) * 100,
-        dealEndDate: data.dealEndDate,
+        dealEndDate: new Date(data.dealEndDate),
       });
 
       return manager.save(deal);

@@ -66,8 +66,7 @@ export const RemoveProductPhotoSchema = z.object({
 
 export const CreateBlackFridayDealSchema = z.discriminatedUnion('type', [
   z.object({
-    type: z.string(),
-    // type: z.literal('existing'),
+    type: z.literal('existing'),
     productId: z.string(),
     discountedPrice: z.number().positive(),
     dealEndDate: z
