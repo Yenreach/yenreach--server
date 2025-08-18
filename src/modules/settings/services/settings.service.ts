@@ -186,7 +186,15 @@ export class SettingsService {
   }
 
   public async createSetting(data: CreateSettingsDto): Promise<Settings> {
+    const cachedSetting = await this.redis.get(data.name);
+
+    if (cachedSetting) {
+      logger.info(`Setting ${data.name} already exists, updating instead`);
+      return this.updateSetting(data.name, data);
+    }
+
     const setting = await this.SettingsRepository.findOneBy({ name: data.name });
+
     if (setting) {
       logger.info(`Setting ${data.name} already exists, updating instead`);
       return this.updateSetting(data.name, data);
