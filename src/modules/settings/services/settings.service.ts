@@ -186,7 +186,7 @@ export class SettingsService {
   }
 
   public async createSetting(data: CreateSettingsDto): Promise<Settings> {
-    const setting = await this.getSetting(data.name);
+    const setting = await this.SettingsRepository.findOneBy({ name: data.name });
     if (setting) {
       return await this.updateSetting(data.name, data)
     } else {
