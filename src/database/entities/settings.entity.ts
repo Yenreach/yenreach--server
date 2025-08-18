@@ -7,7 +7,7 @@ export class Settings {
   @PrimaryGeneratedColumn('uuid')
   public id: string;
 
-  @PrimaryColumn('varchar', { name: 'name', nullable: false, length: 100, unique: true })
+  @Column('varchar', { name: 'name', nullable: false, length: 100, unique: true })
   public name: string;
 
   @Column('jsonb', { name: 'value' })

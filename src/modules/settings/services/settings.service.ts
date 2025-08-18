@@ -188,7 +188,8 @@ export class SettingsService {
   public async createSetting(data: CreateSettingsDto): Promise<Settings> {
     const setting = await this.SettingsRepository.findOneBy({ name: data.name });
     if (setting) {
-      return await this.updateSetting(data.name, data)
+      logger.info(`Setting ${data.name} already exists, updating instead`);
+      return this.updateSetting(data.name, data);
     } else {
       const newSetting = this.SettingsRepository.create(data);
       const savedSetting = await this.SettingsRepository.save(newSetting);
