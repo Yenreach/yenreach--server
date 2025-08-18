@@ -24,15 +24,15 @@ class ProductsAdminRoute implements Routes {
     this.router.post(
       `${this.path}/black-friday`,
       adminAuthMiddleware,
-      requireSetting('is_black_friday_enabled', true),
+      // requireSetting('is_black_friday_enabled', true),
       validateRequest([z.object({ body: CreateBlackFridayDealSchema })]),
       this.productsAdminController.createBlackFridayProducts,
     );
 
-    // Get filtered Black Friday Deals (with search, category filters)
+    // Get filtered Black Friday Deals (with search, category filters) - public
     this.router.get(
       `/products/black-friday`,
-      adminAuthMiddleware,
+      // adminAuthMiddleware,
       requireSetting('is_black_friday_enabled', true),
       this.productsAdminController.getBlackFridayDeals,
     );
@@ -41,7 +41,7 @@ class ProductsAdminRoute implements Routes {
     this.router.get(
       `/products/black-friday/all`,
       adminAuthMiddleware,
-      requireSetting('is_black_friday_enabled', true),
+      // requireSetting('is_black_friday_enabled', true),
       this.productsAdminController.getAllBlackFridayDeals,
     );
 

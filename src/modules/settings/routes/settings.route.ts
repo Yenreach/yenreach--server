@@ -20,7 +20,7 @@ export class SettingsRoute implements Routes {
     this.router.all(`${this.path}*`, (req: Request, res: Response, next: NextFunction) => {
       next();
     });
-    this.router.get(`${this.path}/:name`, adminAuthMiddleware, this.settingsController.getSetting);
+    this.router.get(`${this.path}/:name`, this.settingsController.getSetting);
 
     this.router.get(`${this.path}`, adminAuthMiddleware, this.settingsController.getSettings);
 
