@@ -60,9 +60,9 @@ const errorMiddleware = (error: any, req: Request, res: Response, next: NextFunc
 
     if (status == 500) {
       res.status(status).json({ status, message: 'Something went wrong' });
+    } else {
+      res.status(status).json({ status, message });
     }
-
-    res.status(status).json({ status, message });
   } catch (error) {
     // next(error);
     logger.error(error);
