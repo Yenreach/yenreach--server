@@ -32,22 +32,22 @@ export class Jobs {
   @Column('uuid', { name: 'admin_id', nullable: true })
   public adminId: string;
 
-  @Column('varchar', { name: 'company_name', length: 255 })
+  @Column('varchar', { name: 'company_name', length: 500 })
   public companyName: string;
 
-  @Column('varchar', { name: 'tittle', length: 255 })
+  @Column('varchar', { name: 'tittle', length: 500 })
   public title: string;
 
-  @Column('varchar', { name: 'type', length: 355 })
+  @Column('varchar', { name: 'type', length: 500 })
   public type: string;
 
-  @Column('varchar', { name: 'location', length: 255 })
+  @Column('varchar', { name: 'location', length: 500 })
   public location: string;
 
-  @Column('varchar', { name: 'salary', length: 255 })
+  @Column('varchar', { name: 'salary', length: 500 })
   public salary: string;
 
-  @Column('varchar', { name: 'application_expiry', length: 255 })
+  @Column('varchar', { name: 'application_expiry', length: 500 })
   public applicationExpiry: string;
 
   @Column('text', { name: 'description' })

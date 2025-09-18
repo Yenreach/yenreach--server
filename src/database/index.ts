@@ -9,7 +9,7 @@ const AppDataSource = new DataSource({
   password: env.DB_PASSWORD,
   database: env.DB_NAME,
   synchronize: true,
-  logging: false,
+  logging: true,
   ...(env.NODE_ENV === 'production'
     ? {
         ssl: {

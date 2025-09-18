@@ -61,7 +61,9 @@ const errorMiddleware = (error: any, req: Request, res: Response, next: NextFunc
     res.status(status).json({ status, message });
   } catch (error) {
     // next(error);
-    res.status(500).json(error);
+    logger.error(error);
+    console.log(error);
+    res.status(500).json('An error occured');
   }
 };
 
