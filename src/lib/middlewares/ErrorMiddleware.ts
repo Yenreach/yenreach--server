@@ -58,11 +58,14 @@ const errorMiddleware = (error: any, req: Request, res: Response, next: NextFunc
 
     logger.error(`[${req.method}] ${req.path} >> StatusCode:: ${status}, Message:: ${message}`);
 
+    if (status == 500) {
+      res.status(status).json({ status, message: 'Something went wrong' });
+    }
+
     res.status(status).json({ status, message });
   } catch (error) {
     // next(error);
     logger.error(error);
-    console.log(error);
     res.status(500).json('An error occured');
   }
 };
