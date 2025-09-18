@@ -8,7 +8,8 @@ const AppDataSource = new DataSource({
   username: env.DB_USER,
   password: env.DB_PASSWORD,
   database: env.DB_NAME,
-  synchronize: true,
+  schema: 'yenreach',
+  synchronize: env.NODE_ENV == 'production' ? false : true,
   logging: true,
   ...(env.NODE_ENV === 'production'
     ? {
