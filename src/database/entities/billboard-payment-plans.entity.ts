@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
-@Entity('billboard-payment-plans')
+@Entity('billboard_payment_plans')
 export class BillboardPaymentPlans {
   @PrimaryGeneratedColumn('uuid')
   id: string;
