@@ -73,12 +73,14 @@ export class BusinessService implements IBusinessService {
 
     await this.businessCategoryRepository.save(businessCategories);
 
-    const photos = medias.map(media => ({
+    const photos = medias?.map(media => ({
       mediaPath: media,
       businessId: savedBusiness.id,
     }));
 
-    await this.businessPhotoRepository.save(photos);
+    if (photos && photos.length > 0) {
+      await this.businessPhotoRepository.save(photos);
+    }
 
     return this.transformBusiness(savedBusiness);
   }
