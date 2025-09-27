@@ -87,7 +87,7 @@ export class Businesses {
   @Column('varchar', { name: 'curriculum_vitae', nullable: true })
   public cv: string;
 
-  @Column('int', { name: 'experience' })
+  @Column('int', { name: 'experience', nullable: true })
   public experience: number;
 
   @Column('varchar', { name: 'month_started', length: 100 })

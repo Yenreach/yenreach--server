@@ -3,15 +3,17 @@ import { z } from 'zod';
 export const CreateBusinessSchema = z.object({
   name: z.string().min(1, 'Name cannot be empty'),
   description: z.string().min(1, 'Description cannot be empty'),
-  category: z.string().min(1, 'Business must belong to a category'),
+  // category: z.string().min(1, 'Business must belong to a category'),
   address: z.string().min(1, 'Business must have an address'),
   lgaId: z.string().min(1, 'Lga where business is situated must be included'),
   town: z.string().min(1, 'Town where business is situated must be included'),
   stateId: z.string().min(1, 'state id must be included'),
   email: z.string().min(1, 'Business must have an email address'),
   phoneNumber: z.string().min(1, 'Business must have a phone number'),
-  experience: z.number(),
-  categories: z.array(z.string().min(1, 'At least 1 category are required').max(5, 'Only a maximum of 5 categories are allowed')),
+  experience: z.number().optional(),
+  categories: z.array(z.string())
+    .min(1, { message: "At least 1 category is required" })
+    .max(5, { message: "You can select at most 5 categories" }),
   photos: z.array(z.string()).optional().default([]),
   whatsapp: z.string().optional(),
   website: z.string().optional(),
