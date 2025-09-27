@@ -60,7 +60,7 @@ export class Businesses {
   @Column('varchar', { name: 'phone_number', length: 100 })
   public phoneNumber: string;
 
-  @Column('varchar', { name: 'whatsapp', length: 100 })
+  @Column('varchar', { name: 'whatsapp', length: 100, nullable: true })
   public whatsapp: string;
 
   @Column('varchar', { name: 'email', length: 500 })
@@ -90,10 +90,10 @@ export class Businesses {
   @Column('int', { name: 'experience', nullable: true })
   public experience: number;
 
-  @Column('varchar', { name: 'month_started', length: 100 })
+  @Column('varchar', { name: 'month_started', length: 100, nullable: true })
   public monthStarted: string;
 
-  @Column('varchar', { name: 'year_started', length: 100 })
+  @Column('varchar', { name: 'year_started', length: 100, nullable: true })
   public yearStarted: string;
 
   @Column('varchar', { name: 'profile_img', length: 250, nullable: true })
