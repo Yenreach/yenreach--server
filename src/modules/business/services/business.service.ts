@@ -172,6 +172,10 @@ export class BusinessService implements IBusinessService {
         state: true,
         lga: true,
       },
+        order: {
+            createdAt: 'DESC',
+          },
+  
     };
 
     if (search) {
